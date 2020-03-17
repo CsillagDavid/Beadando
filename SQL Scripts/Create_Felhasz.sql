@@ -10,11 +10,10 @@ GO
 
 CREATE TABLE dbo.Felhasznalok
 (
-	id int NOT NULL, 
+	id int IDENTITY(1,1) PRIMARY KEY,
 	Nev nvarchar(255) NOT NULL, 
 	Jelszo nvarchar(255) NOT NULL,
 	Email nvarchar(255) NOT NULL,
-	Munkaido int NOT NULL,
-	PRIMARY KEY (id)
+	Munkaido int NOT NULL
 )
 GO

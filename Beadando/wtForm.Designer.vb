@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class wtForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,75 +20,82 @@ Partial Class wtForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.lblFelhasznalok = New System.Windows.Forms.Label()
+        Me.ltbFelhasznalok = New System.Windows.Forms.ListBox()
+        Me.dgvFelhasznalok = New System.Windows.Forms.DataGridView()
+        Me.btnFelhasznalok = New System.Windows.Forms.Button()
+        Me.btnMunkaidő = New System.Windows.Forms.Button()
+        CType(Me.dgvFelhasznalok, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'Label1
+        'lblFelhasznalok
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(39, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Label1"
+        Me.lblFelhasznalok.AutoSize = True
+        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 9)
+        Me.lblFelhasznalok.Name = "lblFelhasznalok"
+        Me.lblFelhasznalok.Size = New System.Drawing.Size(72, 13)
+        Me.lblFelhasznalok.TabIndex = 0
+        Me.lblFelhasznalok.Text = "Felhasználók:"
         '
-        'ListBox1
+        'ltbFelhasznalok
         '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(15, 35)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(156, 160)
-        Me.ListBox1.TabIndex = 1
+        Me.ltbFelhasznalok.FormattingEnabled = True
+        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 35)
+        Me.ltbFelhasznalok.Name = "ltbFelhasznalok"
+        Me.ltbFelhasznalok.Size = New System.Drawing.Size(156, 160)
+        Me.ltbFelhasznalok.TabIndex = 1
         '
-        'TableLayoutPanel1
+        'dgvFelhasznalok
         '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(190, 35)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 2
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(198, 160)
-        Me.TableLayoutPanel1.TabIndex = 2
+        Me.dgvFelhasznalok.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgvFelhasznalok.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.dgvFelhasznalok.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvFelhasznalok.Location = New System.Drawing.Point(186, 9)
+        Me.dgvFelhasznalok.Name = "dgvFelhasznalok"
+        Me.dgvFelhasznalok.Size = New System.Drawing.Size(765, 517)
+        Me.dgvFelhasznalok.TabIndex = 4
         '
-        'TableLayoutPanel2
+        'btnFelhasznalok
         '
-        Me.TableLayoutPanel2.ColumnCount = 2
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel2.Location = New System.Drawing.Point(406, 35)
-        Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
-        Me.TableLayoutPanel2.RowCount = 2
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(200, 160)
-        Me.TableLayoutPanel2.TabIndex = 3
+        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 286)
+        Me.btnFelhasznalok.Name = "btnFelhasznalok"
+        Me.btnFelhasznalok.Size = New System.Drawing.Size(85, 23)
+        Me.btnFelhasznalok.TabIndex = 5
+        Me.btnFelhasznalok.Text = "Felhasználók"
+        Me.btnFelhasznalok.UseVisualStyleBackColor = True
+        '
+        'btnMunkaidő
+        '
+        Me.btnMunkaidő.Location = New System.Drawing.Point(15, 211)
+        Me.btnMunkaidő.Name = "btnMunkaidő"
+        Me.btnMunkaidő.Size = New System.Drawing.Size(75, 46)
+        Me.btnMunkaidő.TabIndex = 6
+        Me.btnMunkaidő.Text = "Munkaidő lekérdezése"
+        Me.btnMunkaidő.UseVisualStyleBackColor = True
         '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
-        Me.Controls.Add(Me.TableLayoutPanel2)
-        Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.Controls.Add(Me.ListBox1)
-        Me.Controls.Add(Me.Label1)
+        Me.ClientSize = New System.Drawing.Size(954, 538)
+        Me.Controls.Add(Me.btnMunkaidő)
+        Me.Controls.Add(Me.btnFelhasznalok)
+        Me.Controls.Add(Me.dgvFelhasznalok)
+        Me.Controls.Add(Me.ltbFelhasznalok)
+        Me.Controls.Add(Me.lblFelhasznalok)
         Me.Name = "wtForm"
         Me.Text = "Munkaidő nyilvántartó"
+        CType(Me.dgvFelhasznalok, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents Label1 As Label
-    Friend WithEvents ListBox1 As ListBox
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
+    Friend WithEvents lblFelhasznalok As Label
+    Friend WithEvents ltbFelhasznalok As ListBox
+    Friend WithEvents dgvFelhasznalok As DataGridView
+    Friend WithEvents btnFelhasznalok As Button
+    Friend WithEvents btnMunkaidő As Button
 End Class

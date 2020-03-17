@@ -10,11 +10,10 @@ GO
 
 CREATE TABLE dbo.Munkaidok
 (
-	id int NOT NULL, 
+	id int IDENTITY(1,1) PRIMARY KEY,
 	Datum date NOT NULL, 
-	Kezdo_ido datetime NOT NULL,
-	Befejezo_ido datetime NOT NULL,
-	FelhasznaloID int NOT NULL,
-	PRIMARY KEY (id)
+	Kezdo_ido decimal(18, 0) NOT NULL,
+	Befejezo_ido decimal(18, 0) NOT NULL,
+	FelhasznaloID int NOT NULL
 )
 GO
