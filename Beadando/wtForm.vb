@@ -10,7 +10,9 @@ Public Class wtForm
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Bejelentkezés.ShowDialog()
         sqlConnect()
-        autentCheck("user")
+        autentCheck(user.role)
+
+
     End Sub
 
     'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
