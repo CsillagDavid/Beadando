@@ -27,7 +27,7 @@ Public Class wtForm
         sda.Fill(dt)
     End Sub
     Private Sub sqlConnect()
-        con.ConnectionString = "Data Source=tcp:5.187.213.233,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
+        con.ConnectionString = "Data Source=tcp:5.187.201.97,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
         If con.State = ConnectionState.Open Then
             con.Close()
         End If
