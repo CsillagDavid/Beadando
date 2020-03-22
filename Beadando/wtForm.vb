@@ -10,7 +10,7 @@ Public Class wtForm
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         LoginForm.ShowDialog()
         sqlConnect()
-        autentCheck("user")
+        autentCheck(user.role)
 
 
     End Sub
