@@ -11,8 +11,6 @@ Public Class wtForm
         Bejelentkezés.ShowDialog()
         sqlConnect()
         autentCheck(user.role)
-
-
     End Sub
 
     'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
@@ -111,5 +109,9 @@ Public Class wtForm
 
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
 
+    End Sub
+
+    Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
+        MsgBox("Edited!")
     End Sub
 End Class

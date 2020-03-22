@@ -26,6 +26,7 @@ Public Class Bejelentkezés
             wtForm.user.role = reader.Item(2)
             Me.Close()
         End If
+        MsgBox("Hibás felhasználónév vagy jelszó!", , "Hiba!")
         reader.Close()
     End Sub
 
