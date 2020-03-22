@@ -1,5 +1,4 @@
-﻿
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class wtForm
 
@@ -11,17 +10,15 @@ Public Class wtForm
         LoginForm.ShowDialog()
         sqlConnect()
         autentCheck(user.role)
-
-
     End Sub
 
     'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
     'tcp:5.187.213.233,1433\sqlhome
     Private Sub autentCheck(logined As String)
         Select Case logined
-            Case "admin"
+            Case "Admin"
 
-            Case "user"
+            Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
                 lblFelhasznalok.Visible = False
                 ltbFelhasznalok.Visible = False
@@ -35,7 +32,6 @@ Public Class wtForm
 
         End Select
     End Sub
-
     Private Sub szamolNapi()
         Try
             For index = 0 To dgvTabla.Rows.Count - 2
