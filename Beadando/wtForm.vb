@@ -5,11 +5,11 @@ Public Class wtForm
 
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
+    Public Property user = New User()
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        LoginForm.ShowDialog()
         sqlConnect()
-
-
     End Sub
 
     'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
@@ -22,8 +22,6 @@ Public Class wtForm
         cmd.ExecuteNonQuery()
         Dim dt As New DataTable()
         Dim sda As New SqlDataAdapter(cmd)
-
-
         sda.Fill(dt)
     End Sub
     Private Sub sqlConnect()
@@ -49,7 +47,4 @@ Public Class wtForm
         dgvFelhasznalok.Columns(3).HeaderText = "Munkaidő"
     End Sub
 
-    Private Sub btnMunkaidő_Click(sender As Object, e As EventArgs) Handles btnMunkaidő.Click
-
-    End Sub
 End Class
