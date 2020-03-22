@@ -8,12 +8,14 @@ IF OBJECT_ID('dbo.Munkaidok', 'U') IS NOT NULL
   DROP TABLE dbo.Munkaidok
 GO
 
-CREATE TABLE dbo.Munkaidok
-(
-	id int IDENTITY(1,1) PRIMARY KEY,
-	Datum date NOT NULL, 
-	Kezdo_ido decimal(18, 0) NOT NULL,
-	Befejezo_ido decimal(18, 0) NOT NULL,
-	FelhasznaloID int NOT NULL
-)
+CREATE TABLE [dbo].[Munkaidok] (
+    [id]            INT          IDENTITY (1, 1) NOT NULL,
+    [Datum]         DATE         NOT NULL,
+    [Kezdo_ido]     DECIMAL (18) NOT NULL,
+    [Befejezo_ido]  DECIMAL (18) NOT NULL,
+    [FelhasznaloID] INT          NOT NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC), 
+    CONSTRAINT fk_munkaidok_felhasznalok FOREIGN KEY (FelhasznaloID) REFERENCES Felhasznalok(id)
+);
+
 GO
