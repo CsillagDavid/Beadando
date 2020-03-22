@@ -1,6 +1,6 @@
 Imports System.Data.SqlClient
 
-Public Class LoginForm
+Public Class Bejelentkezés
 
     ' TODO: Insert code to perform custom authentication using the provided username and password 
     ' (See https://go.microsoft.com/fwlink/?LinkId=35339).  
@@ -17,13 +17,13 @@ Public Class LoginForm
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         'cmd.CommandText = "SELECT f.Nev, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE f.Jelszo = '" + PasswordTextBox.Text & "'"
-        cmd.CommandText = "SELECT f.Nev, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & UsernameTextBox.Text & "' AND f.Jelszo = '" + PasswordTextBox.Text & "')"
+        cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & UsernameTextBox.Text & "' AND f.Jelszo = '" + PasswordTextBox.Text & "')"
         Dim reader As SqlDataReader
         reader = cmd.ExecuteReader()
         If reader.Read() Then
             wtForm.user.userName = reader.Item(0)
-            wtForm.user.role = reader.Item(1)
-            MsgBox(reader.Item(0) & " " & reader.Item(1))
+            wtForm.user.email = reader.Item(1)
+            wtForm.user.role = reader.Item(2)
             Me.Close()
         End If
         reader.Close()
@@ -47,5 +47,9 @@ Public Class LoginForm
 
     Private Sub LoginForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         sqlConnect()
+    End Sub
+
+    Private Sub PasswordLabel_Click(sender As Object, e As EventArgs) Handles PasswordLabel.Click
+
     End Sub
 End Class

@@ -8,11 +8,9 @@ Public Class wtForm
     Public Property user = New User()
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        LoginForm.ShowDialog()
+        Bejelentkezés.ShowDialog()
         sqlConnect()
         autentCheck("user")
-
-
     End Sub
 
     'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
