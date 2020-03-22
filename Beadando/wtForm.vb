@@ -26,10 +26,9 @@ Public Class wtForm
                 btnFelhasznalok.Visible = False
                 btnMunkaidoleker.Enabled = False
                 btnMunkaidoleker.Visible = False
-                getMunkaido(2)
+                getMunkaido(user.email)
                 szamolNapi()
                 szamolHavi()
-
         End Select
     End Sub
     Private Sub szamolNapi()
@@ -57,13 +56,13 @@ Public Class wtForm
             MsgBox("Havi számláló megdöglött")
         End Try
     End Sub
-    Private Sub getMunkaido(id As Integer)
+    Private Sub getMunkaido(email As String)
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE M.FelhasznaloID = " & id
+                            WHERE F.Email = " & "'" & email & "'"
         cmd.ExecuteNonQuery()
         Dim dt As New DataTable()
         Dim sda As New SqlDataAdapter(cmd)
