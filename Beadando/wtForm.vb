@@ -12,8 +12,6 @@ Public Class wtForm
         autentCheck(user.role)
     End Sub
 
-    'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-    'tcp:5.187.213.233,1433\sqlhome
     Private Sub autentCheck(logined As String)
         Select Case logined
             Case "Admin"
@@ -88,9 +86,12 @@ Public Class wtForm
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
         con.Close()
     End Sub
+
+    'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
+    'tcp:5.187.213.233,1433\sqlhome
     Private Sub sqlConnect()
         Try
-            con.ConnectionString = "Data Source=tcp:5.187.201.97,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
+            con.ConnectionString = "Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
             If con.State = ConnectionState.Open Then
                 con.Close()
             End If
