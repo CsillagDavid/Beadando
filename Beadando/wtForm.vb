@@ -13,15 +13,11 @@ Public Class wtForm
         sqlConnection = New sqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
-        autentCheck()
-        sqlConnect()
-        chkJsg(user.role)
+        chkJsg()
     End Sub
-    Private Sub autentCheck()
-        Select Case user.role
 
-    Private Sub chkJsg(logined As String) 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
-        Select Case logined
+    Private Sub chkJsg() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
+        Select Case user.role
             Case "Admin"
                 getFszhLtb()
             Case "Felhasznalo"
@@ -51,9 +47,9 @@ Public Class wtForm
             txtMunkaidoOsszes.Text = osszeg & " óra"
         Catch ex As Exception
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
-            'MsgBox("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
+
     Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
         dgvTabla.DataSource = sqlCmd("SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
@@ -66,12 +62,14 @@ Public Class wtForm
         dgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
         getRltMko()
     End Sub
+
     Private Sub getFszh() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
         dgvTabla.DataSource = sqlCmd("SELECT nev,email,munkaido FROM Felhasznalok")
         dgvTabla.Columns(0).HeaderText = "Név"
         dgvTabla.Columns(1).HeaderText = "E-Mail"
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
     End Sub
+
     Private Function sqlCmd(command As String) 'A táblázat feltöltése parancs megadásával
         dgvTabla.Columns.Clear()
         cmd = con.CreateCommand()
@@ -90,20 +88,6 @@ Public Class wtForm
         ltbFelhasznalok.ValueMember = "email"
     End Sub
 
-    'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-    'tcp:5.187.213.233,1433\sqlhome
-    Private Sub sqlConnect()
-        Try
-            con.ConnectionString = "Data Source=5.187.196.255,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-            If con.State = ConnectionState.Open Then
-                con.Close()
-            End If
-            con.Open()
-        Catch ex As Exception
-            MsgBox("SQL Kapcsolat meghiúsult!")
-        End Try
-    End Sub
-
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click
         getFszh()
     End Sub
@@ -112,6 +96,7 @@ Public Class wtForm
         editedRows.ForEach(Sub(i) saveOrUpdate(dgvTabla.Rows.Item(i).Cells))
         editedRows.Clear()
     End Sub
+
     Private Sub saveOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -124,6 +109,7 @@ Public Class wtForm
         sqlConnection.sqlClose()
         MsgBox("Edited: " & Cells.Item(0).Value & " " & Cells.Item(1).Value & " " & Cells.Item(2).Value & " " & Cells.Item(3).Value)
     End Sub
+
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         If Not dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(dgvTabla.Rows.Item(e.RowIndex).Tag) Then
             If Not editedRows.Contains(e.RowIndex) Then
@@ -131,15 +117,15 @@ Public Class wtForm
             End If
         End If
         dgvTabla.Rows.Item(e.RowIndex).Tag = ""
-    End Sub
-
-    Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         getRltMko()
     End Sub
 
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
         getFszhMko(ltbFelhasznalok.SelectedValue)
+    End Sub
+
     Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
         dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
     End Sub
+
 End Class
