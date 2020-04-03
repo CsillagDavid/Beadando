@@ -30,7 +30,7 @@ Public Class sqlConn
         Try
             con.ConnectionString = ConfigurationManager.ConnectionStrings("sqlConnection").ConnectionString
         Catch ex As Exception
-
+            MsgBox("Csatlakozás meghiúsult!")
         End Try
     End Function
 

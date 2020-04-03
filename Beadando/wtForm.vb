@@ -43,7 +43,8 @@ Public Class wtForm
             Next
             txtMunkaidoOsszes.Text = osszeg & " óra"
         Catch ex As Exception
-            MsgBox("A munkaidő kiszámításában hiba lépett fel!")
+            Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
+            'MsgBox("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
     Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
@@ -52,6 +53,7 @@ Public Class wtForm
                             ON M.FelhasznaloID = F.id
                             WHERE F.Email = " & "'" & email & "'")
         dgvTabla.Columns(0).HeaderText = "Dátum"
+        dgvTabla.Columns(0).ReadOnly = True
         dgvTabla.Columns(1).HeaderText = "Kezdés"
         dgvTabla.Columns(2).HeaderText = "Befejezés"
         dgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
