@@ -8,7 +8,7 @@ Public Class wtForm
     Public Property user = New User()
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Bejelentkezés.ShowDialog()
+        Login.ShowDialog()
         sqlConnect()
         autentCheck(user.role)
     End Sub
