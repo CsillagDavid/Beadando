@@ -1,5 +1,4 @@
-﻿
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class wtForm
 
@@ -17,9 +16,9 @@ Public Class wtForm
     End Sub
     Private Sub autentCheck()
         Select Case user.role
-            Case "admin"
+            Case "Admin"
 
-            Case "user"
+            Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
                 lblFelhasznalok.Visible = False
                 ltbFelhasznalok.Visible = False
@@ -32,7 +31,6 @@ Public Class wtForm
                 szamolHavi()
         End Select
     End Sub
-
     Private Sub szamolNapi()
         Try
             For index = 0 To dgvTabla.Rows.Count - 2
@@ -64,7 +62,7 @@ Public Class wtForm
         cmd.CommandText = "SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE F.Email = " & user.email
+                            WHERE F.Email = " & "'" & email & "'"
         cmd.ExecuteNonQuery()
         Dim dt As New DataTable()
         Dim sda As New SqlDataAdapter(cmd)
