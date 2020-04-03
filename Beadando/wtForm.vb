@@ -16,6 +16,13 @@ Public Class wtForm
         Select Case logined
             Case "Admin"
                 felhasznaloLista()
+                'ltbFelhasznalok.Enabled = True
+                'lblFelhasznalok.Visible = True
+                'ltbFelhasznalok.Visible = True
+                'btnFelhasznalok.Enabled = True
+                'btnFelhasznalok.Visible = True
+                'btnMunkaidoleker.Enabled = True
+                'btnMunkaidoleker.Visible = True
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
                 lblFelhasznalok.Visible = False
@@ -25,7 +32,6 @@ Public Class wtForm
                 btnMunkaidoleker.Enabled = False
                 btnMunkaidoleker.Visible = False
                 getMunkaido(user.email)
-
         End Select
     End Sub
     Private Sub szamolNapi()
@@ -123,14 +129,12 @@ Public Class wtForm
     End Sub
 
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
-        MsgBox("Edited!")
+        'MsgBox("Edited!")
+        szamolNapi()
+        szamolHavi()
     End Sub
 
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
-        dgvTabla.Columns.Clear()
-        Dim email, nev As String
-        email = ltbFelhasznalok.SelectedValue
-        nev = ltbFelhasznalok.ValueMember
-        getMunkaido(email)
+        getMunkaido(ltbFelhasznalok.SelectedValue)
     End Sub
 End Class
