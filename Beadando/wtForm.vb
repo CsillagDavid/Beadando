@@ -7,7 +7,7 @@ Public Class wtForm
     Public Property user = New User()
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Bejelentkezés.ShowDialog()
+        Login.ShowDialog()
         sqlConnect()
         autentCheck(user.role)
     End Sub
@@ -107,5 +107,9 @@ Public Class wtForm
 
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
 
+    End Sub
+
+    Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
+        MsgBox("Edited!")
     End Sub
 End Class
