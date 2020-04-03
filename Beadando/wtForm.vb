@@ -43,7 +43,7 @@ Public Class wtForm
             Next
             txtMunkaidoOsszes.Text = osszeg & " óra"
         Catch ex As Exception
-            MsgBox("Havi számlálóban hiba lépett fel!")
+            MsgBox("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
     Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
