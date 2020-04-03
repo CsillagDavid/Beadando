@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports Beadando.sqlConn
 
 Public Class wtForm
 
@@ -9,20 +10,13 @@ Public Class wtForm
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
         sqlConnect()
-        autentCheck(user.role)
+        chkJsg(user.role)
     End Sub
 
-    Private Sub autentCheck(logined As String)
+    Private Sub chkJsg(logined As String) 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
         Select Case logined
             Case "Admin"
-                felhasznaloLista()
-                'ltbFelhasznalok.Enabled = True
-                'lblFelhasznalok.Visible = True
-                'ltbFelhasznalok.Visible = True
-                'btnFelhasznalok.Enabled = True
-                'btnFelhasznalok.Visible = True
-                'btnMunkaidoleker.Enabled = True
-                'btnMunkaidoleker.Visible = True
+                getFszhLtb()
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
                 lblFelhasznalok.Visible = False
@@ -31,22 +25,15 @@ Public Class wtForm
                 btnFelhasznalok.Visible = False
                 btnMunkaidoleker.Enabled = False
                 btnMunkaidoleker.Visible = False
-                getMunkaido(user.email)
+                getFszhMko(user.email)
         End Select
     End Sub
-    Private Sub szamolNapi()
+
+    Private Sub getRltMko() 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
         Try
             For index = 0 To dgvTabla.Rows.Count - 2
                 dgvTabla.Item(3, index).Value = dgvTabla.Item(2, index).Value - dgvTabla.Item(1, index).Value
             Next
-        Catch ex As Exception
-            MsgBox("Napi számláló megdöglött")
-        End Try
-
-    End Sub
-
-    Private Sub szamolHavi()
-        Try
             Dim osszeg As Decimal
             Dim akt As Decimal
             For index = 0 To dgvTabla.Rows.Count - 2
@@ -56,52 +43,40 @@ Public Class wtForm
             Next
             txtMunkaidoOsszes.Text = osszeg & " óra"
         Catch ex As Exception
-            MsgBox("Havi számláló megdöglött")
+            MsgBox("Havi számlálóban hiba lépett fel!")
         End Try
     End Sub
-    Private Sub getMunkaido(email As String)
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+    Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
+        dgvTabla.DataSource = sqlCmd("SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE F.Email = " & "'" & email & "'"
-        cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
-        dgvTabla.DataSource = dt
+                            WHERE F.Email = " & "'" & email & "'")
         dgvTabla.Columns(0).HeaderText = "Dátum"
         dgvTabla.Columns(1).HeaderText = "Kezdés"
         dgvTabla.Columns(2).HeaderText = "Befejezés"
         dgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
-        szamolNapi()
-        szamolHavi()
+        getRltMko()
     End Sub
-    Private Sub loadFelhasznalok()
-        dgvTabla.Columns.Clear()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT nev,email,munkaido FROM Felhasznalok"
-        cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
-        dgvTabla.DataSource = dt
+    Private Sub getFszh() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
+        dgvTabla.DataSource = sqlCmd("SELECT nev,email,munkaido FROM Felhasznalok")
         dgvTabla.Columns(0).HeaderText = "Név"
         dgvTabla.Columns(1).HeaderText = "E-Mail"
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
     End Sub
-
-    Private Sub felhasznaloLista()
+    Private Function sqlCmd(command As String) 'A táblázat feltöltése parancs megadásával
+        dgvTabla.Columns.Clear()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT nev,email FROM Felhasznalok"
+        cmd.CommandText = command
         cmd.ExecuteNonQuery()
         Dim dt As New DataTable()
         Dim sda As New SqlDataAdapter(cmd)
         sda.Fill(dt)
-        ltbFelhasznalok.DataSource = dt
+        Return dt
+    End Function
+
+    Private Sub getFszhLtb() 'A felhasználók kiválasztásához szükséges ListBox feltöltése
+        ltbFelhasznalok.DataSource = sqlCmd("SELECT nev,email FROM Felhasznalok")
         ltbFelhasznalok.DisplayMember = "nev"
         ltbFelhasznalok.ValueMember = "email"
     End Sub
@@ -121,7 +96,7 @@ Public Class wtForm
     End Sub
 
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click
-        loadFelhasznalok()
+        getFszh()
     End Sub
 
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
@@ -129,12 +104,10 @@ Public Class wtForm
     End Sub
 
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
-        'MsgBox("Edited!")
-        szamolNapi()
-        szamolHavi()
+        getRltMko()
     End Sub
 
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
-        getMunkaido(ltbFelhasznalok.SelectedValue)
+        getFszhMko(ltbFelhasznalok.SelectedValue)
     End Sub
 End Class
