@@ -1,5 +1,4 @@
 ﻿Imports System.Data.SqlClient
-Imports Beadando.sqlConn
 
 Public Class wtForm
 
@@ -14,8 +13,6 @@ Public Class wtForm
         sqlConnection = New sqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
-        autentCheck()
-        sqlConnect()
         chkJsg(user.role)
     End Sub
 
@@ -85,21 +82,21 @@ Public Class wtForm
         dgvTabla.Columns(1).HeaderText = "E-Mail"
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
         con.Close()
-        End Sub
+    End Function
 
     'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
     'tcp:5.187.213.233,1433\sqlhome
-    Private Sub sqlConnect()
-        Try
-            con.ConnectionString = "Data Source=5.187.196.255,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-            If con.State = ConnectionState.Open Then
-                con.Close()
-            End If
-            con.Open()
-        Catch ex As Exception
-            MsgBox("SQL Kapcsolat meghiúsult!")
-        End Try
-    End Sub
+    'Private Sub sqlConnect()
+    '    Try
+    '        con.ConnectionString = "Data Source=5.187.196.255,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
+    '        If con.State = ConnectionState.Open Then
+    '            con.Close()
+    '        End If
+    '        con.Open()
+    '    Catch ex As Exception
+    '        MsgBox("SQL Kapcsolat meghiúsult!")
+    '    End Try
+    'End Sub
 
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click
         getFszh()
@@ -128,14 +125,12 @@ Public Class wtForm
             End If
         End If
         dgvTabla.Rows.Item(e.RowIndex).Tag = ""
-    End Sub
-
-    Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         getRltMko()
     End Sub
 
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
         getFszhMko(ltbFelhasznalok.SelectedValue)
+    End Sub
     Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
         dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
     End Sub
