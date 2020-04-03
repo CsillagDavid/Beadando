@@ -38,7 +38,7 @@ Partial Class wtForm
         'lblFelhasznalok
         '
         Me.lblFelhasznalok.AutoSize = True
-        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 119)
+        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 67)
         Me.lblFelhasznalok.Name = "lblFelhasznalok"
         Me.lblFelhasznalok.Size = New System.Drawing.Size(72, 13)
         Me.lblFelhasznalok.TabIndex = 0
@@ -47,7 +47,7 @@ Partial Class wtForm
         'ltbFelhasznalok
         '
         Me.ltbFelhasznalok.FormattingEnabled = True
-        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 135)
+        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 83)
         Me.ltbFelhasznalok.Name = "ltbFelhasznalok"
         Me.ltbFelhasznalok.Size = New System.Drawing.Size(156, 160)
         Me.ltbFelhasznalok.TabIndex = 1
@@ -73,7 +73,7 @@ Partial Class wtForm
         '
         'btnMunkaidoleker
         '
-        Me.btnMunkaidoleker.Location = New System.Drawing.Point(12, 70)
+        Me.btnMunkaidoleker.Location = New System.Drawing.Point(15, 249)
         Me.btnMunkaidoleker.Name = "btnMunkaidoleker"
         Me.btnMunkaidoleker.Size = New System.Drawing.Size(156, 46)
         Me.btnMunkaidoleker.TabIndex = 6
