@@ -5,18 +5,18 @@ Public Class wtForm
 
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
+    Dim sqlConnection As sqlConn
     Public Property user = New User()
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
-        sqlConnect()
-        autentCheck(user.role)
+        sqlConnection = New sqlConn()
+        con = sqlConnection.con
+        cmd = sqlConnection.cmd
+        autentCheck()
     End Sub
-
-    'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-    'tcp:5.187.213.233,1433\sqlhome
-    Private Sub autentCheck(logined As String)
-        Select Case logined
+    Private Sub autentCheck()
+        Select Case user.role
             Case "admin"
 
             Case "user"
@@ -27,10 +27,9 @@ Public Class wtForm
                 btnFelhasznalok.Visible = False
                 btnMunkaidoleker.Enabled = False
                 btnMunkaidoleker.Visible = False
-                getMunkaido(2)
+                getMunkaido()
                 szamolNapi()
                 szamolHavi()
-
         End Select
     End Sub
 
@@ -59,13 +58,13 @@ Public Class wtForm
             MsgBox("Havi számláló megdöglött")
         End Try
     End Sub
-    Private Sub getMunkaido(id As Integer)
+    Private Sub getMunkaido()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE M.FelhasznaloID = " & id
+                            WHERE F.Email = " & user.email
         cmd.ExecuteNonQuery()
         Dim dt As New DataTable()
         Dim sda As New SqlDataAdapter(cmd)
@@ -90,17 +89,6 @@ Public Class wtForm
         dgvTabla.Columns(1).HeaderText = "E-Mail"
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
         con.Close()
-    End Sub
-    Private Sub sqlConnect()
-        Try
-            con.ConnectionString = "Data Source=tcp:5.187.201.97,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-            If con.State = ConnectionState.Open Then
-                con.Close()
-            End If
-            con.Open()
-        Catch ex As Exception
-            MsgBox("SQL Kapcsolat meghiúsult!")
-        End Try
     End Sub
 
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click

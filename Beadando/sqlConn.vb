@@ -2,9 +2,6 @@
 Imports Nancy.Json
 Imports System.Configuration
 Public Class sqlConn
-
-    'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-    'tcp:5.187.213.233,1433\sqlhome
     Public con As New SqlConnection
     Public cmd As New SqlCommand
 
@@ -15,22 +12,34 @@ Public Class sqlConn
 
     Protected Overrides Sub Finalize()
         If con.State = ConnectionState.Open Then
-            con.Close()
+            Try
+                con.Close()
+            Catch ex As Exception
+            End Try
         End If
     End Sub
 
-    Public Sub sqlConnect()
+    Private Sub sqlConnect()
         If con.State = ConnectionState.Open Then
-            con.Close()
+            Try
+                con.Close()
+            Catch ex As Exception
+            End Try
         End If
-        con.Open()
+        Try
+            con.Open()
+        Catch ex As Exception
+            MsgBox("Az SQL kapcsolat felállítása sikertelen!")
+            Application.Exit()
+        End Try
     End Sub
 
     Private Function readConnectionString()
         Try
             con.ConnectionString = ConfigurationManager.ConnectionStrings("sqlConnection").ConnectionString
         Catch ex As Exception
-
+            MsgBox("Az sql elérési út nem található!")
+            Application.Exit()
         End Try
     End Function
 
