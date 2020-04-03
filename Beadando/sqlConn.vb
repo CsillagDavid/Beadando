@@ -19,19 +19,23 @@ Public Class sqlConn
         End If
     End Sub
 
-    Private Sub sqlConnect()
-        If con.State = ConnectionState.Open Then
-            Try
-                con.Close()
-            Catch ex As Exception
-            End Try
-        End If
+    Public Sub sqlConnect()
+        sqlClose()
         Try
             con.Open()
         Catch ex As Exception
             MsgBox("Az SQL kapcsolat felállítása sikertelen!")
             Application.Exit()
         End Try
+    End Sub
+
+    Public Sub sqlClose()
+        If con.State = ConnectionState.Open Then
+            Try
+                con.Close()
+            Catch ex As Exception
+            End Try
+        End If
     End Sub
 
     Private Function readConnectionString()
