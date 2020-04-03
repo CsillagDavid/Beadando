@@ -51,15 +51,16 @@ Public Class wtForm
     End Sub
 
     Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
+        Dim ct As Integer
         dgvTabla.DataSource = sqlCmd("SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
                             WHERE F.Email = " & "'" & email & "'")
         dgvTabla.Columns(0).HeaderText = "Dátum"
-        dgvTabla.Columns(0).ReadOnly = True
         dgvTabla.Columns(1).HeaderText = "Kezdés"
         dgvTabla.Columns(2).HeaderText = "Befejezés"
         dgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
+        dgvTabla.Columns(3).ReadOnly = True
         getRltMko()
     End Sub
 
@@ -115,9 +116,9 @@ Public Class wtForm
             If Not editedRows.Contains(e.RowIndex) Then
                 editedRows.Add(e.RowIndex)
             End If
+            getRltMko()
         End If
         dgvTabla.Rows.Item(e.RowIndex).Tag = ""
-        getRltMko()
     End Sub
 
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
