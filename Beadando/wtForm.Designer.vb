@@ -32,6 +32,7 @@ Partial Class wtForm
         Me.btnMunkaidoossz = New System.Windows.Forms.Button()
         Me.txtMunkaidoOsszes = New System.Windows.Forms.TextBox()
         Me.lblMunkaidoOsszes = New System.Windows.Forms.Label()
+        Me.chxAkt = New System.Windows.Forms.CheckBox()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -109,7 +110,7 @@ Partial Class wtForm
         '
         'txtMunkaidoOsszes
         '
-        Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(270, 541)
+        Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(282, 541)
         Me.txtMunkaidoOsszes.Name = "txtMunkaidoOsszes"
         Me.txtMunkaidoOsszes.ReadOnly = True
         Me.txtMunkaidoOsszes.Size = New System.Drawing.Size(166, 20)
@@ -120,15 +121,26 @@ Partial Class wtForm
         Me.lblMunkaidoOsszes.AutoSize = True
         Me.lblMunkaidoOsszes.Location = New System.Drawing.Point(183, 544)
         Me.lblMunkaidoOsszes.Name = "lblMunkaidoOsszes"
-        Me.lblMunkaidoOsszes.Size = New System.Drawing.Size(81, 13)
+        Me.lblMunkaidoOsszes.Size = New System.Drawing.Size(93, 13)
         Me.lblMunkaidoOsszes.TabIndex = 11
-        Me.lblMunkaidoOsszes.Text = "Havi munkaidő:"
+        Me.lblMunkaidoOsszes.Text = "Összes munkaidő:"
+        '
+        'chxAkt
+        '
+        Me.chxAkt.AutoSize = True
+        Me.chxAkt.Location = New System.Drawing.Point(12, 560)
+        Me.chxAkt.Name = "chxAkt"
+        Me.chxAkt.Size = New System.Drawing.Size(205, 17)
+        Me.chxAkt.TabIndex = 12
+        Me.chxAkt.Text = "Csak az aktuális hónap megjelenítése"
+        Me.chxAkt.UseVisualStyleBackColor = True
         '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(954, 585)
+        Me.Controls.Add(Me.chxAkt)
         Me.Controls.Add(Me.lblMunkaidoOsszes)
         Me.Controls.Add(Me.txtMunkaidoOsszes)
         Me.Controls.Add(Me.btnMunkaidoossz)
@@ -157,4 +169,5 @@ Partial Class wtForm
     Friend WithEvents btnMunkaidoossz As Button
     Friend WithEvents txtMunkaidoOsszes As TextBox
     Friend WithEvents lblMunkaidoOsszes As Label
+    Friend WithEvents chxAkt As CheckBox
 End Class
