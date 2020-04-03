@@ -55,21 +55,23 @@ Public Class wtForm
     End Sub
 
     Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
+        Dim command As String
         If chxAkt.Checked Then
             Dim yr, mh As String
             yr = DateTime.Now.ToString("yyyy/MM")
             Dim newDate As DateTime = DateTime.Now.AddMonths(1)
             mh = newDate.ToString("yyyy/MM")
-            dgvTabla.DataSource = sqlCmd("SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & yr & ". 01' AND M.Datum <= '" & mh & ". 01'")
+                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & yr & ". 01' AND M.Datum <= '" & mh & ". 01'"
         Else
-            dgvTabla.DataSource = sqlCmd("SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & email & "'")
+                            WHERE F.Email = '" & email & "'"
         End If
+        dgvTabla.DataSource = sqlCmd(command)
         dgvTabla.Columns(0).Visible = False
         dgvTabla.Columns(1).HeaderText = "Dátum"
         dgvTabla.Columns(2).HeaderText = "Kezdés"
