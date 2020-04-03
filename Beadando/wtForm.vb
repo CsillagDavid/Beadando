@@ -73,6 +73,7 @@ Public Class wtForm
         szamolHavi()
     End Sub
     Private Sub loadFelhasznalok()
+        dgvTabla.Columns.Clear()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT nev,email,munkaido FROM Felhasznalok"
