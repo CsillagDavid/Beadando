@@ -1,17 +1,24 @@
 ﻿Imports System.Data.SqlClient
-Imports Beadando.sqlConn
 
 Public Class wtForm
 
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
+    Dim sqlConnection As sqlConn
+    Dim editedRows As List(Of Integer) = New List(Of Integer)
     Public Property user = New User()
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
+        sqlConnection = New sqlConn()
+        con = sqlConnection.con
+        cmd = sqlConnection.cmd
+        autentCheck()
         sqlConnect()
         chkJsg(user.role)
     End Sub
+    Private Sub autentCheck()
+        Select Case user.role
 
     Private Sub chkJsg(logined As String) 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
         Select Case logined
@@ -102,7 +109,28 @@ Public Class wtForm
     End Sub
 
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
-
+        editedRows.ForEach(Sub(i) saveOrUpdate(dgvTabla.Rows.Item(i).Cells))
+        editedRows.Clear()
+    End Sub
+    Private Sub saveOrUpdate(Cells As DataGridViewCellCollection)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "saveOrUpdateMunkaidok"
+        cmd.Parameters.AddWithValue("date", Cells.Item(0).Value)
+        cmd.Parameters.AddWithValue("beginTime", Cells.Item(1).Value)
+        cmd.Parameters.AddWithValue("endTime", Cells.Item(2).Value)
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+        MsgBox("Edited: " & Cells.Item(0).Value & " " & Cells.Item(1).Value & " " & Cells.Item(2).Value & " " & Cells.Item(3).Value)
+    End Sub
+    Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
+        If Not dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(dgvTabla.Rows.Item(e.RowIndex).Tag) Then
+            If Not editedRows.Contains(e.RowIndex) Then
+                editedRows.Add(e.RowIndex)
+            End If
+        End If
+        dgvTabla.Rows.Item(e.RowIndex).Tag = ""
     End Sub
 
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
@@ -111,5 +139,7 @@ Public Class wtForm
 
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
         getFszhMko(ltbFelhasznalok.SelectedValue)
+    Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
+        dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
     End Sub
 End Class

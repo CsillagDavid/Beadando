@@ -24,8 +24,9 @@ Public Class Login
             wtForm.user.email = reader.Item(1)
             wtForm.user.role = reader.Item(2)
             Me.Close()
+        Else
+            MsgBox("Hibás felhasználónév vagy jelszó!", , "Hiba!")
         End If
-        MsgBox("Hibás felhasználónév vagy jelszó!", , "Hiba!")
         reader.Close()
     End Sub
 
@@ -35,14 +36,6 @@ Public Class Login
             Application.Exit()
             End
         End If
-    End Sub
-
-    Private Sub sqlConnect()
-        sqlConnection.con.ConnectionString = "Data Source=tcp:5.187.201.97,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
-        If sqlConnection.con.State = ConnectionState.Open Then
-            sqlConnection.con.Close()
-        End If
-        sqlConnection.con.Open()
     End Sub
 
     Private Sub LoginForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
