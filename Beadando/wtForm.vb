@@ -91,7 +91,7 @@ Public Class wtForm
     'tcp:5.187.213.233,1433\sqlhome
     Private Sub sqlConnect()
         Try
-            con.ConnectionString = "Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
+            con.ConnectionString = "Data Source=5.187.196.255,1433;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
             If con.State = ConnectionState.Open Then
                 con.Close()
             End If
