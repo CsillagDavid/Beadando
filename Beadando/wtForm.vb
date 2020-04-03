@@ -15,7 +15,7 @@ Public Class wtForm
     Private Sub autentCheck(logined As String)
         Select Case logined
             Case "Admin"
-
+                felhasznaloLista()
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
                 lblFelhasznalok.Visible = False
@@ -25,8 +25,7 @@ Public Class wtForm
                 btnMunkaidoleker.Enabled = False
                 btnMunkaidoleker.Visible = False
                 getMunkaido(user.email)
-                szamolNapi()
-                szamolHavi()
+
         End Select
     End Sub
     Private Sub szamolNapi()
@@ -70,7 +69,8 @@ Public Class wtForm
         dgvTabla.Columns(1).HeaderText = "Kezdés"
         dgvTabla.Columns(2).HeaderText = "Befejezés"
         dgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
-        con.Close()
+        szamolNapi()
+        szamolHavi()
     End Sub
     Private Sub loadFelhasznalok()
         cmd = con.CreateCommand()
@@ -84,7 +84,19 @@ Public Class wtForm
         dgvTabla.Columns(0).HeaderText = "Név"
         dgvTabla.Columns(1).HeaderText = "E-Mail"
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
-        con.Close()
+    End Sub
+
+    Private Sub felhasznaloLista()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.Text
+        cmd.CommandText = "SELECT nev,email FROM Felhasznalok"
+        cmd.ExecuteNonQuery()
+        Dim dt As New DataTable()
+        Dim sda As New SqlDataAdapter(cmd)
+        sda.Fill(dt)
+        ltbFelhasznalok.DataSource = dt
+        ltbFelhasznalok.DisplayMember = "nev"
+        ltbFelhasznalok.ValueMember = "email"
     End Sub
 
     'connectionString="Data Source=GAMER-PC\SQLHOME;Initial Catalog=wtDB;Persist Security Info=True;User ID=sa;Password=2SS3BJSDbu"
@@ -111,5 +123,13 @@ Public Class wtForm
 
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         MsgBox("Edited!")
+    End Sub
+
+    Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
+        dgvTabla.Columns.Clear()
+        Dim email, nev As String
+        email = ltbFelhasznalok.SelectedValue
+        nev = ltbFelhasznalok.ValueMember
+        getMunkaido(email)
     End Sub
 End Class
