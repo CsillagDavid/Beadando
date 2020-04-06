@@ -14,6 +14,7 @@ Public Class wtForm
         con = sqlConnection.con
         cmd = sqlConnection.cmd
         chkJsg()
+        initYearMonth()
     End Sub
 
     Private Sub chkJsg() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
@@ -154,34 +155,93 @@ Public Class wtForm
     End Sub
 
     Private Sub getDate()
-        Dim cmsCount As Integer
-        Dim rowCount As Integer
-        cmsCount = dgvTabla.Columns.Count
-        rowCount = dgvTabla.Rows.Count
-        dgvTabla.Columns(cmsCount - 4).ReadOnly = False
-        dgvTabla.Item(cmsCount - 4, rowCount - 1).Value = DateTime.Now.ToString("yyyy/MM/dd") & "."
-        dgvTabla.Columns(cmsCount - 4).ReadOnly = True
+        Try
+            Dim cmsCount As Integer
+            Dim rowCount As Integer
+            cmsCount = dgvTabla.Columns.Count
+            rowCount = dgvTabla.Rows.Count
+            dgvTabla.Columns(cmsCount - 4).ReadOnly = False
+            dgvTabla.Item(cmsCount - 4, rowCount - 1).Value = DateTime.Now.ToString("yyyy/MM/dd") & "."
+            dgvTabla.Columns(cmsCount - 4).ReadOnly = True
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 
+    Private Sub initYearMonth()
+        Dim yr, mh As Integer
+        yr = DateTime.Now.Year
+        mh = 12
+        cmbHonap.Items.Add("Összes")
+        For aktYr = yr To 2000 Step -1
+            cmbEv.Items.Add(aktYr)
+        Next
+        For aktMh = 1 To mh
+            cmbHonap.Items.Add(aktMh)
+        Next
+        cmbEv.SelectedIndex = 0
+        cmbHonap.SelectedIndex = 0
+    End Sub
+
+    Private Sub setupTable()
+        dgvTabla.DataSource = sqlCmd("SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
+                                    INNER JOIN Munkaidok M
+                                    ON F.id = M.FelhasznaloID")
+        dgvTabla.Columns(0).HeaderText = "Név"
+        dgvTabla.Columns(1).HeaderText = "E-Mail"
+        dgvTabla.Columns(2).HeaderText = "Munkaidő"
+        dgvTabla.Columns(3).HeaderText = "Dátum"
+        dgvTabla.Columns(4).HeaderText = "Kezdő idő"
+        dgvTabla.Columns(5).HeaderText = "Befejező idő"
+        dgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
+        dgvTabla.Columns(3).Visible = False
+        dgvTabla.Columns(4).Visible = False
+        dgvTabla.Columns(5).Visible = False
+        'txtMunkaidoOsszes.Visible = False
+        'lblMunkaidoOsszes.Visible = False
+        getRltMko()
+    End Sub
     Private Sub btnMunkaidoossz_Click(sender As Object, e As EventArgs) Handles btnMunkaidoossz.Click
-        Dim cmsCount, rowCount As Integer
-        Dim year, aktdate As String
-        year = DateTime.Now.Year.ToString()
+        setupTable()
+        Dim res, selYr, selMh, cmsCount, rowCount, miSum As Integer
+        Dim allMh = ""
+        Dim aktDate As DateTime
         cmsCount = dgvTabla.Columns.Count
         rowCount = dgvTabla.Rows.Count
-        MsgBox(DateInterval.Day.ToString())
 
-        'For i = 1 To rowCount - 1
-        '    For j = 1 To 12
-        '        If j <= 9 Then
-        '            aktdate = year & ". 0" & j & "."
-        '        Else
-        '            aktdate = year & ". " & j & "."
-        '        End If
-        '        If (dgvTabla.Item(cmsCount - 4, i).ToString() >= aktdate & " 01.") And (dgvTabla.Item(cmsCount - 4, i).ToString() <= aktdate & " 31.") Then
-        '            MsgBox(j)
-        '        End If
-        '    Next
-        'Next
+        Dim dt As New DataTable()
+        dt.Columns.Add("Név")
+        dt.Columns.Add("Előírt óraszám")
+        dt.Columns.Add("Teljesített óraszám")
+        dt.Columns.Add("Különbség")
+        If Int32.TryParse(cmbEv.SelectedItem.ToString(), res) Then
+            selYr = Int32.Parse(cmbEv.SelectedItem.ToString())
+        Else
+            selYr = DateTime.Now.Year
+        End If
+        If Int32.TryParse(cmbHonap.SelectedItem.ToString(), res) Then
+            selMh = Int32.Parse(cmbHonap.SelectedItem.ToString())
+        Else
+            allMh = cmbHonap.SelectedItem.ToString()
+        End If
+        For index = 1 To rowCount - 1
+            aktDate = Convert.ToDateTime(dgvTabla.Item(cmsCount - 4, index).Value)
+            If aktDate.Year = selYr Then
+                If allMh = "Összes" Then
+                    miSum += dgvTabla.Item(cmsCount - 1, index).Value
+                End If
+                If aktDate.Month = selMh Then
+                    If Int32.TryParse(dgvTabla.Item(cmsCount - 1, index).Value, res) Then
+                        miSum += dgvTabla.Item(cmsCount - 1, index).Value
+                    Else
+                        miSum = 0
+                    End If
+                End If
+
+
+            End If
+        Next
+        txtMunkaidoOsszes.Text = miSum
     End Sub
 End Class
