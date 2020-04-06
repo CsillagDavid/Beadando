@@ -48,6 +48,8 @@ Public Class wtForm
                     mkoSum += Decimal.Parse(tabla.Item(cmsCount - 1, index).Value)
                 End If
             Next
+            txtMunkaidoOsszes.Visible = True
+            lblMunkaidoOsszes.Visible = True
             txtMunkaidoOsszes.Text = mkoSum & " óra"
             tabla.Columns(cmsCount - 1).ReadOnly = True
         Catch ex As Exception
@@ -238,13 +240,14 @@ Public Class wtForm
             aktDate = Convert.ToDateTime(dgvUj.Item(cmsCount - 4, index).Value)
             If aktDate.Year = selYr Then
                 If dgvTabla.Rows.Count = 1 Then
+                    miSum = 0
+                    mkido = 0
                     If Int32.TryParse((dgvUj.Item(cmsCount - 5, index).Value * munkanap), res) Then
                         mkido = Int32.Parse(dgvUj.Item(cmsCount - 5, index).Value * munkanap)
                     End If
                     If allMh = "Összes" Then
                         miSum += dgvUj.Item(cmsCount - 1, index).Value
-                    End If
-                    If aktDate.Month = selMh Then
+                    ElseIf aktDate.Month = selMh Then
                         If Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value, res) Then
                             miSum += dgvUj.Item(cmsCount - 1, index).Value
                         End If
@@ -264,18 +267,29 @@ Public Class wtForm
                 Else
                     If nevLista.Contains(dgvUj.Item(cmsCount - 7, index).Value.ToString()) Then
                         If Int32.TryParse(dgvTabla.Item(3, lsindex).Value.ToString(), res) And Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value.ToString(), res) Then
-                            dgvTabla.Item(3, lsindex).Value = Int32.Parse(dgvTabla.Item(3, lsindex).Value.ToString()) + Int32.Parse(dgvUj.Item(cmsCount - 1, index).Value.ToString())
+                            miSum = 0
+                            mkido = 0
+                            If allMh = "Összes" Then
+                                miSum += dgvUj.Item(cmsCount - 1, index).Value
+                            ElseIf aktDate.Month = selMh Then
+                                If Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value, res) Then
+                                    miSum += dgvUj.Item(cmsCount - 1, index).Value
+                                End If
+                            Else
+                                miSum = 0
+                            End If
+                            dgvTabla.Item(3, lsindex).Value = Int32.Parse(dgvTabla.Item(3, lsindex).Value.ToString()) + miSum
                             If Int32.TryParse(dgvTabla.Item(4, lsindex).Value.ToString(), res) Then
                                 dgvTabla.Item(4, lsindex).Value = Int32.Parse(dgvTabla.Item(3, lsindex).Value) - Int32.Parse(dgvTabla.Item(2, lsindex).Value)
                             End If
-
                         End If
                     Else
+                        miSum = 0
+                        mkido = 0
                         nevLista.Add(dgvUj.Item(cmsCount - 7, index).Value.ToString())
                         If allMh = "Összes" Then
                             miSum += dgvUj.Item(cmsCount - 1, index).Value
-                        End If
-                        If aktDate.Month = selMh Then
+                        ElseIf aktDate.Month = selMh Then
                             If Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value, res) Then
                                 miSum += dgvUj.Item(cmsCount - 1, index).Value
                             End If
