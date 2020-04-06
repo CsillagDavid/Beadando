@@ -164,6 +164,24 @@ Public Class wtForm
     End Sub
 
     Private Sub btnMunkaidoossz_Click(sender As Object, e As EventArgs) Handles btnMunkaidoossz.Click
+        Dim cmsCount, rowCount As Integer
+        Dim year, aktdate As String
+        year = DateTime.Now.Year.ToString()
+        cmsCount = dgvTabla.Columns.Count
+        rowCount = dgvTabla.Rows.Count
+        MsgBox(DateInterval.Day.ToString())
 
+        'For i = 1 To rowCount - 1
+        '    For j = 1 To 12
+        '        If j <= 9 Then
+        '            aktdate = year & ". 0" & j & "."
+        '        Else
+        '            aktdate = year & ". " & j & "."
+        '        End If
+        '        If (dgvTabla.Item(cmsCount - 4, i).ToString() >= aktdate & " 01.") And (dgvTabla.Item(cmsCount - 4, i).ToString() <= aktdate & " 31.") Then
+        '            MsgBox(j)
+        '        End If
+        '    Next
+        'Next
     End Sub
 End Class
