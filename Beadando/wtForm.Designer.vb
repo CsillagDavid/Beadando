@@ -33,13 +33,19 @@ Partial Class wtForm
         Me.txtMunkaidoOsszes = New System.Windows.Forms.TextBox()
         Me.lblMunkaidoOsszes = New System.Windows.Forms.Label()
         Me.chxAkt = New System.Windows.Forms.CheckBox()
+        Me.cmbEv = New System.Windows.Forms.ComboBox()
+        Me.cmbHonap = New System.Windows.Forms.ComboBox()
+        Me.lblEv = New System.Windows.Forms.Label()
+        Me.lvlHonap = New System.Windows.Forms.Label()
+        Me.dgvUj = New System.Windows.Forms.DataGridView()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lblFelhasznalok
         '
         Me.lblFelhasznalok.AutoSize = True
-        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 67)
+        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 128)
         Me.lblFelhasznalok.Name = "lblFelhasznalok"
         Me.lblFelhasznalok.Size = New System.Drawing.Size(72, 13)
         Me.lblFelhasznalok.TabIndex = 0
@@ -48,7 +54,7 @@ Partial Class wtForm
         'ltbFelhasznalok
         '
         Me.ltbFelhasznalok.FormattingEnabled = True
-        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 83)
+        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 144)
         Me.ltbFelhasznalok.Name = "ltbFelhasznalok"
         Me.ltbFelhasznalok.Size = New System.Drawing.Size(156, 160)
         Me.ltbFelhasznalok.TabIndex = 1
@@ -65,7 +71,7 @@ Partial Class wtForm
         '
         'btnFelhasznalok
         '
-        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 301)
+        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 362)
         Me.btnFelhasznalok.Name = "btnFelhasznalok"
         Me.btnFelhasznalok.Size = New System.Drawing.Size(156, 23)
         Me.btnFelhasznalok.TabIndex = 5
@@ -74,7 +80,7 @@ Partial Class wtForm
         '
         'btnMunkaidoleker
         '
-        Me.btnMunkaidoleker.Location = New System.Drawing.Point(15, 249)
+        Me.btnMunkaidoleker.Location = New System.Drawing.Point(15, 310)
         Me.btnMunkaidoleker.Name = "btnMunkaidoleker"
         Me.btnMunkaidoleker.Size = New System.Drawing.Size(156, 46)
         Me.btnMunkaidoleker.TabIndex = 6
@@ -83,7 +89,7 @@ Partial Class wtForm
         '
         'btnMentes
         '
-        Me.btnMentes.Location = New System.Drawing.Point(12, 12)
+        Me.btnMentes.Location = New System.Drawing.Point(786, 539)
         Me.btnMentes.Name = "btnMentes"
         Me.btnMentes.Size = New System.Drawing.Size(75, 23)
         Me.btnMentes.TabIndex = 7
@@ -92,7 +98,7 @@ Partial Class wtForm
         '
         'btnTorles
         '
-        Me.btnTorles.Location = New System.Drawing.Point(93, 12)
+        Me.btnTorles.Location = New System.Drawing.Point(867, 538)
         Me.btnTorles.Name = "btnTorles"
         Me.btnTorles.Size = New System.Drawing.Size(75, 23)
         Me.btnTorles.TabIndex = 8
@@ -101,7 +107,7 @@ Partial Class wtForm
         '
         'btnMunkaidoossz
         '
-        Me.btnMunkaidoossz.Location = New System.Drawing.Point(12, 41)
+        Me.btnMunkaidoossz.Location = New System.Drawing.Point(12, 12)
         Me.btnMunkaidoossz.Name = "btnMunkaidoossz"
         Me.btnMunkaidoossz.Size = New System.Drawing.Size(156, 23)
         Me.btnMunkaidoossz.TabIndex = 9
@@ -135,11 +141,60 @@ Partial Class wtForm
         Me.chxAkt.Text = "Csak az aktuális hónap megjelenítése"
         Me.chxAkt.UseVisualStyleBackColor = True
         '
+        'cmbEv
+        '
+        Me.cmbEv.FormattingEnabled = True
+        Me.cmbEv.Location = New System.Drawing.Point(15, 54)
+        Me.cmbEv.Name = "cmbEv"
+        Me.cmbEv.Size = New System.Drawing.Size(75, 21)
+        Me.cmbEv.TabIndex = 13
+        '
+        'cmbHonap
+        '
+        Me.cmbHonap.FormattingEnabled = True
+        Me.cmbHonap.Location = New System.Drawing.Point(96, 54)
+        Me.cmbHonap.Name = "cmbHonap"
+        Me.cmbHonap.Size = New System.Drawing.Size(72, 21)
+        Me.cmbHonap.TabIndex = 14
+        '
+        'lblEv
+        '
+        Me.lblEv.AutoSize = True
+        Me.lblEv.Location = New System.Drawing.Point(12, 38)
+        Me.lblEv.Name = "lblEv"
+        Me.lblEv.Size = New System.Drawing.Size(23, 13)
+        Me.lblEv.TabIndex = 15
+        Me.lblEv.Text = "Év:"
+        '
+        'lvlHonap
+        '
+        Me.lvlHonap.AutoSize = True
+        Me.lvlHonap.Location = New System.Drawing.Point(93, 38)
+        Me.lvlHonap.Name = "lvlHonap"
+        Me.lvlHonap.Size = New System.Drawing.Size(42, 13)
+        Me.lvlHonap.TabIndex = 16
+        Me.lvlHonap.Text = "Hónap:"
+        '
+        'dgvUj
+        '
+        Me.dgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvUj.Enabled = False
+        Me.dgvUj.Location = New System.Drawing.Point(941, 567)
+        Me.dgvUj.Name = "dgvUj"
+        Me.dgvUj.Size = New System.Drawing.Size(10, 10)
+        Me.dgvUj.TabIndex = 17
+        Me.dgvUj.Visible = False
+        '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(954, 585)
+        Me.Controls.Add(Me.dgvUj)
+        Me.Controls.Add(Me.lvlHonap)
+        Me.Controls.Add(Me.lblEv)
+        Me.Controls.Add(Me.cmbHonap)
+        Me.Controls.Add(Me.cmbEv)
         Me.Controls.Add(Me.chxAkt)
         Me.Controls.Add(Me.lblMunkaidoOsszes)
         Me.Controls.Add(Me.txtMunkaidoOsszes)
@@ -154,6 +209,7 @@ Partial Class wtForm
         Me.Name = "wtForm"
         Me.Text = "Munkaidő nyilvántartó"
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -170,4 +226,9 @@ Partial Class wtForm
     Friend WithEvents txtMunkaidoOsszes As TextBox
     Friend WithEvents lblMunkaidoOsszes As Label
     Friend WithEvents chxAkt As CheckBox
+    Friend WithEvents cmbEv As ComboBox
+    Friend WithEvents cmbHonap As ComboBox
+    Friend WithEvents lblEv As Label
+    Friend WithEvents lvlHonap As Label
+    Friend WithEvents dgvUj As DataGridView
 End Class
