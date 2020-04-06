@@ -37,7 +37,9 @@ Partial Class wtForm
         Me.cmbHonap = New System.Windows.Forms.ComboBox()
         Me.lblEv = New System.Windows.Forms.Label()
         Me.lvlHonap = New System.Windows.Forms.Label()
+        Me.dgvUj = New System.Windows.Forms.DataGridView()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lblFelhasznalok
@@ -173,11 +175,22 @@ Partial Class wtForm
         Me.lvlHonap.TabIndex = 16
         Me.lvlHonap.Text = "Hónap:"
         '
+        'dgvUj
+        '
+        Me.dgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvUj.Enabled = False
+        Me.dgvUj.Location = New System.Drawing.Point(941, 567)
+        Me.dgvUj.Name = "dgvUj"
+        Me.dgvUj.Size = New System.Drawing.Size(10, 10)
+        Me.dgvUj.TabIndex = 17
+        Me.dgvUj.Visible = False
+        '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(954, 585)
+        Me.Controls.Add(Me.dgvUj)
         Me.Controls.Add(Me.lvlHonap)
         Me.Controls.Add(Me.lblEv)
         Me.Controls.Add(Me.cmbHonap)
@@ -196,6 +209,7 @@ Partial Class wtForm
         Me.Name = "wtForm"
         Me.Text = "Munkaidő nyilvántartó"
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -216,4 +230,5 @@ Partial Class wtForm
     Friend WithEvents cmbHonap As ComboBox
     Friend WithEvents lblEv As Label
     Friend WithEvents lvlHonap As Label
+    Friend WithEvents dgvUj As DataGridView
 End Class
