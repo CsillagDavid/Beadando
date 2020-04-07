@@ -28,11 +28,11 @@ Public Class wtForm
                 getFszhMko(user.email)
                 userEmail = user.email
         End Select
-
     End Sub
 
     Private Sub getRltMko(tabla As DataGridView, index As Integer) 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
         Try
+
             Dim result, kezdo, befejezo, mkoSum As Decimal
             tabla.Columns("napi_ido").ReadOnly = False
             If Decimal.TryParse(tabla.Item("befejezo_ido", index).Value, result) Then
@@ -44,7 +44,14 @@ Public Class wtForm
             If Decimal.TryParse(txtMunkaidoOsszes.Text, result) Then
                 mkoSum = result
             End If
-            tabla.Item("napi_ido", index).Value = befejezo - kezdo
+            If tabla.Item("tavollet", index).Value = "Szabadság" Then
+                tabla.Item("napi_ido", index).Value = 0
+                tabla.Item("befejezo_ido", index).Value = 0
+                tabla.Item("kezdo_ido", index).Value = 0
+            Else
+                tabla.Item("napi_ido", index).Value = befejezo - kezdo
+            End If
+            'tabla.Item("napi_ido", index).Value = befejezo - kezdo
             mkoSum += (befejezo - kezdo)
             txtMunkaidoOsszes.Visible = True
             lblMunkaidoOsszes.Visible = True
@@ -54,6 +61,14 @@ Public Class wtForm
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
+
+    Private Function intComboBox()
+        Dim tavolletBox As New DataGridViewComboBoxCell
+        tavolletBox.Items.Add("Szabadság")
+        tavolletBox.Items.Add("Betegség")
+        tavolletBox.Items.Add("Fizetetlen szabadság")
+        Return tavolletBox
+    End Function
 
     Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
         Dim command As String
@@ -80,21 +95,27 @@ Public Class wtForm
         '                    WHERE F.Email = '" & email & "'"
         End If
         dgvTabla.DataSource = sqlCmd(command)
-        dgvTabla.Columns(0).Visible = False
-        dgvTabla.Columns(1).HeaderText = "Dátum"
-        dgvTabla.Columns(1).Name = "datum"
-        dgvTabla.Columns(2).HeaderText = "Kezdés"
-        dgvTabla.Columns(2).Name = "kezdo_ido"
-        dgvTabla.Columns(3).HeaderText = "Befejezés"
-        dgvTabla.Columns(3).Name = "befejezo_ido"
+        dgvTabla.Columns("id").Visible = False
+        dgvTabla.Columns("Datum").HeaderText = "Dátum"
+        dgvTabla.Columns("Datum").Name = "datum"
+        'dgvTabla.Columns("Datum").ValueType = GetType(Date)
+        dgvTabla.Columns("Kezdo_ido").HeaderText = "Kezdés"
+        dgvTabla.Columns("Kezdo_ido").Name = "kezdo_ido"
+        'dgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
+        dgvTabla.Columns("Befejezo_ido").HeaderText = "Befejezés"
+        dgvTabla.Columns("Befejezo_ido").Name = "befejezo_ido"
+        'dgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
+        'dgvTabla.Columns("napi_ido").ValueType = GetType(Decimal)
+        dgvTabla.Columns.Add("tavollet", "Távollét")
         Dim rowCount = dgvTabla.Rows.Count
         txtMunkaidoOsszes.Text = 0
         For index = 0 To rowCount - 2
+            dgvTabla.Item("tavollet", index) = intComboBox()
             getRltMko(dgvTabla, index)
         Next
-        dgvTabla.Columns(1).ReadOnly = True
-        dgvTabla.Columns(4).ReadOnly = True
+        dgvTabla.Columns("Datum").ReadOnly = True
+        dgvTabla.Columns("napi_ido").ReadOnly = True
         btnMentes.Enabled = True
         btnTorles.Enabled = True
     End Sub
@@ -102,12 +123,12 @@ Public Class wtForm
     Private Sub getFszh() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
         dgvTabla.DataSource = sqlCmd("SELECT nev,email,munkaido FROM Felhasznalok
                                      WHERE munkaido >" & 0)
-        dgvTabla.Columns(0).HeaderText = "Név"
-        dgvTabla.Columns(0).Name = "nev"
-        dgvTabla.Columns(1).HeaderText = "E-Mail"
-        dgvTabla.Columns(1).Name = "email"
-        dgvTabla.Columns(2).HeaderText = "Munkaidő"
-        dgvTabla.Columns(2).Name = "munkaido"
+        dgvTabla.Columns("nev").HeaderText = "Név"
+        dgvTabla.Columns("nev").Name = "nev"
+        dgvTabla.Columns("email").HeaderText = "E-Mail"
+        dgvTabla.Columns("email").Name = "email"
+        dgvTabla.Columns("munkaido").HeaderText = "Munkaidő"
+        dgvTabla.Columns("munkaido").Name = "munkaido"
         btnMentes.Enabled = True
         btnTorles.Enabled = True
         txtMunkaidoOsszes.Visible = False
@@ -196,6 +217,7 @@ Public Class wtForm
             dgvTabla.Columns("datum").ReadOnly = False
             dgvTabla.Item("datum", rowCount - 1).Value = DateTime.Now.ToString("yyyy/MM/dd") & "."
             dgvTabla.Columns("datum").ReadOnly = True
+            dgvTabla.Item("tavollet", rowCount - 1) = intComboBox()
         Catch ex As Exception
 
         End Try
@@ -233,21 +255,24 @@ Public Class wtForm
                                     WHERE F.Email = '" & email & "'"
         End Select
         dgvUj.DataSource = sqlCmd(command)
-        dgvUj.Columns(0).HeaderText = "Név"
-        dgvUj.Columns(0).Name = "nev"
-        dgvUj.Columns(1).HeaderText = "E-Mail"
-        dgvUj.Columns(1).Name = "email"
-        dgvUj.Columns(2).HeaderText = "Munkaidő"
-        dgvUj.Columns(2).Name = "munkaido"
-        dgvUj.Columns(3).HeaderText = "Dátum"
-        dgvUj.Columns(3).Name = "datum"
-        dgvUj.Columns(4).HeaderText = "Kezdő idő"
-        dgvUj.Columns(4).Name = "kezdo_ido"
-        dgvUj.Columns(5).HeaderText = "Befejező idő"
-        dgvUj.Columns(5).Name = "befejezo_ido"
+        dgvUj.Columns("Nev").HeaderText = "Név"
+        dgvUj.Columns("Nev").Name = "nev"
+        dgvUj.Columns("Email").HeaderText = "E-Mail"
+        dgvUj.Columns("Email").Name = "email"
+        dgvUj.Columns("Munkaido").HeaderText = "Munkaidő"
+        dgvUj.Columns("Munkaido").Name = "munkaido"
+        dgvUj.Columns("Datum").HeaderText = "Dátum"
+        dgvUj.Columns("Datum").Name = "datum"
+        dgvUj.Columns("Kezdo_ido").HeaderText = "Kezdő idő"
+        dgvUj.Columns("Kezdo_ido").Name = "kezdo_ido"
+        dgvUj.Columns("Befejezo_ido").HeaderText = "Befejező idő"
+        dgvUj.Columns("Befejezo_ido").Name = "befejezo_ido"
         dgvUj.Columns.Add("napi_ido", "Napi munkaidő")
+        dgvUj.Columns.Add("tavollet", "Távollét")
         Dim rowCount = dgvUj.Rows.Count
+        txtMunkaidoOsszes.Text = 0
         For index = 0 To rowCount - 2
+            dgvUj.Item("tavollet", index) = intComboBox()
             getRltMko(dgvUj, index)
         Next
         dgvUj.ReadOnly = True
