@@ -83,17 +83,11 @@ Public Class wtForm
         Else
             selMh = 0
         End If
-        If selMh > 0 Then
-            command = "SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+        command = "SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & selYr & ". " & selMh & ". 01' AND M.Datum <= '" & selYr & ". " & (selMh + 1) & ". 01'"
-        Else
-            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
-        '                    INNER JOIN Felhasznalok F
-        '                    ON M.FelhasznaloID = F.id
-        '                    WHERE F.Email = '" & email & "'"
-        End If
+                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & selYr & ". " & selMh & ". 01' 
+                            AND M.Datum <= '" & selYr & ". " & (selMh + 1) & ". 01'"
         dgvTabla.DataSource = sqlCmd(command)
         dgvTabla.Columns("Datum").HeaderText = "Dátum"
         dgvTabla.Columns("Datum").Name = "datum"
@@ -119,6 +113,100 @@ Public Class wtForm
         btnTorles.Enabled = True
     End Sub
 
+    Private Sub getAlapMk(email As String)
+        Dim command, datum, napStr, honapStr As String
+        Dim result, selYr, selMh, rowCount, napok, munkaido, kido, bido, felhaszid, ev, honap As Integer
+        Dim row As String()
+        Dim dateRes, aktDatum As DateTime
+        dgvUj.DataSource = Nothing
+        dgvUj.Columns.Clear()
+        dgvUj.Rows.Clear()
+        If Int32.TryParse(cmbEv.SelectedItem.ToString(), result) Then
+            selYr = result
+        Else
+            selYr = DateTime.Now.Year
+        End If
+        If Int32.TryParse(cmbHonap.SelectedItem.ToString(), result) Then
+            selMh = result
+        Else
+            selMh = 0
+        End If
+        command = "SELECT M.Datum, F.Munkaido, M.FelhasznaloID FROM Munkaidok M
+                   INNER JOIN Felhasznalok F
+                   ON M.FelhasznaloID = F.id
+                    WHERE F.Email = '" & email & "'"
+        dgvUj.DataSource = sqlCmd(command)
+        dgvUj.Columns("Datum").Name = "datum"
+        dgvUj.Columns("Datum").HeaderText = "Dátum"
+        dgvUj.Columns("Munkaido").Name = "munkaido"
+        dgvUj.Columns("Munkaido").HeaderText = "Munkaidő"
+        dgvUj.Columns("FelhasznaloID").Name = "felhasznaloid"
+        dgvUj.Columns("FelhasznaloID").HeaderText = "Felhasználó ID"
+        rowCount = dgvUj.Rows.Count
+        If rowCount >= 1 Then
+            If Int32.TryParse(dgvUj.Item("munkaido", 1).Value, result) Then
+                munkaido = result
+            Else
+                munkaido = 0
+            End If
+            If Int32.TryParse(dgvUj.Item("felhasznaloid", 1).Value, result) Then
+                felhaszid = result
+            Else
+                felhaszid = 0
+            End If
+            kido = 8
+            bido = kido + munkaido
+            dgvTabla.DataSource = Nothing
+            dgvTabla.Columns.Clear()
+            dgvTabla.Rows.Clear()
+            dgvTabla.Columns.Add("Datum", "Dátum")
+            dgvTabla.Columns.Add("Kezdo_ido", "Kezdő idő")
+            dgvTabla.Columns.Add("Befejezo_ido", "Befejező idő")
+            dgvTabla.Columns.Add("FelhasznaloID", "Felhasználó ID")
+            dgvTabla.Columns("Datum").ValueType = GetType(Date)
+            dgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
+            dgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
+            dgvTabla.Columns("FelhasznaloID").ValueType = GetType(Integer)
+            ev = DateTime.Now.Year
+            honap = DateTime.Now.Month
+            napok = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)
+            For index = 1 To napok
+                If honap < 10 Then
+                    honapStr = "0" & honap
+                Else
+                    honapStr = honap
+                End If
+                If index < 10 Then
+                    napStr = "0" & index
+                Else
+                    napStr = index
+                End If
+                datum = ev & ". " & honapStr & ". " & napStr
+                If Date.TryParse(datum, dateRes) Then
+                    aktDatum = dateRes
+                End If
+                row = {
+                    aktDatum,
+                    kido,
+                    bido,
+                    felhaszid
+                }
+                dgvTabla.Rows.Add(row)
+            Next
+            'Using cmd As New SqlCommand("INSERT INTO Munkaidok (Datum, Kezdo_ido, Befejezo_ido, FelhasznaloID) VALUES (@datum, @kezdo_ido, @befejezo_ido, @felhasznaloid", con)
+            '    cmd.CommandType = CommandType.Text
+            '    For index = 1 To dgvTabla.Rows.Count - 1
+            '        cmd.
+            '        cmd.Parameters.AddWithValue("@Datum", dgvTabla.Item("datum", index).Value)
+            '        cmd.Parameters.AddWithValue("@Kezdo_ido", dgvTabla.Item("kezdo_ido", index).Value)
+            '        cmd.Parameters.AddWithValue("@Befejezo_ido", dgvTabla.Item("befejezo_ido", index).Value)
+            '        cmd.Parameters.AddWithValue("@FelhasznaloID", dgvTabla.Item("felhasznaloid", index).Value)
+            '    Next
+            '    Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
+            'End Using
+        End If
+
+    End Sub
     Private Sub getFszh() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
         dgvTabla.DataSource = sqlCmd("SELECT nev,email,munkaido FROM Felhasznalok
                                      WHERE munkaido >" & 0)
@@ -254,7 +342,6 @@ Public Class wtForm
                                     WHERE F.Email = '" & email & "'"
         End Select
         dgvUj.DataSource = sqlCmd(command)
-        dgvUj.Columns("Nev").HeaderText = "Név"
         dgvUj.Columns("Nev").Name = "nev"
         dgvUj.Columns("Email").HeaderText = "E-Mail"
         dgvUj.Columns("Email").Name = "email"
@@ -404,4 +491,12 @@ Public Class wtForm
         btnTorles.Enabled = False
     End Sub
 
+    Private Sub tstButton_Click(sender As Object, e As EventArgs) Handles tstButton.Click
+        Select Case user.role
+            Case "Admin"
+                getAlapMk(ltbFelhasznalok.SelectedValue)
+            Case "Felhasznalo"
+                getAlapMk(userEmail)
+        End Select
+    End Sub
 End Class

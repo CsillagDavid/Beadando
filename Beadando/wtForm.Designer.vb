@@ -38,6 +38,7 @@ Partial Class wtForm
         Me.lvlHonap = New System.Windows.Forms.Label()
         Me.dgvUj = New System.Windows.Forms.DataGridView()
         Me.lblOra = New System.Windows.Forms.Label()
+        Me.tstButton = New System.Windows.Forms.Button()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -184,11 +185,21 @@ Partial Class wtForm
         Me.lblOra.TabIndex = 18
         Me.lblOra.Text = "óra"
         '
+        'tstButton
+        '
+        Me.tstButton.Location = New System.Drawing.Point(15, 12)
+        Me.tstButton.Name = "tstButton"
+        Me.tstButton.Size = New System.Drawing.Size(75, 23)
+        Me.tstButton.TabIndex = 19
+        Me.tstButton.Text = "teszt"
+        Me.tstButton.UseVisualStyleBackColor = True
+        '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(954, 585)
+        Me.Controls.Add(Me.tstButton)
         Me.Controls.Add(Me.lblOra)
         Me.Controls.Add(Me.dgvUj)
         Me.Controls.Add(Me.lvlHonap)
@@ -230,4 +241,5 @@ Partial Class wtForm
     Friend WithEvents lvlHonap As Label
     Friend WithEvents dgvUj As DataGridView
     Friend WithEvents lblOra As Label
+    Friend WithEvents tstButton As Button
 End Class
