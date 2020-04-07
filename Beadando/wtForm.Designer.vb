@@ -45,7 +45,7 @@ Partial Class wtForm
         'lblFelhasznalok
         '
         Me.lblFelhasznalok.AutoSize = True
-        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 128)
+        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 152)
         Me.lblFelhasznalok.Name = "lblFelhasznalok"
         Me.lblFelhasznalok.Size = New System.Drawing.Size(72, 13)
         Me.lblFelhasznalok.TabIndex = 0
@@ -54,9 +54,9 @@ Partial Class wtForm
         'ltbFelhasznalok
         '
         Me.ltbFelhasznalok.FormattingEnabled = True
-        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 144)
+        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 168)
         Me.ltbFelhasznalok.Name = "ltbFelhasznalok"
-        Me.ltbFelhasznalok.Size = New System.Drawing.Size(156, 160)
+        Me.ltbFelhasznalok.Size = New System.Drawing.Size(153, 160)
         Me.ltbFelhasznalok.TabIndex = 1
         '
         'dgvTabla
@@ -71,18 +71,18 @@ Partial Class wtForm
         '
         'btnFelhasznalok
         '
-        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 310)
+        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 334)
         Me.btnFelhasznalok.Name = "btnFelhasznalok"
-        Me.btnFelhasznalok.Size = New System.Drawing.Size(156, 23)
+        Me.btnFelhasznalok.Size = New System.Drawing.Size(153, 23)
         Me.btnFelhasznalok.TabIndex = 5
         Me.btnFelhasznalok.Text = "Felhasználók adatai"
         Me.btnFelhasznalok.UseVisualStyleBackColor = True
         '
         'btnMunkaidoleker
         '
-        Me.btnMunkaidoleker.Location = New System.Drawing.Point(12, 79)
+        Me.btnMunkaidoleker.Location = New System.Drawing.Point(15, 90)
         Me.btnMunkaidoleker.Name = "btnMunkaidoleker"
-        Me.btnMunkaidoleker.Size = New System.Drawing.Size(156, 46)
+        Me.btnMunkaidoleker.Size = New System.Drawing.Size(153, 46)
         Me.btnMunkaidoleker.TabIndex = 6
         Me.btnMunkaidoleker.Text = "Munkaidő lekérdezése"
         Me.btnMunkaidoleker.UseVisualStyleBackColor = True
@@ -107,9 +107,9 @@ Partial Class wtForm
         '
         'btnMunkaidoossz
         '
-        Me.btnMunkaidoossz.Location = New System.Drawing.Point(12, 12)
+        Me.btnMunkaidoossz.Location = New System.Drawing.Point(352, 539)
         Me.btnMunkaidoossz.Name = "btnMunkaidoossz"
-        Me.btnMunkaidoossz.Size = New System.Drawing.Size(156, 23)
+        Me.btnMunkaidoossz.Size = New System.Drawing.Size(153, 23)
         Me.btnMunkaidoossz.TabIndex = 9
         Me.btnMunkaidoossz.Text = "Munkaidő összesítése"
         Me.btnMunkaidoossz.UseVisualStyleBackColor = True
@@ -134,7 +134,7 @@ Partial Class wtForm
         'cmbEv
         '
         Me.cmbEv.FormattingEnabled = True
-        Me.cmbEv.Location = New System.Drawing.Point(15, 54)
+        Me.cmbEv.Location = New System.Drawing.Point(15, 63)
         Me.cmbEv.Name = "cmbEv"
         Me.cmbEv.Size = New System.Drawing.Size(75, 21)
         Me.cmbEv.TabIndex = 13
@@ -142,7 +142,7 @@ Partial Class wtForm
         'cmbHonap
         '
         Me.cmbHonap.FormattingEnabled = True
-        Me.cmbHonap.Location = New System.Drawing.Point(96, 54)
+        Me.cmbHonap.Location = New System.Drawing.Point(96, 63)
         Me.cmbHonap.Name = "cmbHonap"
         Me.cmbHonap.Size = New System.Drawing.Size(72, 21)
         Me.cmbHonap.TabIndex = 14
@@ -150,7 +150,7 @@ Partial Class wtForm
         'lblEv
         '
         Me.lblEv.AutoSize = True
-        Me.lblEv.Location = New System.Drawing.Point(12, 38)
+        Me.lblEv.Location = New System.Drawing.Point(12, 47)
         Me.lblEv.Name = "lblEv"
         Me.lblEv.Size = New System.Drawing.Size(23, 13)
         Me.lblEv.TabIndex = 15
@@ -159,7 +159,7 @@ Partial Class wtForm
         'lvlHonap
         '
         Me.lvlHonap.AutoSize = True
-        Me.lvlHonap.Location = New System.Drawing.Point(93, 38)
+        Me.lvlHonap.Location = New System.Drawing.Point(93, 47)
         Me.lvlHonap.Name = "lvlHonap"
         Me.lvlHonap.Size = New System.Drawing.Size(42, 13)
         Me.lvlHonap.TabIndex = 16
