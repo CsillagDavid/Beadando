@@ -35,23 +35,22 @@ Public Class wtForm
 
     Private Sub getRltMko(tabla As DataGridView) 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
         Try
-            Dim cmsCount As Integer
-            Dim tryPre As Decimal
+            Dim result As Decimal
             Dim mkoSum As Decimal
-            cmsCount = tabla.Columns.Count
-            tabla.Columns(cmsCount - 1).ReadOnly = False
-            For index = 0 To tabla.Rows.Count - 2
-                tabla.Item(cmsCount - 1, index).Value = tabla.Item(cmsCount - 2, index).Value - tabla.Item(cmsCount - 3, index).Value
+            Dim rowCount = tabla.Rows.Count
+            tabla.Columns("napi_ido").ReadOnly = False
+            For index = 0 To rowCount - 2
+                tabla.Item("napi_ido", index).Value = tabla.Item("befejezo_ido", index).Value - tabla.Item("kezdo_ido", index).Value
             Next
             For index = 0 To tabla.Rows.Count - 2
-                If (Decimal.TryParse(tabla.Item(cmsCount - 1, index).Value, tryPre)) Then
-                    mkoSum += Decimal.Parse(tabla.Item(cmsCount - 1, index).Value)
+                If (Decimal.TryParse(tabla.Item("napi_ido", index).Value, result)) Then
+                    mkoSum += Decimal.Parse(tabla.Item("napi_ido", index).Value)
                 End If
             Next
             txtMunkaidoOsszes.Visible = True
             lblMunkaidoOsszes.Visible = True
             txtMunkaidoOsszes.Text = mkoSum & " óra"
-            tabla.Columns(cmsCount - 1).ReadOnly = True
+            tabla.Columns("napi_ido").ReadOnly = True
         Catch ex As Exception
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
@@ -77,19 +76,26 @@ Public Class wtForm
         dgvTabla.DataSource = sqlCmd(command)
         dgvTabla.Columns(0).Visible = False
         dgvTabla.Columns(1).HeaderText = "Dátum"
+        dgvTabla.Columns(1).Name = "datum"
         dgvTabla.Columns(2).HeaderText = "Kezdés"
+        dgvTabla.Columns(2).Name = "kezdo_ido"
         dgvTabla.Columns(3).HeaderText = "Befejezés"
-        dgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
+        dgvTabla.Columns(3).Name = "befejezo_ido"
+        dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
         getRltMko(dgvTabla)
         dgvTabla.Columns(1).ReadOnly = True
         dgvTabla.Columns(4).ReadOnly = True
     End Sub
 
     Private Sub getFszh() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
-        dgvTabla.DataSource = sqlCmd("SELECT nev,email,munkaido FROM Felhasznalok")
+        dgvTabla.DataSource = sqlCmd("SELECT nev,email,munkaido FROM Felhasznalok
+                                     WHERE munkaido >" & 0)
         dgvTabla.Columns(0).HeaderText = "Név"
+        dgvTabla.Columns(0).Name = "nev"
         dgvTabla.Columns(1).HeaderText = "E-Mail"
+        dgvTabla.Columns(1).Name = "email"
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
+        dgvTabla.Columns(2).Name = "munkaido"
     End Sub
 
     Private Function sqlCmd(command As String) 'A táblázat feltöltése parancs megadásával
@@ -105,7 +111,8 @@ Public Class wtForm
     End Function
 
     Private Sub getFszhLtb() 'A felhasználók kiválasztásához szükséges ListBox feltöltése
-        ltbFelhasznalok.DataSource = sqlCmd("SELECT nev,email FROM Felhasznalok")
+        ltbFelhasznalok.DataSource = sqlCmd("SELECT nev,email FROM Felhasznalok
+                                            WHERE Munkaido >" & 0)
         ltbFelhasznalok.DisplayMember = "nev"
         ltbFelhasznalok.ValueMember = "email"
     End Sub
@@ -158,13 +165,10 @@ Public Class wtForm
 
     Private Sub getDate()
         Try
-            Dim cmsCount As Integer
-            Dim rowCount As Integer
-            cmsCount = dgvTabla.Columns.Count
-            rowCount = dgvTabla.Rows.Count
-            dgvTabla.Columns(cmsCount - 4).ReadOnly = False
-            dgvTabla.Item(cmsCount - 4, rowCount - 1).Value = DateTime.Now.ToString("yyyy/MM/dd") & "."
-            dgvTabla.Columns(cmsCount - 4).ReadOnly = True
+            Dim rowCount = dgvTabla.Rows.Count
+            dgvTabla.Columns("datum").ReadOnly = False
+            dgvTabla.Item("datum", rowCount - 1).Value = DateTime.Now.ToString("yyyy/MM/dd") & "."
+            dgvTabla.Columns("datum").ReadOnly = True
         Catch ex As Exception
 
         End Try
@@ -187,129 +191,146 @@ Public Class wtForm
     End Sub
 
     Private Sub stpUjTabla(email As String)
+        Dim command = ""
         Select Case user.role
             Case "Admin"
-                dgvUj.DataSource = sqlCmd("SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
+                command = "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
                                     INNER JOIN Munkaidok M
-                                    ON F.id = M.FelhasznaloID")
+                                    ON F.id = M.FelhasznaloID"
             Case "Felhasznalo"
-                dgvUj.DataSource = sqlCmd("SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
+                command = "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
                                     INNER JOIN Munkaidok M
                                     ON F.id = M.FelhasznaloID 
-                                    WHERE F.Email = '" & email & "'")
+                                    WHERE F.Email = '" & email & "'"
         End Select
+        dgvUj.DataSource = sqlCmd(command)
         dgvUj.Columns(0).HeaderText = "Név"
+        dgvUj.Columns(0).Name = "nev"
         dgvUj.Columns(1).HeaderText = "E-Mail"
+        dgvUj.Columns(1).Name = "email"
         dgvUj.Columns(2).HeaderText = "Munkaidő"
+        dgvUj.Columns(2).Name = "munkaido"
         dgvUj.Columns(3).HeaderText = "Dátum"
+        dgvUj.Columns(3).Name = "datum"
         dgvUj.Columns(4).HeaderText = "Kezdő idő"
+        dgvUj.Columns(4).Name = "kezdo_ido"
         dgvUj.Columns(5).HeaderText = "Befejező idő"
-        dgvUj.Columns.Add("Napi_ido", "Napi munkaidő")
+        dgvUj.Columns(5).Name = "befejezo_ido"
+        dgvUj.Columns.Add("napi_ido", "Napi munkaidő")
         getRltMko(dgvUj)
+        dgvUj.ReadOnly = True
         txtMunkaidoOsszes.Visible = False
         lblMunkaidoOsszes.Visible = False
     End Sub
 
-    Private Sub getMkossz()
-        Dim res, selYr, selMh, cmsCount, rowCount, miSum, mkido, kul As Integer
-        Dim allMh = ""
-        Dim row As String()
-        Dim munkanap = 22
-        Dim nevLista As New List(Of String)
+    Private Function getMkIdomiSum(index As Integer)
+        Dim selMh, selYr, result, munkaIdo, napiIdo, munkanap As Integer
+        Dim allMh As String
+        Dim dateRes As Date
+        Dim miSumIdo() = {0, 0}
         Dim aktDate As DateTime
-        cmsCount = dgvUj.Columns.Count
+        munkanap = 22
+        allMh = ""
+        If Int32.TryParse(dgvUj.Item("napi_ido", index).Value, result) Then
+            napiIdo = result
+        End If
+        If Int32.TryParse((dgvUj.Item("munkaido", index).Value), result) Then
+            munkaIdo = munkanap * result
+        End If
+        If Date.TryParse(dgvUj.Item("datum", index).Value, dateRes) Then
+            aktDate = Convert.ToDateTime(dateRes)
+        Else
+            aktDate = DateTime.Now
+        End If
+        If Int32.TryParse(cmbEv.SelectedItem.ToString(), result) Then
+            selYr = result
+        Else
+            selYr = DateTime.Now.Year
+        End If
+        If aktDate.Year = selYr Then
+            If Int32.TryParse(cmbHonap.SelectedItem.ToString(), result) Then
+                selMh = result
+            Else
+                allMh = cmbHonap.SelectedItem.ToString()
+            End If
+
+            If allMh = "Összes" Then
+                miSumIdo(0) += napiIdo
+            ElseIf aktDate.Month = selMh Then
+                miSumIdo(0) += napiIdo
+            Else
+                miSumIdo(0) = 0
+            End If
+            miSumIdo(1) = munkaIdo
+        Else
+            miSumIdo(0) = 0
+            miSumIdo(1) = 0
+        End If
+        Return miSumIdo
+    End Function
+
+    Private Sub getMkossz()
+        Dim miSumIdo() = {0, 0}
+        Dim result, rowCount, kulonbseg, teljesora, eloirtora As Integer
+        Dim nev, email As String
+        Dim row As String()
+        Dim nevLista As New List(Of String)
+        Dim lsindex = 0
         rowCount = dgvUj.Rows.Count
-        dgvTabla.Columns.Clear()
+        dgvTabla.DataSource = Nothing
         dgvTabla.Columns.Add("nev", "Név")
         dgvTabla.Columns.Add("email", "E-Mail")
         dgvTabla.Columns.Add("eloirtora", "Előírt óraszám")
         dgvTabla.Columns.Add("teljesora", "Teljesített óraszám")
         dgvTabla.Columns.Add("kulonbseg", "Különbség")
-        If Int32.TryParse(cmbEv.SelectedItem.ToString(), res) Then
-            selYr = Int32.Parse(cmbEv.SelectedItem.ToString())
-        Else
-            selYr = DateTime.Now.Year
-        End If
-        If Int32.TryParse(cmbHonap.SelectedItem.ToString(), res) Then
-            selMh = Int32.Parse(cmbHonap.SelectedItem.ToString())
-        Else
-            allMh = cmbHonap.SelectedItem.ToString()
-        End If
-        Dim lsindex = 0
-        For index = 0 To rowCount - 1
-            aktDate = Convert.ToDateTime(dgvUj.Item(cmsCount - 4, index).Value)
-            If aktDate.Year = selYr Then
-                If dgvTabla.Rows.Count = 1 Then
-                    miSum = 0
-                    mkido = 0
-                    If Int32.TryParse((dgvUj.Item(cmsCount - 5, index).Value * munkanap), res) Then
-                        mkido = Int32.Parse(dgvUj.Item(cmsCount - 5, index).Value * munkanap)
-                    End If
-                    If allMh = "Összes" Then
-                        miSum += dgvUj.Item(cmsCount - 1, index).Value
-                    ElseIf aktDate.Month = selMh Then
-                        If Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value, res) Then
-                            miSum += dgvUj.Item(cmsCount - 1, index).Value
-                        End If
+        For index = 0 To rowCount - 2
+            nev = dgvUj.Item("nev", index).Value
+            email = dgvUj.Item("email", index).Value
+            If dgvTabla.Rows.Count = 1 Then
+                miSumIdo = getMkIdomiSum(index)
+                kulonbseg = miSumIdo(0) - miSumIdo(1)
+                nevLista.Add(nev)
+                row = New String() {
+                            nev,
+                            email,
+                            miSumIdo(1),
+                            miSumIdo(0),
+                            kulonbseg
+                        }
+                dgvTabla.Rows.Add(row)
+            Else
+                If nevLista.Contains(nev) Then
+                    If Int32.TryParse(dgvTabla.Item("eloirtora", lsindex).Value, result) Then
+                        eloirtora = result
                     Else
-                        miSum = 0
+                        eloirtora = 0
                     End If
-                        kul = miSum - mkido
-                    nevLista.Add(dgvUj.Item(cmsCount - 7, index).Value.ToString())
-                    row = New String() {
-                                dgvUj.Item(cmsCount - 7, index).Value.ToString(),
-                                dgvUj.Item(cmsCount - 6, index).Value.ToString(),
-                                mkido,
-                                miSum,
-                                kul
-                            }
-                    dgvTabla.Rows.Add(row)
+                    If Int32.TryParse(dgvTabla.Item("teljesora", lsindex).Value, result) Then
+                        teljesora = result
+                    Else
+                        teljesora = 0
+                    End If
+                    If Int32.TryParse(dgvTabla.Item("kulonbseg", lsindex).Value, result) Then
+                        kulonbseg = result
+                    Else
+                        kulonbseg = 0
+                    End If
+                    miSumIdo = getMkIdomiSum(index)
+                    dgvTabla.Item("teljesora", lsindex).Value = teljesora + miSumIdo(0)
+                    dgvTabla.Item("kulonbseg", lsindex).Value = (teljesora + miSumIdo(0)) - eloirtora
                 Else
-                    If nevLista.Contains(dgvUj.Item(cmsCount - 7, index).Value.ToString()) Then
-                        If Int32.TryParse(dgvTabla.Item(3, lsindex).Value.ToString(), res) And Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value.ToString(), res) Then
-                            miSum = 0
-                            mkido = 0
-                            If allMh = "Összes" Then
-                                miSum += dgvUj.Item(cmsCount - 1, index).Value
-                            ElseIf aktDate.Month = selMh Then
-                                If Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value, res) Then
-                                    miSum += dgvUj.Item(cmsCount - 1, index).Value
-                                End If
-                            Else
-                                miSum = 0
-                            End If
-                            dgvTabla.Item(3, lsindex).Value = Int32.Parse(dgvTabla.Item(3, lsindex).Value.ToString()) + miSum
-                            If Int32.TryParse(dgvTabla.Item(4, lsindex).Value.ToString(), res) Then
-                                dgvTabla.Item(4, lsindex).Value = Int32.Parse(dgvTabla.Item(3, lsindex).Value) - Int32.Parse(dgvTabla.Item(2, lsindex).Value)
-                            End If
-                        End If
-                    Else
-                        miSum = 0
-                        mkido = 0
-                        nevLista.Add(dgvUj.Item(cmsCount - 7, index).Value.ToString())
-                        If allMh = "Összes" Then
-                            miSum += dgvUj.Item(cmsCount - 1, index).Value
-                        ElseIf aktDate.Month = selMh Then
-                            If Int32.TryParse(dgvUj.Item(cmsCount - 1, index).Value, res) Then
-                                miSum += dgvUj.Item(cmsCount - 1, index).Value
-                            End If
-                        Else
-                            miSum = 0
-                        End If
-                        If Int32.TryParse((dgvUj.Item(cmsCount - 5, index).Value * munkanap), res) Then
-                            mkido = Int32.Parse(dgvUj.Item(cmsCount - 5, index).Value * munkanap)
-                        End If
-                        kul = miSum - mkido
-                        row = New String() {
-                                dgvUj.Item(cmsCount - 7, index).Value.ToString(),
-                                dgvUj.Item(cmsCount - 6, index).Value.ToString(),
-                                mkido,
-                                miSum,
-                                kul
-                            }
-                        lsindex += 1
-                        dgvTabla.Rows.Add(row)
-                    End If
+                    miSumIdo = getMkIdomiSum(index)
+                    nevLista.Add(nev)
+                    kulonbseg = miSumIdo(0) - miSumIdo(1)
+                    row = New String() {
+                            nev,
+                            email,
+                            miSumIdo(1),
+                            miSumIdo(0),
+                            kulonbseg
+                        }
+                    lsindex += 1
+                    dgvTabla.Rows.Add(row)
                 End If
             End If
         Next
