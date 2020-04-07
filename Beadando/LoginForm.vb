@@ -16,8 +16,8 @@ Public Class Login
         sqlConnection.cmd = sqlConnection.con.CreateCommand()
         sqlConnection.cmd.CommandType = CommandType.Text
         'cmd.CommandText = "SELECT f.Nev, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE f.Jelszo = '" + PasswordTextBox.Text & "'"
-        'sqlConnection.cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & UsernameTextBox.Text & "' AND f.Jelszo = '" + PasswordTextBox.Text & "')"
-        sqlConnection.cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & "a" & "' AND f.Jelszo = '" + "1" & "')"
+        sqlConnection.cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & UsernameTextBox.Text & "' AND f.Jelszo = '" + PasswordTextBox.Text & "')"
+        'sqlConnection.cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & "a" & "' AND f.Jelszo = '" + "1" & "')"
         Dim reader As SqlDataReader
         reader = sqlConnection.cmd.ExecuteReader()
         If reader.Read() Then
