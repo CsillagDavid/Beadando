@@ -32,12 +32,12 @@ Partial Class wtForm
         Me.btnMunkaidoossz = New System.Windows.Forms.Button()
         Me.txtMunkaidoOsszes = New System.Windows.Forms.TextBox()
         Me.lblMunkaidoOsszes = New System.Windows.Forms.Label()
-        Me.chxAkt = New System.Windows.Forms.CheckBox()
         Me.cmbEv = New System.Windows.Forms.ComboBox()
         Me.cmbHonap = New System.Windows.Forms.ComboBox()
         Me.lblEv = New System.Windows.Forms.Label()
         Me.lvlHonap = New System.Windows.Forms.Label()
         Me.dgvUj = New System.Windows.Forms.DataGridView()
+        Me.lblOra = New System.Windows.Forms.Label()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -71,7 +71,7 @@ Partial Class wtForm
         '
         'btnFelhasznalok
         '
-        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 362)
+        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 310)
         Me.btnFelhasznalok.Name = "btnFelhasznalok"
         Me.btnFelhasznalok.Size = New System.Drawing.Size(156, 23)
         Me.btnFelhasznalok.TabIndex = 5
@@ -80,7 +80,7 @@ Partial Class wtForm
         '
         'btnMunkaidoleker
         '
-        Me.btnMunkaidoleker.Location = New System.Drawing.Point(15, 310)
+        Me.btnMunkaidoleker.Location = New System.Drawing.Point(12, 79)
         Me.btnMunkaidoleker.Name = "btnMunkaidoleker"
         Me.btnMunkaidoleker.Size = New System.Drawing.Size(156, 46)
         Me.btnMunkaidoleker.TabIndex = 6
@@ -119,7 +119,7 @@ Partial Class wtForm
         Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(282, 541)
         Me.txtMunkaidoOsszes.Name = "txtMunkaidoOsszes"
         Me.txtMunkaidoOsszes.ReadOnly = True
-        Me.txtMunkaidoOsszes.Size = New System.Drawing.Size(166, 20)
+        Me.txtMunkaidoOsszes.Size = New System.Drawing.Size(36, 20)
         Me.txtMunkaidoOsszes.TabIndex = 10
         '
         'lblMunkaidoOsszes
@@ -130,16 +130,6 @@ Partial Class wtForm
         Me.lblMunkaidoOsszes.Size = New System.Drawing.Size(93, 13)
         Me.lblMunkaidoOsszes.TabIndex = 11
         Me.lblMunkaidoOsszes.Text = "Összes munkaidő:"
-        '
-        'chxAkt
-        '
-        Me.chxAkt.AutoSize = True
-        Me.chxAkt.Location = New System.Drawing.Point(12, 560)
-        Me.chxAkt.Name = "chxAkt"
-        Me.chxAkt.Size = New System.Drawing.Size(205, 17)
-        Me.chxAkt.TabIndex = 12
-        Me.chxAkt.Text = "Csak az aktuális hónap megjelenítése"
-        Me.chxAkt.UseVisualStyleBackColor = True
         '
         'cmbEv
         '
@@ -185,17 +175,26 @@ Partial Class wtForm
         Me.dgvUj.TabIndex = 17
         Me.dgvUj.Visible = False
         '
+        'lblOra
+        '
+        Me.lblOra.AutoSize = True
+        Me.lblOra.Location = New System.Drawing.Point(324, 543)
+        Me.lblOra.Name = "lblOra"
+        Me.lblOra.Size = New System.Drawing.Size(22, 13)
+        Me.lblOra.TabIndex = 18
+        Me.lblOra.Text = "óra"
+        '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(954, 585)
+        Me.Controls.Add(Me.lblOra)
         Me.Controls.Add(Me.dgvUj)
         Me.Controls.Add(Me.lvlHonap)
         Me.Controls.Add(Me.lblEv)
         Me.Controls.Add(Me.cmbHonap)
         Me.Controls.Add(Me.cmbEv)
-        Me.Controls.Add(Me.chxAkt)
         Me.Controls.Add(Me.lblMunkaidoOsszes)
         Me.Controls.Add(Me.txtMunkaidoOsszes)
         Me.Controls.Add(Me.btnMunkaidoossz)
@@ -225,10 +224,10 @@ Partial Class wtForm
     Friend WithEvents btnMunkaidoossz As Button
     Friend WithEvents txtMunkaidoOsszes As TextBox
     Friend WithEvents lblMunkaidoOsszes As Label
-    Friend WithEvents chxAkt As CheckBox
     Friend WithEvents cmbEv As ComboBox
     Friend WithEvents cmbHonap As ComboBox
     Friend WithEvents lblEv As Label
     Friend WithEvents lvlHonap As Label
     Friend WithEvents dgvUj As DataGridView
+    Friend WithEvents lblOra As Label
 End Class

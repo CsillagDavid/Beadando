@@ -7,14 +7,15 @@ Public Class wtForm
     Dim sqlConnection As sqlConn
     Dim editedRows As List(Of Integer) = New List(Of Integer)
     Public Property user = New User()
+    Dim userEmail As String
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
         sqlConnection = New sqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
-        chkJsg()
         intYrMh()
+        chkJsg()
     End Sub
 
     Private Sub chkJsg() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
@@ -23,33 +24,34 @@ Public Class wtForm
                 getFszhLtb()
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
-                lblFelhasznalok.Visible = False
-                ltbFelhasznalok.Visible = False
                 btnFelhasznalok.Enabled = False
-                btnFelhasznalok.Visible = False
-                btnMunkaidoleker.Enabled = False
-                btnMunkaidoleker.Visible = False
+                'lblFelhasznalok.Visible = False
+                'ltbFelhasznalok.Visible = False
+                'btnFelhasznalok.Visible = False
                 getFszhMko(user.email)
+                userEmail = user.email
         End Select
+
     End Sub
 
-    Private Sub getRltMko(tabla As DataGridView) 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
+    Private Sub getRltMko(tabla As DataGridView, index As Integer) 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
         Try
-            Dim result As Decimal
-            Dim mkoSum As Decimal
-            Dim rowCount = tabla.Rows.Count
+            Dim result, kezdo, befejezo, mkoSum As Decimal
             tabla.Columns("napi_ido").ReadOnly = False
-            For index = 0 To rowCount - 2
-                tabla.Item("napi_ido", index).Value = tabla.Item("befejezo_ido", index).Value - tabla.Item("kezdo_ido", index).Value
-            Next
-            For index = 0 To tabla.Rows.Count - 2
-                If (Decimal.TryParse(tabla.Item("napi_ido", index).Value, result)) Then
-                    mkoSum += Decimal.Parse(tabla.Item("napi_ido", index).Value)
-                End If
-            Next
+            If Decimal.TryParse(tabla.Item("befejezo_ido", index).Value, result) Then
+                befejezo = result
+            End If
+            If Decimal.TryParse(tabla.Item("kezdo_ido", index).Value, result) Then
+                kezdo = result
+            End If
+            If Decimal.TryParse(txtMunkaidoOsszes.Text, result) Then
+                mkoSum = result
+            End If
+            tabla.Item("napi_ido", index).Value = befejezo - kezdo
+            mkoSum += (befejezo - kezdo)
             txtMunkaidoOsszes.Visible = True
             lblMunkaidoOsszes.Visible = True
-            txtMunkaidoOsszes.Text = mkoSum & " óra"
+            txtMunkaidoOsszes.Text = mkoSum
             tabla.Columns("napi_ido").ReadOnly = True
         Catch ex As Exception
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
@@ -58,20 +60,27 @@ Public Class wtForm
 
     Private Sub getFszhMko(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
         Dim command As String
-        If chxAkt.Checked Then
-            Dim yr, mh As String
-            yr = DateTime.Now.ToString("yyyy/MM")
-            Dim newDate As DateTime = DateTime.Now.AddMonths(1)
-            mh = newDate.ToString("yyyy/MM")
-            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
-                            INNER JOIN Felhasznalok F
-                            ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & yr & ". 01' AND M.Datum <= '" & mh & ". 01'"
+        Dim result, selYr, selMh As Integer
+        If Int32.TryParse(cmbEv.SelectedItem.ToString(), result) Then
+            selYr = result
         Else
-            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+            selYr = DateTime.Now.Year
+        End If
+        If Int32.TryParse(cmbHonap.SelectedItem.ToString(), result) Then
+            selMh = result
+        Else
+            selMh = 0
+        End If
+        If selMh > 0 Then
+                command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & email & "'"
+                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & selYr & ". " & selMh & ". 01' AND M.Datum <= '" & selYr & ". " & (selMh + 1) & ". 01'"
+            Else
+                command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+        '                    INNER JOIN Felhasznalok F
+        '                    ON M.FelhasznaloID = F.id
+        '                    WHERE F.Email = '" & email & "'"
         End If
         dgvTabla.DataSource = sqlCmd(command)
         dgvTabla.Columns(0).Visible = False
@@ -82,9 +91,15 @@ Public Class wtForm
         dgvTabla.Columns(3).HeaderText = "Befejezés"
         dgvTabla.Columns(3).Name = "befejezo_ido"
         dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
-        getRltMko(dgvTabla)
+        Dim rowCount = dgvTabla.Rows.Count
+        txtMunkaidoOsszes.Text = 0
+        For index = 0 To rowCount - 2
+            getRltMko(dgvTabla, index)
+        Next
         dgvTabla.Columns(1).ReadOnly = True
         dgvTabla.Columns(4).ReadOnly = True
+        btnMentes.Enabled = True
+        btnTorles.Enabled = True
     End Sub
 
     Private Sub getFszh() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
@@ -96,6 +111,12 @@ Public Class wtForm
         dgvTabla.Columns(1).Name = "email"
         dgvTabla.Columns(2).HeaderText = "Munkaidő"
         dgvTabla.Columns(2).Name = "munkaido"
+        btnMentes.Enabled = True
+        btnTorles.Enabled = True
+        txtMunkaidoOsszes.Visible = False
+        txtMunkaidoOsszes.Text = 0
+        lblMunkaidoOsszes.Visible = False
+        lblOra.Visible = False
     End Sub
 
     Private Function sqlCmd(command As String) 'A táblázat feltöltése parancs megadásával
@@ -131,12 +152,12 @@ Public Class wtForm
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "saveOrUpdateMunkaidok"
-        cmd.Parameters.AddWithValue("date", Cells.Item(1).Value)
-        cmd.Parameters.AddWithValue("beginTime", Cells.Item(2).Value)
-        cmd.Parameters.AddWithValue("endTime", Cells.Item(3).Value)
+        cmd.Parameters.AddWithValue("date", Cells.Item("datum").Value)
+        cmd.Parameters.AddWithValue("beginTime", Cells.Item("kezdo_ido").Value)
+        cmd.Parameters.AddWithValue("endTime", Cells.Item("befejezo_ido").Value)
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
-        MsgBox("Edited: " & Cells.Item(1).Value & " " & Cells.Item(2).Value & " " & Cells.Item(3).Value & " " & Cells.Item(4).Value)
+        MsgBox("Edited: " & Cells.Item("datum").Value & " " & Cells.Item("kezdo_ido").Value & " " & Cells.Item("befejezo_ido").Value & " " & Cells.Item("napi_ido").Value)
     End Sub
 
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
@@ -145,7 +166,11 @@ Public Class wtForm
                 If Not editedRows.Contains(e.RowIndex) Then
                     editedRows.Add(e.RowIndex)
                 End If
-                getRltMko(dgvTabla)
+                Dim rowCount = dgvTabla.Rows.Count
+                txtMunkaidoOsszes.Text = 0
+                For index = 0 To rowCount - 2
+                    getRltMko(dgvTabla, index)
+                Next
             End If
             dgvTabla.Rows.Item(e.RowIndex).Tag = ""
         Catch ex As Exception
@@ -155,7 +180,12 @@ Public Class wtForm
     End Sub
 
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
-        getFszhMko(ltbFelhasznalok.SelectedValue)
+        Select Case user.role
+            Case "Admin"
+                getFszhMko(ltbFelhasznalok.SelectedValue)
+            Case "Felhasznalo"
+                getFszhMko(userEmail)
+        End Select
     End Sub
 
     Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
@@ -175,23 +205,25 @@ Public Class wtForm
 
     End Sub
 
-    Private Sub intYrMh()
+    Private Sub intYrMh() 'Az év és hónap kiválasztó feltöltése értékekkel
         Dim yr, mh As Integer
         yr = DateTime.Now.Year
-        mh = 12
-        cmbHonap.Items.Add("Összes")
+        mh = DateTime.Now.Month
         For aktYr = yr To 2000 Step -1
             cmbEv.Items.Add(aktYr)
         Next
-        For aktMh = 1 To mh
+        For aktMh = 1 To 12
             cmbHonap.Items.Add(aktMh)
         Next
         cmbEv.SelectedIndex = 0
-        cmbHonap.SelectedIndex = 0
+        cmbHonap.SelectedIndex = (mh - 1)
     End Sub
 
     Private Sub stpUjTabla(email As String)
         Dim command = ""
+        dgvUj.DataSource = Nothing
+        dgvUj.Columns.Clear()
+        dgvUj.Rows.Clear()
         Select Case user.role
             Case "Admin"
                 command = "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
@@ -217,20 +249,22 @@ Public Class wtForm
         dgvUj.Columns(5).HeaderText = "Befejező idő"
         dgvUj.Columns(5).Name = "befejezo_ido"
         dgvUj.Columns.Add("napi_ido", "Napi munkaidő")
-        getRltMko(dgvUj)
+        Dim rowCount = dgvUj.Rows.Count
+        For index = 0 To rowCount - 2
+            getRltMko(dgvUj, index)
+        Next
         dgvUj.ReadOnly = True
         txtMunkaidoOsszes.Visible = False
+        lblOra.Visible = False
         lblMunkaidoOsszes.Visible = False
     End Sub
 
-    Private Function getMkIdomiSum(index As Integer)
+    Private Function getMkIdomiSum(index As Integer) 'Az összes munkaidő és a különbség kiszámítása
         Dim selMh, selYr, result, munkaIdo, napiIdo, munkanap As Integer
-        Dim allMh As String
         Dim dateRes As Date
         Dim miSumIdo() = {0, 0}
         Dim aktDate As DateTime
         munkanap = 22
-        allMh = ""
         If Int32.TryParse(dgvUj.Item("napi_ido", index).Value, result) Then
             napiIdo = result
         End If
@@ -251,12 +285,9 @@ Public Class wtForm
             If Int32.TryParse(cmbHonap.SelectedItem.ToString(), result) Then
                 selMh = result
             Else
-                allMh = cmbHonap.SelectedItem.ToString()
+                selMh = 0
             End If
-
-            If allMh = "Összes" Then
-                miSumIdo(0) += napiIdo
-            ElseIf aktDate.Month = selMh Then
+            If aktDate.Month = selMh Then
                 miSumIdo(0) += napiIdo
             Else
                 miSumIdo(0) = 0
@@ -269,15 +300,18 @@ Public Class wtForm
         Return miSumIdo
     End Function
 
-    Private Sub getMkossz()
+    Private Sub getMkossz() 'Az összesített munkaidők megjelenítése egy táblázatban
         Dim miSumIdo() = {0, 0}
         Dim result, rowCount, kulonbseg, teljesora, eloirtora As Integer
         Dim nev, email As String
         Dim row As String()
         Dim nevLista As New List(Of String)
         Dim lsindex = 0
+        dgvTabla.ReadOnly = False
         rowCount = dgvUj.Rows.Count
         dgvTabla.DataSource = Nothing
+        dgvTabla.Columns.Clear()
+        dgvTabla.Rows.Clear()
         dgvTabla.Columns.Add("nev", "Név")
         dgvTabla.Columns.Add("email", "E-Mail")
         dgvTabla.Columns.Add("eloirtora", "Előírt óraszám")
@@ -334,9 +368,17 @@ Public Class wtForm
                 End If
             End If
         Next
+        dgvTabla.ReadOnly = True
     End Sub
     Private Sub btnMunkaidoossz_Click(sender As Object, e As EventArgs) Handles btnMunkaidoossz.Click
-        stpUjTabla(ltbFelhasznalok.SelectedValue)
+        Select Case user.role
+            Case "Admin"
+                stpUjTabla(ltbFelhasznalok.SelectedValue)
+            Case "Felhasznalo"
+                stpUjTabla(userEmail)
+        End Select
         getMkossz()
+        btnMentes.Enabled = False
+        btnTorles.Enabled = False
     End Sub
 End Class
