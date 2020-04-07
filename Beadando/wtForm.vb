@@ -25,9 +25,6 @@ Public Class wtForm
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
                 btnFelhasznalok.Enabled = False
-                'lblFelhasznalok.Visible = False
-                'ltbFelhasznalok.Visible = False
-                'btnFelhasznalok.Visible = False
                 getFszhMko(user.email)
                 userEmail = user.email
         End Select
@@ -72,12 +69,12 @@ Public Class wtForm
             selMh = 0
         End If
         If selMh > 0 Then
-                command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
                             WHERE F.Email = '" & email & "' AND M.Datum >= '" & selYr & ". " & selMh & ". 01' AND M.Datum <= '" & selYr & ". " & (selMh + 1) & ". 01'"
-            Else
-                command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+        Else
+            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
         '                    INNER JOIN Felhasznalok F
         '                    ON M.FelhasznaloID = F.id
         '                    WHERE F.Email = '" & email & "'"
