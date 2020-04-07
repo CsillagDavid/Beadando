@@ -84,7 +84,7 @@ Public Class wtForm
             selMh = 0
         End If
         If selMh > 0 Then
-            command = "SELECT M.id, Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
+            command = "SELECT Datum, Kezdo_ido, Befejezo_ido FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
                             WHERE F.Email = '" & email & "' AND M.Datum >= '" & selYr & ". " & selMh & ". 01' AND M.Datum <= '" & selYr & ". " & (selMh + 1) & ". 01'"
@@ -95,7 +95,6 @@ Public Class wtForm
         '                    WHERE F.Email = '" & email & "'"
         End If
         dgvTabla.DataSource = sqlCmd(command)
-        dgvTabla.Columns("id").Visible = False
         dgvTabla.Columns("Datum").HeaderText = "Dátum"
         dgvTabla.Columns("Datum").Name = "datum"
         'dgvTabla.Columns("Datum").ValueType = GetType(Date)
@@ -392,6 +391,7 @@ Public Class wtForm
         Next
         dgvTabla.ReadOnly = True
     End Sub
+
     Private Sub btnMunkaidoossz_Click(sender As Object, e As EventArgs) Handles btnMunkaidoossz.Click
         Select Case user.role
             Case "Admin"
@@ -403,4 +403,5 @@ Public Class wtForm
         btnMentes.Enabled = False
         btnTorles.Enabled = False
     End Sub
+
 End Class

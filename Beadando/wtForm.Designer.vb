@@ -66,7 +66,7 @@ Partial Class wtForm
         Me.dgvTabla.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvTabla.Location = New System.Drawing.Point(186, 9)
         Me.dgvTabla.Name = "dgvTabla"
-        Me.dgvTabla.Size = New System.Drawing.Size(765, 526)
+        Me.dgvTabla.Size = New System.Drawing.Size(765, 539)
         Me.dgvTabla.TabIndex = 4
         '
         'btnFelhasznalok
@@ -89,7 +89,7 @@ Partial Class wtForm
         '
         'btnMentes
         '
-        Me.btnMentes.Location = New System.Drawing.Point(786, 539)
+        Me.btnMentes.Location = New System.Drawing.Point(9, 554)
         Me.btnMentes.Name = "btnMentes"
         Me.btnMentes.Size = New System.Drawing.Size(75, 23)
         Me.btnMentes.TabIndex = 7
@@ -98,7 +98,7 @@ Partial Class wtForm
         '
         'btnTorles
         '
-        Me.btnTorles.Location = New System.Drawing.Point(867, 538)
+        Me.btnTorles.Location = New System.Drawing.Point(90, 554)
         Me.btnTorles.Name = "btnTorles"
         Me.btnTorles.Size = New System.Drawing.Size(75, 23)
         Me.btnTorles.TabIndex = 8
@@ -107,7 +107,7 @@ Partial Class wtForm
         '
         'btnMunkaidoossz
         '
-        Me.btnMunkaidoossz.Location = New System.Drawing.Point(352, 539)
+        Me.btnMunkaidoossz.Location = New System.Drawing.Point(186, 554)
         Me.btnMunkaidoossz.Name = "btnMunkaidoossz"
         Me.btnMunkaidoossz.Size = New System.Drawing.Size(153, 23)
         Me.btnMunkaidoossz.TabIndex = 9
@@ -116,7 +116,7 @@ Partial Class wtForm
         '
         'txtMunkaidoOsszes
         '
-        Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(282, 541)
+        Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(878, 556)
         Me.txtMunkaidoOsszes.Name = "txtMunkaidoOsszes"
         Me.txtMunkaidoOsszes.ReadOnly = True
         Me.txtMunkaidoOsszes.Size = New System.Drawing.Size(36, 20)
@@ -125,7 +125,7 @@ Partial Class wtForm
         'lblMunkaidoOsszes
         '
         Me.lblMunkaidoOsszes.AutoSize = True
-        Me.lblMunkaidoOsszes.Location = New System.Drawing.Point(183, 544)
+        Me.lblMunkaidoOsszes.Location = New System.Drawing.Point(779, 559)
         Me.lblMunkaidoOsszes.Name = "lblMunkaidoOsszes"
         Me.lblMunkaidoOsszes.Size = New System.Drawing.Size(93, 13)
         Me.lblMunkaidoOsszes.TabIndex = 11
@@ -178,7 +178,7 @@ Partial Class wtForm
         'lblOra
         '
         Me.lblOra.AutoSize = True
-        Me.lblOra.Location = New System.Drawing.Point(324, 543)
+        Me.lblOra.Location = New System.Drawing.Point(920, 559)
         Me.lblOra.Name = "lblOra"
         Me.lblOra.Size = New System.Drawing.Size(22, 13)
         Me.lblOra.TabIndex = 18
