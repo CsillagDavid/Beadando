@@ -33,8 +33,8 @@ Public Class wtForm
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
                 btnFelhasznalok.Enabled = False
-                getUserWorkingHours(user.email)
                 setDefaultWorkingHours(user.email)
+                getUserWorkingHours(user.email)
                 userEmail = user.email
         End Select
     End Sub
@@ -71,6 +71,7 @@ Public Class wtForm
             txtMunkaidoOsszes.Visible = True
             lblMunkaidoOsszes.Visible = True
             txtMunkaidoOsszes.Text = mkoSum
+            lblOra.Visible = True
             tabla.Columns("napi_ido").ReadOnly = True
         Catch ex As Exception
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
@@ -86,7 +87,7 @@ Public Class wtForm
         Dim evhonap = getYearAndMonth()
         Select Case value
             Case "Munkaido"
-                Return "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Munkaidok M
+                Return "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M
                             INNER JOIN Felhasznalok F
                             ON M.FelhasznaloID = F.id
                             WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
@@ -119,6 +120,7 @@ Public Class wtForm
                                     WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
                                     AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
         End Select
+        Return ""
     End Function
     Private Sub InsertMunkaidok(tabla As DataGridView)
         Try
@@ -164,13 +166,34 @@ Public Class wtForm
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateMunkaidok"
-        cmd.Parameters.AddWithValue("@Datum", isDate(Cells.Item("datum").Value))
-        cmd.Parameters.AddWithValue("@Kezdo_ido", isDecimal(Cells.Item("kezdo_ido").Value))
-        cmd.Parameters.AddWithValue("@Befejezo_ido", isDecimal(Cells.Item("befejezo_ido").Value))
-        cmd.Parameters.AddWithValue("@FelhasznaloID", isInteger(Cells.Item("felhasznaloid").Value))
+        cmd.Parameters.AddWithValue("@Datum", isDate(Cells.Item("Datum").Value))
+        cmd.Parameters.AddWithValue("@Kezdo_ido", isDecimal(Cells.Item("Kezdo_ido").Value))
+        cmd.Parameters.AddWithValue("@Befejezo_ido", isDecimal(Cells.Item("Befejezo_ido").Value))
+        cmd.Parameters.AddWithValue("@FelhasznaloID", isInteger(Cells.Item("FelhasznaloID").Value))
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+    Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "InsertOrUpdateFelhasznalok"
+        cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value)
+        cmd.Parameters.AddWithValue("@Jelszo", "Asdasd1111")
+        cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
+        cmd.Parameters.AddWithValue("@Munkaido", isInteger(Cells.Item("Munkaido").Value))
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+    End Sub
+    Private Function checkTable(tabla As DataGridView)
+        If tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "Email" And tabla.Columns(2).Name = "Munkaido" Then
+            Return 1
+        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" And tabla.Columns(2).Name = "Befejezo_ido" Then
+            Return 0
+        Else
+            Return -1
+        End If
+    End Function
     Private Function getDifferenceWorkingHours(index As Integer) 'Az összes munkaidő és a ledolgozott órák különbsége
         Dim munkaIdo, napiIdo As Integer
         Dim lista As New Dictionary(Of String, Integer)
@@ -251,6 +274,7 @@ Public Class wtForm
         dgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns("Befejezo_ido").HeaderText = "Befejezés"
         dgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
+        dgvTabla.Columns("FelhasznaloID").Visible = False
         dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
         dgvTabla.Columns("napi_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns.Add("tavollet", "Távollét")
@@ -262,7 +286,7 @@ Public Class wtForm
         dgvTabla.Columns("Datum").ReadOnly = True
         dgvTabla.Columns("napi_ido").ReadOnly = True
         btnMentes.Enabled = True
-        btnTorles.Enabled = True
+        btnTorles.Enabled = False
     End Sub
     Private Sub setDefaultWorkingHours(email As String)
         Dim datum, napStr, honapStr As String
@@ -411,18 +435,18 @@ Public Class wtForm
             Dim diffworkhours = getDifferenceWorkingHours(index)
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
-                If dgvTabla.Rows.Count = 1 Then
-                    kulonbseg = napiIdo - munkaIdo
-                    nevLista.Add(nev)
-                    row = New String() {
+            If dgvTabla.Rows.Count = 1 Then
+                kulonbseg = napiIdo - munkaIdo
+                nevLista.Add(nev)
+                row = New String() {
                                 nev,
                                 email,
                                 munkaIdo,
                                 napiIdo,
                                 kulonbseg
                             }
-                    dgvTabla.Rows.Add(row)
-                Else
+                dgvTabla.Rows.Add(row)
+            Else
                 If nevLista.Contains(nev) Then
                     eloirtora = isDecimal(dgvTabla.Item("eloirtora", lsindex).Value)
                     teljesora = isDecimal(dgvTabla.Item("teljesora", lsindex).Value)
@@ -452,8 +476,13 @@ Public Class wtForm
         getUserData()
     End Sub
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
-        editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
-        editedRows.Clear()
+        If checkTable(dgvTabla) = 1 Then
+            editedRows.ForEach(Sub(i) UpdateFelhasznalok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.Clear()
+        ElseIf checkTable(dgvTabla) = 0 Then
+            editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.Clear()
+        End If
     End Sub
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
         Select Case user.role
@@ -486,11 +515,13 @@ Public Class wtForm
                 If Not editedRows.Contains(e.RowIndex) Then
                     editedRows.Add(e.RowIndex)
                 End If
-                Dim rowCount = dgvTabla.Rows.Count
-                txtMunkaidoOsszes.Text = 0
-                For index = 0 To rowCount - 2
-                    getWorkTimeofDay(dgvTabla, index)
-                Next
+                If checkTable(dgvTabla) = 0 Then
+                    Dim rowCount = dgvTabla.Rows.Count
+                    txtMunkaidoOsszes.Text = 0
+                    For index = 0 To rowCount - 2
+                        getWorkTimeofDay(dgvTabla, index)
+                    Next
+                End If
             End If
             dgvTabla.Rows.Item(e.RowIndex).Tag = ""
         Catch ex As Exception
