@@ -185,10 +185,19 @@ Public Class wtForm
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+    Private Sub DeleteFelhasznalok(Cells As DataGridViewCellCollection)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "DeleteFelhasznalok"
+        cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+    End Sub
     Private Function checkTable(tabla As DataGridView)
         If tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "Email" And tabla.Columns(2).Name = "Munkaido" Then
             Return 1
-        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" And tabla.Columns(2).Name = "Befejezo_ido" Then
+        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" And tabla.Columns(2).Name = "Befejezo_ido" And tabla.Columns(3).Name = "FelhasznaloID" Then
             Return 0
         Else
             Return -1
@@ -483,6 +492,7 @@ Public Class wtForm
             editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         End If
+
     End Sub
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
         Select Case user.role
@@ -504,8 +514,17 @@ Public Class wtForm
                 setDefaultWorkingHours(userEmail)
         End Select
     End Sub
+    Private Sub btnTorles_Click(sender As Object, e As EventArgs) Handles btnTorles.Click
+        If checkTable(dgvTabla) = 1 Then
+            editedRows.ForEach(Sub(i) DeleteFelhasznalok(dgvTabla.SelectedCells.Item(i).Value))
+            editedRows.Clear()
+            'ElseIf checkTable(dgvTabla) = 0 Then
+            '    editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
+            '    editedRows.Clear()
+        End If
+    End Sub
 
-    'Cellamódosítások automatikus érzékelése
+    'DataGridView automatikus függvényei
     Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
         dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
     End Sub
@@ -527,5 +546,18 @@ Public Class wtForm
         Catch ex As Exception
             Console.WriteLine("Hiba a cellamódosításban.")
         End Try
+    End Sub
+    Private Sub dgvTabla_RowPostPaint(sender As Object, e As DataGridViewRowPostPaintEventArgs) Handles dgvTabla.RowPostPaint
+        Dim dg As DataGridView = DirectCast(sender, DataGridView)
+        Dim rowNumber As String = (e.RowIndex + 1).ToString()
+        While rowNumber.Length < dg.RowCount.ToString().Length
+            rowNumber = "0" & rowNumber
+        End While
+        Dim size As SizeF = e.Graphics.MeasureString(rowNumber, Me.Font)
+        If dg.RowHeadersWidth < CInt(size.Width + 20) Then
+            dg.RowHeadersWidth = CInt(size.Width + 20)
+        End If
+        Dim b As Brush = SystemBrushes.ControlText
+        e.Graphics.DrawString(rowNumber, dg.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2))
     End Sub
 End Class

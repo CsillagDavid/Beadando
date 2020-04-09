@@ -46,7 +46,7 @@ Partial Class wtForm
         'lblFelhasznalok
         '
         Me.lblFelhasznalok.AutoSize = True
-        Me.lblFelhasznalok.Location = New System.Drawing.Point(12, 152)
+        Me.lblFelhasznalok.Location = New System.Drawing.Point(6, 159)
         Me.lblFelhasznalok.Name = "lblFelhasznalok"
         Me.lblFelhasznalok.Size = New System.Drawing.Size(72, 13)
         Me.lblFelhasznalok.TabIndex = 0
@@ -55,7 +55,7 @@ Partial Class wtForm
         'ltbFelhasznalok
         '
         Me.ltbFelhasznalok.FormattingEnabled = True
-        Me.ltbFelhasznalok.Location = New System.Drawing.Point(15, 168)
+        Me.ltbFelhasznalok.Location = New System.Drawing.Point(9, 175)
         Me.ltbFelhasznalok.Name = "ltbFelhasznalok"
         Me.ltbFelhasznalok.Size = New System.Drawing.Size(153, 160)
         Me.ltbFelhasznalok.TabIndex = 1
@@ -72,7 +72,7 @@ Partial Class wtForm
         '
         'btnFelhasznalok
         '
-        Me.btnFelhasznalok.Location = New System.Drawing.Point(15, 334)
+        Me.btnFelhasznalok.Location = New System.Drawing.Point(9, 341)
         Me.btnFelhasznalok.Name = "btnFelhasznalok"
         Me.btnFelhasznalok.Size = New System.Drawing.Size(153, 23)
         Me.btnFelhasznalok.TabIndex = 5
@@ -81,7 +81,7 @@ Partial Class wtForm
         '
         'btnMunkaidoleker
         '
-        Me.btnMunkaidoleker.Location = New System.Drawing.Point(15, 90)
+        Me.btnMunkaidoleker.Location = New System.Drawing.Point(9, 52)
         Me.btnMunkaidoleker.Name = "btnMunkaidoleker"
         Me.btnMunkaidoleker.Size = New System.Drawing.Size(153, 46)
         Me.btnMunkaidoleker.TabIndex = 6
@@ -91,7 +91,7 @@ Partial Class wtForm
         'btnMentes
         '
         Me.btnMentes.Enabled = False
-        Me.btnMentes.Location = New System.Drawing.Point(9, 554)
+        Me.btnMentes.Location = New System.Drawing.Point(9, 525)
         Me.btnMentes.Name = "btnMentes"
         Me.btnMentes.Size = New System.Drawing.Size(75, 23)
         Me.btnMentes.TabIndex = 7
@@ -101,7 +101,7 @@ Partial Class wtForm
         'btnTorles
         '
         Me.btnTorles.Enabled = False
-        Me.btnTorles.Location = New System.Drawing.Point(90, 554)
+        Me.btnTorles.Location = New System.Drawing.Point(90, 525)
         Me.btnTorles.Name = "btnTorles"
         Me.btnTorles.Size = New System.Drawing.Size(75, 23)
         Me.btnTorles.TabIndex = 8
@@ -110,7 +110,7 @@ Partial Class wtForm
         '
         'btnMunkaidoossz
         '
-        Me.btnMunkaidoossz.Location = New System.Drawing.Point(186, 554)
+        Me.btnMunkaidoossz.Location = New System.Drawing.Point(9, 104)
         Me.btnMunkaidoossz.Name = "btnMunkaidoossz"
         Me.btnMunkaidoossz.Size = New System.Drawing.Size(153, 23)
         Me.btnMunkaidoossz.TabIndex = 9
@@ -119,7 +119,7 @@ Partial Class wtForm
         '
         'txtMunkaidoOsszes
         '
-        Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(878, 556)
+        Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(887, 551)
         Me.txtMunkaidoOsszes.Name = "txtMunkaidoOsszes"
         Me.txtMunkaidoOsszes.ReadOnly = True
         Me.txtMunkaidoOsszes.Size = New System.Drawing.Size(36, 20)
@@ -128,7 +128,7 @@ Partial Class wtForm
         'lblMunkaidoOsszes
         '
         Me.lblMunkaidoOsszes.AutoSize = True
-        Me.lblMunkaidoOsszes.Location = New System.Drawing.Point(779, 559)
+        Me.lblMunkaidoOsszes.Location = New System.Drawing.Point(788, 556)
         Me.lblMunkaidoOsszes.Name = "lblMunkaidoOsszes"
         Me.lblMunkaidoOsszes.Size = New System.Drawing.Size(93, 13)
         Me.lblMunkaidoOsszes.TabIndex = 11
@@ -137,7 +137,7 @@ Partial Class wtForm
         'cmbEv
         '
         Me.cmbEv.FormattingEnabled = True
-        Me.cmbEv.Location = New System.Drawing.Point(15, 63)
+        Me.cmbEv.Location = New System.Drawing.Point(9, 25)
         Me.cmbEv.Name = "cmbEv"
         Me.cmbEv.Size = New System.Drawing.Size(75, 21)
         Me.cmbEv.TabIndex = 13
@@ -145,7 +145,7 @@ Partial Class wtForm
         'cmbHonap
         '
         Me.cmbHonap.FormattingEnabled = True
-        Me.cmbHonap.Location = New System.Drawing.Point(96, 63)
+        Me.cmbHonap.Location = New System.Drawing.Point(90, 25)
         Me.cmbHonap.Name = "cmbHonap"
         Me.cmbHonap.Size = New System.Drawing.Size(72, 21)
         Me.cmbHonap.TabIndex = 14
@@ -153,7 +153,7 @@ Partial Class wtForm
         'lblEv
         '
         Me.lblEv.AutoSize = True
-        Me.lblEv.Location = New System.Drawing.Point(12, 47)
+        Me.lblEv.Location = New System.Drawing.Point(6, 9)
         Me.lblEv.Name = "lblEv"
         Me.lblEv.Size = New System.Drawing.Size(23, 13)
         Me.lblEv.TabIndex = 15
@@ -162,7 +162,7 @@ Partial Class wtForm
         'lvlHonap
         '
         Me.lvlHonap.AutoSize = True
-        Me.lvlHonap.Location = New System.Drawing.Point(93, 47)
+        Me.lvlHonap.Location = New System.Drawing.Point(87, 9)
         Me.lvlHonap.Name = "lvlHonap"
         Me.lvlHonap.Size = New System.Drawing.Size(42, 13)
         Me.lvlHonap.TabIndex = 16
@@ -172,7 +172,7 @@ Partial Class wtForm
         '
         Me.dgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvUj.Enabled = False
-        Me.dgvUj.Location = New System.Drawing.Point(941, 567)
+        Me.dgvUj.Location = New System.Drawing.Point(9, 558)
         Me.dgvUj.Name = "dgvUj"
         Me.dgvUj.Size = New System.Drawing.Size(10, 10)
         Me.dgvUj.TabIndex = 17
@@ -181,7 +181,7 @@ Partial Class wtForm
         'lblOra
         '
         Me.lblOra.AutoSize = True
-        Me.lblOra.Location = New System.Drawing.Point(920, 559)
+        Me.lblOra.Location = New System.Drawing.Point(929, 555)
         Me.lblOra.Name = "lblOra"
         Me.lblOra.Size = New System.Drawing.Size(22, 13)
         Me.lblOra.TabIndex = 18
@@ -189,7 +189,8 @@ Partial Class wtForm
         '
         'tstButton
         '
-        Me.tstButton.Location = New System.Drawing.Point(15, 12)
+        Me.tstButton.Enabled = False
+        Me.tstButton.Location = New System.Drawing.Point(9, 426)
         Me.tstButton.Name = "tstButton"
         Me.tstButton.Size = New System.Drawing.Size(75, 23)
         Me.tstButton.TabIndex = 19
@@ -200,7 +201,8 @@ Partial Class wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(954, 585)
+        Me.AutoSize = True
+        Me.ClientSize = New System.Drawing.Size(954, 578)
         Me.Controls.Add(Me.tstButton)
         Me.Controls.Add(Me.lblOra)
         Me.Controls.Add(Me.dgvUj)
