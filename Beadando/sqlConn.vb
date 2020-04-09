@@ -38,13 +38,13 @@ Public Class sqlConn
         End If
     End Sub
 
-    Private Function readConnectionString()
+    Private Sub readConnectionString()
         Try
             con.ConnectionString = ConfigurationManager.ConnectionStrings("sqlConnection").ConnectionString
         Catch ex As Exception
             MsgBox("Az sql elérési út nem található!")
             Application.Exit()
         End Try
-    End Function
+    End Sub
 
 End Class
