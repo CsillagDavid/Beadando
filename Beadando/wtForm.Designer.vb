@@ -90,6 +90,7 @@ Partial Class wtForm
         '
         'btnMentes
         '
+        Me.btnMentes.Enabled = False
         Me.btnMentes.Location = New System.Drawing.Point(9, 554)
         Me.btnMentes.Name = "btnMentes"
         Me.btnMentes.Size = New System.Drawing.Size(75, 23)
@@ -99,6 +100,7 @@ Partial Class wtForm
         '
         'btnTorles
         '
+        Me.btnTorles.Enabled = False
         Me.btnTorles.Location = New System.Drawing.Point(90, 554)
         Me.btnTorles.Name = "btnTorles"
         Me.btnTorles.Size = New System.Drawing.Size(75, 23)
