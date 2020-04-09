@@ -1,13 +1,25 @@
-USE wtDB
+USE Nyilvantartas
 GO
 
-CREATE PROCEDURE DeleteFelhasznalok @Email nvarchar
+IF EXISTS (
+  SELECT * 
+    FROM INFORMATION_SCHEMA.ROUTINES 
+   WHERE SPECIFIC_SCHEMA = N'dbo'
+     AND SPECIFIC_NAME = N'DeleteFelhasznalok' 
+)
+   DROP PROCEDURE [dbo].[DeleteFelhasznalok]
+GO
+
+CREATE PROCEDURE [dbo].[DeleteFelhasznalok]
+	@Email nvarchar
 AS
 	begin tran
-		if exists (select * from Felhasznalok where Email=@Email)
+		if exists (select * from [dbo].[Felhasznalok] 
+			where Email=@Email)
 		begin
-		   delete from Felhasznalok
-		   where Email=@Email
+		   delete from [dbo].[Felhasznalok]
+				where Email=@Email
 		end
 	commit tran
 RETURN 0
+GO
