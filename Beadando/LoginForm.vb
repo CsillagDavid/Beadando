@@ -29,6 +29,7 @@ Public Class Login
             MsgBox("Hibás felhasználónév vagy jelszó!", , "Hiba!")
         End If
         reader.Close()
+        sqlConnection.sqlClose()
     End Sub
 
     Private Sub Cancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel.Click
