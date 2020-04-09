@@ -29,6 +29,10 @@ IF OBJECT_ID('[dbo].[Felhasznalok]', 'U') IS NOT NULL
   DROP TABLE [dbo].[Felhasznalok]
 GO
 
+IF OBJECT_ID('[dbo].[Unnepnapok]', 'U') IS NOT NULL
+  DROP TABLE [dbo].[Unnepnapok]
+GO
+
 --Felhasználók tábla létrehozása
 CREATE TABLE [dbo].[Felhasznalok] (
     [id]       INT            IDENTITY (1, 1) NOT NULL,
@@ -65,11 +69,21 @@ CREATE TABLE [dbo].[Jogkorok] (
 
 GO
 
+--Ünnepnapok tábla létrehozása
+CREATE TABLE [dbo].[Unnepnapok]
+(
+	[Id]	INT		IDENTITY (1, 1) NOT NULL,
+	[Datum]	DATE	NOT NULL,
+    [Tipus] int		NOT NULL,
+	PRIMARY KEY CLUSTERED ([Id] ASC),
+);
+GO
+
 --Felhasználók tábla feltöltése
-INSERT INTO [dbo].[Felhasznalok] VALUES ('Rendszergazda','admin1234','admin@wtdb.com','0')
-INSERT INTO [dbo].[Felhasznalok] VALUES ('Jung Tamás','Asd123','jungt@wtdb.com','7')
-INSERT INTO [dbo].[Felhasznalok] VALUES ('Csillag Dávid','Asd456','csdavid@wtdb.com','6')
-INSERT INTO [dbo].[Felhasznalok] VALUES ('Admin Teszt','1','a','8')
+INSERT INTO [dbo].[Felhasznalok] VALUES ('Rendszergazda','admin1234','admin@nyilvantartas.com','0')
+INSERT INTO [dbo].[Felhasznalok] VALUES ('Jung Tamás','Asd123','jungtamas@nyilvantartas.com','7')
+INSERT INTO [dbo].[Felhasznalok] VALUES ('Csillag Dávid','Asd456','csillagdavid@nyilvantartas.com','6')
+INSERT INTO [dbo].[Felhasznalok] VALUES ('Munkahelyi Vezetõ','1','a','8')
 INSERT INTO [dbo].[Felhasznalok] VALUES ('User Teszt','1','u','5')
 
 --Jogkörök tábla feltöltése (Jogkorok beállítása)
@@ -78,3 +92,21 @@ INSERT INTO [dbo].[Jogkorok] VALUES ('2','Felhasznalo')
 INSERT INTO [dbo].[Jogkorok] VALUES ('3','Felhasznalo')
 INSERT INTO [dbo].[Jogkorok] VALUES ('4','Admin')
 INSERT INTO [dbo].[Jogkorok] VALUES ('5','Felhasznalo')
+
+--Ünnepnapok tábla feltöltése
+
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 01. 01','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 03. 15','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 04. 10','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 04. 13','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 05. 01','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 06. 01','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 08. 20','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 08. 21','1')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 08. 29','2')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 10. 23','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 11. 01','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 12. 12','2')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 12. 24','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 12. 25','0')
+INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 12. 26','0')

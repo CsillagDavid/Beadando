@@ -20,7 +20,7 @@ Public Class wtForm
         cmd = sqlConnection.cmd
         readYearAndMonth()
         checkAuthentication()
-        getWeekDays()
+        getWeekdaysNumber()
     End Sub
     'Jogosultságkezelő
     Private Sub checkAuthentication() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
@@ -113,12 +113,14 @@ Public Class wtForm
                                     ON F.id = M.FelhasznaloID
                                     WHERE M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
                                     AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-            Case "OsszesítoFelhasznalo"
+            Case "OsszesitoFelhasznalo"
                 Return "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
                                     INNER JOIN Munkaidok M
                                     ON F.id = M.FelhasznaloID 
                                     WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
                                     AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
+            Case "Unnepnap"
+                Return "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
         End Select
         Return ""
     End Function
@@ -161,6 +163,52 @@ Public Class wtForm
         tavolletBox.Items.Add("Fizetetlen szabadság")
         Return tavolletBox
     End Function
+    Private Function checkTable(tabla As DataGridView)
+        If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" And tabla.Columns(2).Name = "Email" And tabla.Columns(3).Name = "Munkaido" Then
+            Return 1
+        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" And tabla.Columns(2).Name = "Befejezo_ido" And tabla.Columns(3).Name = "FelhasznaloID" Then
+            Return 0
+        Else
+            Return -1
+        End If
+    End Function
+    Private Function getDifferenceWorkingHours(index As Integer) 'Az összes munkaidő és a ledolgozott órák különbsége
+        Dim munkaIdo, napiIdo As Integer
+        Dim lista As New Dictionary(Of String, Integer)
+        Dim aktDate As DateTime
+        Dim evhonap = getYearAndMonth()
+        napiIdo = isInteger(dgvUj.Item("napi_ido", index).Value)
+        munkaIdo = (isInteger(dgvUj.Item("munkaido", index).Value)) * munkanap
+        aktDate = isDate(dgvUj.Item("datum", index).Value)
+        If aktDate.Year = evhonap.Item(itemEv) Then
+            If aktDate.Month = evhonap.Item(itemHonap) Then
+                lista.Add(itemMunkaIdo, munkaIdo)
+                lista.Add(itemNapiIdo, napiIdo)
+            Else
+                napiIdo = 0
+                munkaIdo = 0
+            End If
+        End If
+        Return lista
+    End Function
+    Private Sub getWeekdaysNumber()
+        Dim evhonap As New Dictionary(Of String, Integer)
+        Dim ev, honap, nap As Integer
+        Dim datum As DateTime
+        Dim holidays = getHolidays()
+        munkanap = 0
+        evhonap = getYearAndMonth()
+        ev = isInteger(evhonap.Item(itemEv))
+        honap = isInteger(evhonap.Item(itemHonap))
+        nap = DateTime.DaysInMonth(ev, honap)
+        For index = 1 To nap
+            datum = isDate(ev & ". " & honap & "." & index)
+            Dim ismunkanap = isHolidayOrWeekend(datum, holidays)
+            If ismunkanap Then
+                munkanap += 1
+            End If
+        Next
+    End Sub
     Private Sub UpdateMunkaidok(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -195,52 +243,18 @@ Public Class wtForm
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
-    Private Function checkTable(tabla As DataGridView)
-        If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" And tabla.Columns(2).Name = "Email" And tabla.Columns(3).Name = "Munkaido" Then
-            Return 1
-        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" And tabla.Columns(2).Name = "Befejezo_ido" And tabla.Columns(3).Name = "FelhasznaloID" Then
-            Return 0
-        Else
-            Return -1
-        End If
-    End Function
-    Private Function getDifferenceWorkingHours(index As Integer) 'Az összes munkaidő és a ledolgozott órák különbsége
-        Dim munkaIdo, napiIdo As Integer
-        Dim lista As New Dictionary(Of String, Integer)
-        Dim aktDate As DateTime
-        Dim evhonap = getYearAndMonth()
-        napiIdo = isInteger(dgvUj.Item("napi_ido", index).Value)
-        munkaIdo = (isInteger(dgvUj.Item("munkaido", index).Value)) * munkanap
-        aktDate = isDate(dgvUj.Item("datum", index).Value)
-        If aktDate.Year = evhonap.Item(itemEv) Then
-            If aktDate.Month = evhonap.Item(itemHonap) Then
-                lista.Add(itemMunkaIdo, munkaIdo)
-                lista.Add(itemNapiIdo, napiIdo)
-            Else
-                napiIdo = 0
-                munkaIdo = 0
-            End If
-        End If
+    Private Function getHolidays()
+        clearDataGridView(dgvUj)
+        dgvUj.DataSource = setSqlCommand(getCommand("Unnepnap", ""))
+        Dim lista As New Dictionary(Of Date, Integer)
+        For index = 0 To dgvUj.Rows.Count - 2
+            Dim datum = isDate(dgvUj.Item("Datum", index).Value)
+            Dim tipus = isInteger(dgvUj.Item("Tipus", index).Value)
+            lista.Add(datum, tipus)
+        Next
+        clearDataGridView(dgvUj)
         Return lista
     End Function
-    Private Sub getWeekDays()
-        Dim evhonap As New Dictionary(Of String, Integer)
-        Dim ev, honap, nap As Integer
-        Dim datum As DateTime
-        munkanap = 0
-        evhonap = getYearAndMonth()
-        ev = isInteger(evhonap.Item(itemEv))
-        honap = isInteger(evhonap.Item(itemHonap))
-        nap = DateTime.DaysInMonth(ev, honap)
-        For index = 1 To nap
-            datum = isDate(ev & ". " & honap & "." & index)
-            If datum.DayOfWeek() = DayOfWeek.Sunday Or datum.DayOfWeek() = DayOfWeek.Saturday Then
-                Console.WriteLine(datum)
-            Else
-                munkanap += 1
-            End If
-        Next
-    End Sub
 
     'Dátum, Integer, Decimal ellenőrzés, és táblaresetelés
     Private Function isDate(parameter As Object)
@@ -273,6 +287,25 @@ Public Class wtForm
         tabla.Columns.Clear()
         tabla.Rows.Clear()
     End Sub
+    Private Function isHolidayOrWeekend(datum As Date, holidays As Dictionary(Of Date, Integer))
+        If datum.DayOfWeek = DayOfWeek.Sunday Then
+            Return False
+        ElseIf datum.DayOfWeek() = DayOfWeek.Saturday Then
+            Return False
+        End If
+        For Each item In holidays
+            If item.Key = datum Then
+                If item.Value = 0 Then
+                    Return False
+                ElseIf item.Value = 1 Then
+                    Return False
+                Else
+                    Return True
+                End If
+            End If
+        Next
+        Return True
+    End Function
 
     'Funkciót ellátó függvények
     Private Sub getUserWorkingHours(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
@@ -304,6 +337,7 @@ Public Class wtForm
         Dim kido, bido As Decimal
         Dim row As String()
         Dim dateResult As DateTime
+        Dim holidays = getHolidays()
         Dim evhonap = getYearAndMonth()
         clearDataGridView(dgvUj)
         dgvUj.DataSource = setSqlCommand(getCommand("MunkaidokAll", email))
@@ -340,9 +374,8 @@ Public Class wtForm
             End If
             datum = ev & ". " & honapStr & ". " & napStr
             If Date.TryParse(datum, dateResult) Then
-                If dateResult.DayOfWeek = DayOfWeek.Sunday Then
-                ElseIf dateResult.DayOfWeek() = DayOfWeek.Saturday Then
-                Else
+                Dim ismunkanap = isHolidayOrWeekend(datum, holidays)
+                If ismunkanap Then
                     kido = 8
                     bido = kido + munkaido
                     If rowCount > 1 Then
@@ -405,7 +438,7 @@ Public Class wtForm
             Case "Admin"
                 dgvUj.DataSource = setSqlCommand(getCommand("OsszesitoAdmin", ""))
             Case "Felhasznalo"
-                dgvUj.DataSource = setSqlCommand(getCommand("OsszesítoFelhasznalo", userEmail))
+                dgvUj.DataSource = setSqlCommand(getCommand("OsszesitoFelhasznalo", userEmail))
         End Select
         dgvUj.Columns.Add("napi_ido", "Napi munkaidő")
         dgvUj.Columns.Add("tavollet", "Távollét")
@@ -505,7 +538,7 @@ Public Class wtForm
         End Select
     End Sub
     Private Sub btnMunkaidoossz_Click(sender As Object, e As EventArgs) Handles btnMunkaidoossz.Click
-        getWeekDays()
+        getWeekdaysNumber()
         getSummary()
     End Sub
     Private Sub tstButton_Click(sender As Object, e As EventArgs) Handles tstButton.Click
