@@ -102,7 +102,7 @@ Public Class wtForm
                 Return "SELECT F.id, F.Munkaido FROM Felhasznalok F
                             WHERE F.Email = '" & email & "'"
             Case "Felhasznalo"
-                Return "SELECT F.Nev, F.Email, F.Munkaido FROM Felhasznalok F
+                Return "SELECT F.id, F.Nev, F.Email, F.Munkaido FROM Felhasznalok F
                                      WHERE F.Munkaido >" & 0
             Case "FelhasznaloLista"
                 Return "SELECT F.Nev, F.Email FROM Felhasznalok F
@@ -178,6 +178,7 @@ Public Class wtForm
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateFelhasznalok"
+        cmd.Parameters.AddWithValue("@id", Cells.Item("id").Value)
         cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value)
         cmd.Parameters.AddWithValue("@Jelszo", "Asdasd1111")
         cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
@@ -195,7 +196,7 @@ Public Class wtForm
         sqlConnection.sqlClose()
     End Sub
     Private Function checkTable(tabla As DataGridView)
-        If tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "Email" And tabla.Columns(2).Name = "Munkaido" Then
+        If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" And tabla.Columns(2).Name = "Email" And tabla.Columns(3).Name = "Munkaido" Then
             Return 1
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" And tabla.Columns(2).Name = "Befejezo_ido" And tabla.Columns(3).Name = "FelhasznaloID" Then
             Return 0
@@ -383,6 +384,7 @@ Public Class wtForm
     Private Sub getUserData() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
         clearDataGridView(dgvTabla)
         dgvTabla.DataSource = setSqlCommand(getCommand("Felhasznalo", ""))
+        dgvTabla.Columns("id").Visible = False
         dgvTabla.Columns("nev").HeaderText = "Név"
         dgvTabla.Columns("email").HeaderText = "E-Mail"
         dgvTabla.Columns("munkaido").HeaderText = "Munkaidő"
