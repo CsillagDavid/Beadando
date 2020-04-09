@@ -1,6 +1,3 @@
--- =========================================
--- Create table template
--- =========================================
 USE wtDB
 GO
 
@@ -14,8 +11,8 @@ CREATE TABLE [dbo].[Munkaidok] (
     [Kezdo_ido]     DECIMAL (18) NOT NULL,
     [Befejezo_ido]  DECIMAL (18) NOT NULL,
     [FelhasznaloID] INT          NOT NULL,
-    PRIMARY KEY CLUSTERED ([id] ASC), 
-    CONSTRAINT fk_munkaidok_felhasznalok FOREIGN KEY (FelhasznaloID) REFERENCES Felhasznalok(id)
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [fk_munkaidok_felhasznalok] FOREIGN KEY ([FelhasznaloID]) REFERENCES [dbo].[Felhasznalok] ([id])
 );
 
 GO
