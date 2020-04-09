@@ -321,6 +321,7 @@ Public Class wtForm
         dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
         dgvTabla.Columns("napi_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns.Add("tavollet", "Távollét")
+        dgvTabla.Columns("tavollet").ValueType = GetType(DataGridViewComboBoxCell)
         txtMunkaidoOsszes.Text = 0
         For index = 0 To dgvTabla.Rows.Count - 2
             dgvTabla.Item("tavollet", index) = initComboBox()
@@ -421,6 +422,10 @@ Public Class wtForm
         dgvTabla.Columns("nev").HeaderText = "Név"
         dgvTabla.Columns("email").HeaderText = "E-Mail"
         dgvTabla.Columns("munkaido").HeaderText = "Munkaidő"
+        dgvTabla.Columns("id").ValueType = GetType(Integer)
+        dgvTabla.Columns("id").ValueType = GetType(String)
+        dgvTabla.Columns("id").ValueType = GetType(String)
+        dgvTabla.Columns("id").ValueType = GetType(Integer)
         btnMentes.Enabled = True
         btnTorles.Enabled = True
         txtMunkaidoOsszes.Visible = False
@@ -594,5 +599,30 @@ Public Class wtForm
         End If
         Dim b As Brush = SystemBrushes.ControlText
         e.Graphics.DrawString(rowNumber, dg.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2))
+    End Sub
+
+    Private Sub dgvTabla_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvTabla.DataError
+        MessageBox.Show("Error:  " & e.Context.ToString())
+        If (e.Context = DataGridViewDataErrorContexts.Commit) Then
+            MessageBox.Show("Commit error")
+        End If
+        If (e.Context = DataGridViewDataErrorContexts.CurrentCellChange) Then
+            MessageBox.Show("Cell change")
+        End If
+        If (e.Context = DataGridViewDataErrorContexts.Parsing) Then
+            MessageBox.Show("parsing error")
+        End If
+        If (e.Context = DataGridViewDataErrorContexts.LeaveControl) Then
+            MessageBox.Show("leave control error")
+        End If
+
+        If (TypeOf (e.Exception) Is ConstraintException) Then
+            Dim view As DataGridView = CType(sender, DataGridView)
+            view.Rows(e.RowIndex).ErrorText = "an error"
+            view.Rows(e.RowIndex).Cells(e.ColumnIndex) _
+                .ErrorText = "an error"
+            MsgBox("error")
+            e.ThrowException = False
+        End If
     End Sub
 End Class
