@@ -189,7 +189,6 @@ Partial Class wtForm
         '
         'tstButton
         '
-        Me.tstButton.Enabled = False
         Me.tstButton.Location = New System.Drawing.Point(9, 426)
         Me.tstButton.Name = "tstButton"
         Me.tstButton.Size = New System.Drawing.Size(75, 23)
