@@ -15,10 +15,10 @@ CREATE PROCEDURE [dbo].[InsertOrUpdateUnnepnapok]
 	@Tipus int
 AS
 	begin tran
-		if exists (select * from [dbo].[InsertOrUpdateUnnepnapok] 
+		if exists (select * from [dbo].[Unnepnapok] 
 			where Datum=@Datum)
 		begin
-		   update [dbo].[InsertOrUpdateUnnepnapok] 
+		   update [dbo].[Unnepnapok] 
 		   set 
 				Datum=@Datum, 
 				Tipus=@Tipus
@@ -26,7 +26,7 @@ AS
 		end
 		else
 		begin
-		   insert into [dbo].[InsertOrUpdateUnnepnapok] (Datum, Tipus) 
+		   insert into [dbo].[Unnepnapok] (Datum, Tipus) 
 		   values (@Datum, @Tipus)
 		end
 	commit tran
