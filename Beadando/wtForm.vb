@@ -29,6 +29,12 @@ Public Class wtForm
                 getFszhLtb()
                 If Not user.userName = "Rendszergazda" Then
                     setDefaultWorkingHours(user.email)
+                Else
+                    sqlConnection.sqlConnect()
+                    lblUnnep.Visible = True
+                    lblUnnep.Enabled = True
+                    btnUnnep.Visible = True
+                    btnUnnep.Enabled = True
                 End If
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
@@ -102,7 +108,7 @@ Public Class wtForm
                 Return "SELECT F.id, F.Munkaido FROM Felhasznalok F
                             WHERE F.Email = '" & email & "'"
             Case "Felhasznalo"
-                Return "SELECT F.id, F.Nev, F.Email, F.Munkaido FROM Felhasznalok F
+                Return "SELECT F.id, F.Nev, F.Jelszo, F.Email, F.Munkaido FROM Felhasznalok F
                                      WHERE F.Munkaido >" & 0
             Case "FelhasznaloLista"
                 Return "SELECT F.Nev, F.Email FROM Felhasznalok F
@@ -164,13 +170,20 @@ Public Class wtForm
         Return tavolletBox
     End Function
     Private Function checkTable(tabla As DataGridView)
-        If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" And tabla.Columns(2).Name = "Email" And tabla.Columns(3).Name = "Munkaido" Then
-            Return 1
-        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" And tabla.Columns(2).Name = "Befejezo_ido" And tabla.Columns(3).Name = "FelhasznaloID" Then
-            Return 0
+        If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" Then
+            If tabla.Columns(3).Name = "Jelszo" And tabla.Columns(4).Name = "Email" And tabla.Columns(3).Name = "Munkaido" Then
+                Return 1
+            End If
+        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" Then
+            If tabla.Columns(2).Name = "Befejezo_ido" And tabla.Columns(3).Name = "FelhasznaloID" Then
+                Return 0
+            End If
+        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Tipus" Then
+            Return 2
         Else
             Return -1
         End If
+        Return -1
     End Function
     Private Function getDifferenceWorkingHours(index As Integer) 'Az összes munkaidő és a ledolgozott órák különbsége
         Dim munkaIdo, napiIdo As Integer
@@ -228,9 +241,19 @@ Public Class wtForm
         cmd.CommandText = "InsertOrUpdateFelhasznalok"
         cmd.Parameters.AddWithValue("@id", Cells.Item("id").Value)
         cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value)
-        cmd.Parameters.AddWithValue("@Jelszo", "Asdasd1111")
+        cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value)
         cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
         cmd.Parameters.AddWithValue("@Munkaido", isInteger(Cells.Item("Munkaido").Value))
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+    End Sub
+    Private Sub UpdateUnnenpnapok(Cells As DataGridViewCellCollection)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "InsertOrUpdateUnnepnapok"
+        cmd.Parameters.AddWithValue("@Datum", isDate(Cells.Item("Datum").Value))
+        cmd.Parameters.AddWithValue("@Tipus", isInteger(Cells.Item("Tipus").Value))
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
@@ -422,6 +445,8 @@ Public Class wtForm
         dgvTabla.Columns("nev").HeaderText = "Név"
         dgvTabla.Columns("email").HeaderText = "E-Mail"
         dgvTabla.Columns("munkaido").HeaderText = "Munkaidő"
+        dgvTabla.Columns("jelszo").Visible = False
+        dgvTabla.Columns("jelszo").ReadOnly = True
         dgvTabla.Columns("id").ValueType = GetType(Integer)
         dgvTabla.Columns("id").ValueType = GetType(String)
         dgvTabla.Columns("id").ValueType = GetType(String)
@@ -458,6 +483,12 @@ Public Class wtForm
         btnMentes.Enabled = False
         btnTorles.Enabled = False
         getWorkingHoursSummary()
+    End Sub
+    Private Sub setHoliday()
+        clearDataGridView(dgvTabla)
+        dgvTabla.DataSource = setSqlCommand(getCommand("Unnepnap", ""))
+        btnMentes.Enabled = True
+        btnTorles.Enabled = True
     End Sub
     Private Sub getWorkingHoursSummary() 'Az összesített munkaidők megjelenítése egy táblázatban
         Dim kulonbseg, teljesora, eloirtora As Decimal
@@ -523,6 +554,10 @@ Public Class wtForm
     'Funkciógombok működtetése
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click
         getUserData()
+        If user.userName = "Rendszergazda" Then
+            dgvTabla.Columns("jelszo").Visible = True
+            dgvTabla.Columns("jelszo").ReadOnly = False
+        End If
     End Sub
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
         If checkTable(dgvTabla) = 1 Then
@@ -530,6 +565,9 @@ Public Class wtForm
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 0 Then
             editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.Clear()
+        ElseIf checkTable(dgvTabla) = 2 Then
+            editedRows.ForEach(Sub(i) UpdateUnnenpnapok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         End If
 
@@ -562,6 +600,9 @@ Public Class wtForm
             '    editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
             '    editedRows.Clear()
         End If
+    End Sub
+    Private Sub btnUnnep_Click(sender As Object, e As EventArgs) Handles btnUnnep.Click
+        setHoliday()
     End Sub
 
     'DataGridView automatikus függvényei
@@ -600,7 +641,6 @@ Public Class wtForm
         Dim b As Brush = SystemBrushes.ControlText
         e.Graphics.DrawString(rowNumber, dg.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2))
     End Sub
-
     Private Sub dgvTabla_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvTabla.DataError
         MessageBox.Show("Error:  " & e.Context.ToString())
         If (e.Context = DataGridViewDataErrorContexts.Commit) Then
@@ -625,4 +665,5 @@ Public Class wtForm
             e.ThrowException = False
         End If
     End Sub
+
 End Class
