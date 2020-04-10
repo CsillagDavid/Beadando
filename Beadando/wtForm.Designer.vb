@@ -39,6 +39,8 @@ Partial Class wtForm
         Me.dgvUj = New System.Windows.Forms.DataGridView()
         Me.lblOra = New System.Windows.Forms.Label()
         Me.tstButton = New System.Windows.Forms.Button()
+        Me.btnUnnep = New System.Windows.Forms.Button()
+        Me.lblUnnep = New System.Windows.Forms.Label()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -189,12 +191,34 @@ Partial Class wtForm
         '
         'tstButton
         '
-        Me.tstButton.Location = New System.Drawing.Point(9, 426)
+        Me.tstButton.Location = New System.Drawing.Point(197, 554)
         Me.tstButton.Name = "tstButton"
         Me.tstButton.Size = New System.Drawing.Size(75, 23)
         Me.tstButton.TabIndex = 19
         Me.tstButton.Text = "teszt"
         Me.tstButton.UseVisualStyleBackColor = True
+        '
+        'btnUnnep
+        '
+        Me.btnUnnep.Enabled = False
+        Me.btnUnnep.Location = New System.Drawing.Point(9, 414)
+        Me.btnUnnep.Name = "btnUnnep"
+        Me.btnUnnep.Size = New System.Drawing.Size(75, 23)
+        Me.btnUnnep.TabIndex = 20
+        Me.btnUnnep.Text = "Szerkesztés"
+        Me.btnUnnep.UseVisualStyleBackColor = True
+        Me.btnUnnep.Visible = False
+        '
+        'lblUnnep
+        '
+        Me.lblUnnep.AutoSize = True
+        Me.lblUnnep.Enabled = False
+        Me.lblUnnep.Location = New System.Drawing.Point(6, 398)
+        Me.lblUnnep.Name = "lblUnnep"
+        Me.lblUnnep.Size = New System.Drawing.Size(136, 13)
+        Me.lblUnnep.TabIndex = 21
+        Me.lblUnnep.Text = "Ünnepnapok szerkesztése:"
+        Me.lblUnnep.Visible = False
         '
         'wtForm
         '
@@ -202,6 +226,8 @@ Partial Class wtForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(954, 578)
+        Me.Controls.Add(Me.lblUnnep)
+        Me.Controls.Add(Me.btnUnnep)
         Me.Controls.Add(Me.tstButton)
         Me.Controls.Add(Me.lblOra)
         Me.Controls.Add(Me.dgvUj)
@@ -245,4 +271,6 @@ Partial Class wtForm
     Friend WithEvents dgvUj As DataGridView
     Friend WithEvents lblOra As Label
     Friend WithEvents tstButton As Button
+    Friend WithEvents btnUnnep As Button
+    Friend WithEvents lblUnnep As Label
 End Class
