@@ -12,21 +12,21 @@ GO
 
 CREATE PROCEDURE [dbo].[InsertOrUpdateFelhasznalok]
 	@id int, 
-	@Nev nvarchar, 
-	@Jelszo nvarchar, 
-	@Email nvarchar, 
+	@Nev nvarchar (255), 
+	@Jelszo nvarchar (255), 
+	@Email nvarchar (255), 
 	@Munkaido int
 AS
 	begin tran
 		if exists (select * from [dbo].[Felhasznalok] 
-			where Email=@Email)
+			where Nev = @Nev OR Email = @Email)
 		begin
 		   update [dbo].[Felhasznalok] 
 		   set 
-				Nev=@Nev, 
-				Email=@Email, 
-				Munkaido=@Munkaido
-		   where id=@id
+				Nev = @Nev, 
+				Email = @Email, 
+				Munkaido = @Munkaido
+		   where Nev = @Nev OR Email = @Email
 		end
 		else
 		begin

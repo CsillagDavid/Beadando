@@ -16,13 +16,13 @@ CREATE PROCEDURE [dbo].[InsertOrUpdateUnnepnapok]
 AS
 	begin tran
 		if exists (select * from [dbo].[Unnepnapok] 
-			where Datum=@Datum)
+			where Datum = @Datum)
 		begin
 		   update [dbo].[Unnepnapok] 
 		   set 
-				Datum=@Datum, 
-				Tipus=@Tipus
-		   where Datum=@Datum
+				Datum = @Datum, 
+				Tipus = @Tipus
+		   where Datum = @Datum
 		end
 		else
 		begin
