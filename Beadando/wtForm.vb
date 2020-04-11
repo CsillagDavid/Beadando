@@ -35,6 +35,10 @@ Public Class wtForm
                     lblUnnep.Enabled = True
                     btnUnnep.Visible = True
                     btnUnnep.Enabled = True
+                    lblJogkor.Visible = True
+                    lblJogkor.Enabled = True
+                    btnJogkor.Visible = True
+                    btnJogkor.Enabled = True
                 End If
             Case "Felhasznalo"
                 ltbFelhasznalok.Enabled = False
@@ -127,29 +131,17 @@ Public Class wtForm
                                     AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
             Case "Unnepnap"
                 Return "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
+            Case "Jogkor"
+                Return "SELECT F.id FROM Felhasznalok F
+                        WHERE F.Munkaido > " & 0
+            Case "UpdateJogkor"
+                Return "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
+                        INNER JOIN Felhasznalok F
+                        ON F.id = J.FelhasznaloID
+                        WHERE F.Munkaido > " & 0
         End Select
         Return ""
     End Function
-    Private Sub InsertMunkaidok(tabla As DataGridView)
-        Try
-            Dim rowCount = tabla.Rows.Count
-            cmd = con.CreateCommand()
-            cmd.CommandText = "InsertOrUpdateMunkaidok"
-            cmd.CommandType = CommandType.StoredProcedure
-            sqlConnection.sqlConnect()
-            For index = 0 To rowCount - 2
-                cmd.Parameters.Clear()
-                cmd.Parameters.AddWithValue("@Datum", isDate(dgvTabla.Item("datum", index).Value))
-                cmd.Parameters.AddWithValue("@Kezdo_ido", isDecimal(dgvTabla.Item("kezdo_ido", index).Value))
-                cmd.Parameters.AddWithValue("@Befejezo_ido", isDecimal(dgvTabla.Item("befejezo_ido", index).Value))
-                cmd.Parameters.AddWithValue("@FelhasznaloID", isInteger(dgvTabla.Item("felhasznaloid", index).Value))
-                cmd.ExecuteNonQuery()
-            Next
-            sqlConnection.sqlClose()
-        Catch ex As Exception
-            Console.WriteLine("Hiba az adatbázis frissítése közben")
-        End Try
-    End Sub
     Private Function setSqlCommand(command As String) 'A táblázat feltöltése parancs megadásával
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -171,15 +163,13 @@ Public Class wtForm
     End Function
     Private Function checkTable(tabla As DataGridView)
         If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" Then
-            If tabla.Columns(3).Name = "Jelszo" And tabla.Columns(4).Name = "Email" And tabla.Columns(3).Name = "Munkaido" Then
-                Return 1
-            End If
+            Return 1
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" Then
-            If tabla.Columns(2).Name = "Befejezo_ido" And tabla.Columns(3).Name = "FelhasznaloID" Then
-                Return 0
-            End If
+            Return 0
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Tipus" Then
             Return 2
+        ElseIf tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "FelhasznaloID" Then
+            Return 3
         Else
             Return -1
         End If
@@ -222,6 +212,36 @@ Public Class wtForm
             End If
         Next
     End Sub
+    Private Function getHolidays()
+        clearDataGridView(dgvUj)
+        dgvUj.DataSource = setSqlCommand(getCommand("Unnepnap", ""))
+        Dim lista As New Dictionary(Of Date, Integer)
+        For index = 0 To dgvUj.Rows.Count - 2
+            Dim datum = isDate(dgvUj.Item("Datum", index).Value)
+            Dim tipus = isInteger(dgvUj.Item("Tipus", index).Value)
+            lista.Add(datum, tipus)
+        Next
+        clearDataGridView(dgvUj)
+        Return lista
+    End Function
+
+    'SQL tárolt eljárások
+    Private Sub InsertJogkorok()
+        clearDataGridView(dgvUj)
+        dgvUj.DataSource = setSqlCommand(getCommand("Jogkor", ""))
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "InsertJogkorok"
+        For index = 0 To dgvUj.Rows.Count - 2
+            cmd.Parameters.Clear()
+            cmd.Parameters.AddWithValue("@FelhasznaloID", dgvUj.Item("id", index).Value)
+            cmd.Parameters.AddWithValue("@Jogkor", "Felhasznalo")
+            cmd.ExecuteNonQuery()
+        Next
+        sqlConnection.sqlClose()
+        clearDataGridView(dgvUj)
+    End Sub
     Private Sub UpdateMunkaidok(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -239,13 +259,48 @@ Public Class wtForm
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateFelhasznalok"
-        cmd.Parameters.AddWithValue("@id", Cells.Item("id").Value)
-        cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value)
-        cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value)
+        cmd.Parameters.AddWithValue("@id", Cells.Item("id").Value.ToString())
+        cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value.ToString())
+        If Cells.Item("Jelszo").Value.ToString() = "" Then
+            cmd.Parameters.AddWithValue("@Jelszo", "Password1")
+        Else
+            cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value.ToString())
+        End If
         cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
-        cmd.Parameters.AddWithValue("@Munkaido", isInteger(Cells.Item("Munkaido").Value))
+        cmd.Parameters.AddWithValue("@Munkaido", isInteger(Cells.Item("Munkaido").Value.ToString()))
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
+        InsertJogkorok()
+    End Sub
+    Private Sub UpdateJogkorok(Cells As DataGridViewCellCollection)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "UpdateJogkorok"
+        cmd.Parameters.AddWithValue("@FelhasznaloID", Cells.Item("FelhasznaloID").Value)
+        cmd.Parameters.AddWithValue("@Jogkor", Cells.Item("Jogkor").Value)
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+    End Sub
+    Private Sub InsertMunkaidok(tabla As DataGridView)
+        Try
+            Dim rowCount = tabla.Rows.Count
+            cmd = con.CreateCommand()
+            cmd.CommandText = "InsertOrUpdateMunkaidok"
+            cmd.CommandType = CommandType.StoredProcedure
+            sqlConnection.sqlConnect()
+            For index = 0 To rowCount - 2
+                cmd.Parameters.Clear()
+                cmd.Parameters.AddWithValue("@Datum", isDate(dgvTabla.Item("datum", index).Value))
+                cmd.Parameters.AddWithValue("@Kezdo_ido", isDecimal(dgvTabla.Item("kezdo_ido", index).Value))
+                cmd.Parameters.AddWithValue("@Befejezo_ido", isDecimal(dgvTabla.Item("befejezo_ido", index).Value))
+                cmd.Parameters.AddWithValue("@FelhasznaloID", isInteger(dgvTabla.Item("felhasznaloid", index).Value))
+                cmd.ExecuteNonQuery()
+            Next
+            sqlConnection.sqlClose()
+        Catch ex As Exception
+            Console.WriteLine("Hiba az adatbázis frissítése közben")
+        End Try
     End Sub
     Private Sub UpdateUnnenpnapok(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
@@ -257,27 +312,17 @@ Public Class wtForm
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
-    Private Sub DeleteFelhasznalok(Cells As DataGridViewCellCollection)
+    Private Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "DeleteFelhasznalok"
-        cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
+        cmd.Parameters.AddWithValue("@id", id)
+        cmd.Parameters.AddWithValue("@Nev", nev)
+        cmd.Parameters.AddWithValue("@Email", email)
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
-    Private Function getHolidays()
-        clearDataGridView(dgvUj)
-        dgvUj.DataSource = setSqlCommand(getCommand("Unnepnap", ""))
-        Dim lista As New Dictionary(Of Date, Integer)
-        For index = 0 To dgvUj.Rows.Count - 2
-            Dim datum = isDate(dgvUj.Item("Datum", index).Value)
-            Dim tipus = isInteger(dgvUj.Item("Tipus", index).Value)
-            lista.Add(datum, tipus)
-        Next
-        clearDataGridView(dgvUj)
-        Return lista
-    End Function
 
     'Dátum, Integer, Decimal ellenőrzés, és táblaresetelés
     Private Function isDate(parameter As Object)
@@ -550,6 +595,13 @@ Public Class wtForm
         Next
         dgvTabla.ReadOnly = True
     End Sub
+    Private Sub getJogkorok()
+        clearDataGridView(dgvTabla)
+        dgvTabla.DataSource = setSqlCommand(getCommand("UpdateJogkor", ""))
+        dgvTabla.Columns("FelhasznaloID").Visible = False
+        dgvTabla.Columns("Nev").ReadOnly = True
+        btnMentes.Enabled = True
+    End Sub
 
     'Funkciógombok működtetése
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click
@@ -568,6 +620,9 @@ Public Class wtForm
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 2 Then
             editedRows.ForEach(Sub(i) UpdateUnnenpnapok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.Clear()
+        ElseIf checkTable(dgvTabla) = 3 Then
+            editedRows.ForEach(Sub(i) UpdateJogkorok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         End If
 
@@ -594,15 +649,25 @@ Public Class wtForm
     End Sub
     Private Sub btnTorles_Click(sender As Object, e As EventArgs) Handles btnTorles.Click
         If checkTable(dgvTabla) = 1 Then
-            editedRows.ForEach(Sub(i) DeleteFelhasznalok(dgvTabla.SelectedCells.Item(i).Value))
-            editedRows.Clear()
-            'ElseIf checkTable(dgvTabla) = 0 Then
-            '    editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
-            '    editedRows.Clear()
+            Dim email, nev As String
+            Dim id As Integer
+            If dgvTabla.SelectedRows.Count > 0 Then
+                email = dgvTabla.SelectedRows(0).Cells("Email").Value
+                id = dgvTabla.SelectedRows(0).Cells("id").Value
+                nev = dgvTabla.SelectedRows(0).Cells("nev").Value
+                dgvTabla.Rows.Remove(dgvTabla.SelectedRows(0))
+                DeleteFelhasznalok(nev, email, id)
+                getFszhLtb()
+            Else
+                MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
+            End If
         End If
     End Sub
     Private Sub btnUnnep_Click(sender As Object, e As EventArgs) Handles btnUnnep.Click
         setHoliday()
+    End Sub
+    Private Sub btnJogkor_Click(sender As Object, e As EventArgs) Handles btnJogkor.Click
+        getJogkorok()
     End Sub
 
     'DataGridView automatikus függvényei

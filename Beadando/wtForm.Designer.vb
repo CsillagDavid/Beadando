@@ -41,6 +41,8 @@ Partial Class wtForm
         Me.tstButton = New System.Windows.Forms.Button()
         Me.btnUnnep = New System.Windows.Forms.Button()
         Me.lblUnnep = New System.Windows.Forms.Label()
+        Me.lblJogkor = New System.Windows.Forms.Label()
+        Me.btnJogkor = New System.Windows.Forms.Button()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -220,12 +222,36 @@ Partial Class wtForm
         Me.lblUnnep.Text = "Ünnepnapok szerkesztése:"
         Me.lblUnnep.Visible = False
         '
+        'lblJogkor
+        '
+        Me.lblJogkor.AutoSize = True
+        Me.lblJogkor.Enabled = False
+        Me.lblJogkor.Location = New System.Drawing.Point(9, 444)
+        Me.lblJogkor.Name = "lblJogkor"
+        Me.lblJogkor.Size = New System.Drawing.Size(54, 13)
+        Me.lblJogkor.TabIndex = 22
+        Me.lblJogkor.Text = "Jogkörök:"
+        Me.lblJogkor.Visible = False
+        '
+        'btnJogkor
+        '
+        Me.btnJogkor.Enabled = False
+        Me.btnJogkor.Location = New System.Drawing.Point(9, 460)
+        Me.btnJogkor.Name = "btnJogkor"
+        Me.btnJogkor.Size = New System.Drawing.Size(75, 23)
+        Me.btnJogkor.TabIndex = 23
+        Me.btnJogkor.Text = "Szerkesztés"
+        Me.btnJogkor.UseVisualStyleBackColor = True
+        Me.btnJogkor.Visible = False
+        '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(954, 578)
+        Me.Controls.Add(Me.btnJogkor)
+        Me.Controls.Add(Me.lblJogkor)
         Me.Controls.Add(Me.lblUnnep)
         Me.Controls.Add(Me.btnUnnep)
         Me.Controls.Add(Me.tstButton)
@@ -273,4 +299,6 @@ Partial Class wtForm
     Friend WithEvents tstButton As Button
     Friend WithEvents btnUnnep As Button
     Friend WithEvents lblUnnep As Label
+    Friend WithEvents lblJogkor As Label
+    Friend WithEvents btnJogkor As Button
 End Class
