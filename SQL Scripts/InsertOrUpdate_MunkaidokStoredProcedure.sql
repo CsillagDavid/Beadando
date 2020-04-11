@@ -12,20 +12,20 @@ GO
 
 CREATE PROCEDURE [dbo].[InsertOrUpdateMunkaidok]
 	@Datum date, 
-	@Kezdo_Ido decimal, 
-	@Befejezo_Ido decimal, 
+	@Kezdo_Ido decimal (18,0), 
+	@Befejezo_Ido decimal (18,0), 
 	@FelhasznaloID int
 AS
 	begin tran
 		if exists (select * from [dbo].[Munkaidok] 
-			where Datum=@Datum AND FelhasznaloID=@FelhasznaloID)
+			where Datum = @Datum AND FelhasznaloID = @FelhasznaloID)
 		begin
 		   update [dbo].[Munkaidok] 
 		   set 
-				Datum=@Datum, 
-				Kezdo_ido=@Kezdo_Ido, 
-				Befejezo_ido=@Befejezo_Ido
-		   where Datum=@Datum AND FelhasznaloID=@FelhasznaloID
+				Datum = @Datum, 
+				Kezdo_ido = @Kezdo_Ido, 
+				Befejezo_ido = @Befejezo_Ido
+		   where Datum = @Datum AND FelhasznaloID = @FelhasznaloID
 		end
 		else
 		begin
