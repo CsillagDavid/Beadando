@@ -1,5 +1,4 @@
 ﻿Imports System.Data.SqlClient
-Imports Nancy.Json
 Imports System.Configuration
 Public Class sqlConn
     Public con As New SqlConnection
@@ -7,7 +6,7 @@ Public Class sqlConn
 
     Public Sub New()
         readConnectionString()
-        sqlConnect()
+        'sqlConnect()
     End Sub
 
     Protected Overrides Sub Finalize()

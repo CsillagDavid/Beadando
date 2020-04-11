@@ -1,7 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class wtForm
-
+    Dim authentication As New AuthenticationManagement
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
     Dim sqlConnection As sqlConn
@@ -59,6 +59,7 @@ Public Class wtForm
         cmbEv.SelectedIndex = 0
         cmbHonap.SelectedIndex = (mh - 1)
     End Sub
+
     Private Sub getWorkTimeofDay(tabla As DataGridView, index As Integer) 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
         Try
             Dim kezdo, befejezo, mkoSum As Decimal
@@ -83,12 +84,14 @@ Public Class wtForm
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
+
     Private Function getYearAndMonth()
         Dim lista As New Dictionary(Of String, Integer)
         lista.Add(itemEv, isInteger(cmbEv.SelectedItem))
         lista.Add(itemHonap, isInteger(cmbHonap.SelectedItem))
         Return lista
     End Function
+
     Private Function getCommand(value As String, email As String)
         Dim evhonap = getYearAndMonth()
         Select Case value
