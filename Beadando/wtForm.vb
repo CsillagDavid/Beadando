@@ -4,6 +4,8 @@ Public Class wtForm
     Dim authentication As New AuthenticationManagement
     Dim munkaidokManagement As New MunkaidokManagement
     Dim felhasznalokManagement As New FelhasznalokManagement
+    Dim unnepnapokManagement As New UnnepnapokManagement
+    Dim jogkorokManagement As New JogkorokManagement
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
     Dim sqlConnection As sqlConn
@@ -25,6 +27,7 @@ Public Class wtForm
         checkAuthentication()
         getWeekdaysNumber()
     End Sub
+
 #Region "Jogosultságkezelő"
     Private Sub checkAuthentication() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
         Select Case user.role
@@ -68,7 +71,8 @@ Public Class wtForm
         cmbHonap.SelectedIndex = (mh - 1)
     End Sub
 
-    Private Sub getWorkTimeofDay(tabla As DataGridView, index As Integer) 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
+    'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
+    Private Sub getWorkTimeofDay(tabla As DataGridView, index As Integer)
         Try
             Dim kezdo, befejezo, mkoSum As Decimal
             tabla.Columns("napi_ido").ReadOnly = False
@@ -149,7 +153,9 @@ Public Class wtForm
         End Select
         Return ""
     End Function
-    Private Function setSqlCommand(command As String) 'A táblázat feltöltése parancs megadásával
+
+    'A táblázat feltöltése parancs megadásával
+    Private Function setSqlCommand(command As String)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
@@ -161,6 +167,7 @@ Public Class wtForm
         sqlConnection.sqlClose()
         Return dt
     End Function
+
     Private Function initComboBox()
         Dim tavolletBox As New DataGridViewComboBoxCell
         tavolletBox.Items.Add("Szabadság")
@@ -168,6 +175,7 @@ Public Class wtForm
         tavolletBox.Items.Add("Fizetetlen szabadság")
         Return tavolletBox
     End Function
+
     Private Function checkTable(tabla As DataGridView)
         If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" Then
             Return 1
@@ -182,7 +190,9 @@ Public Class wtForm
         End If
         Return -1
     End Function
-    Private Function getDifferenceWorkingHours(index As Integer) 'Az összes munkaidő és a ledolgozott órák különbsége
+
+    'Az összes munkaidő és a ledolgozott órák különbsége
+    Private Function getDifferenceWorkingHours(index As Integer)
         Dim munkaIdo, napiIdo As Integer
         Dim lista As New Dictionary(Of String, Integer)
         Dim aktDate As DateTime
@@ -201,6 +211,7 @@ Public Class wtForm
         End If
         Return lista
     End Function
+
     Private Sub getWeekdaysNumber()
         Dim evhonap As New Dictionary(Of String, Integer)
         Dim ev, honap, nap As Integer
@@ -219,9 +230,10 @@ Public Class wtForm
             End If
         Next
     End Sub
+
     Private Function getHolidays()
         clearDataGridView(dgvUj)
-        dgvUj.DataSource = setSqlCommand(getCommand("Unnepnap", ""))
+        dgvUj.DataSource = unnepnapokManagement.GetUnnepnapok()
         Dim lista As New Dictionary(Of Date, Integer)
         For index = 0 To dgvUj.Rows.Count - 2
             Dim datum = isDate(dgvUj.Item("Datum", index).Value)
@@ -257,19 +269,8 @@ Public Class wtForm
 
     Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
 
-        felhasznalokManagement.InsertOrUpdateFelhasznalok(Cells)
+        felhasznalokManagement.InsertOrUpdate(Cells)
         InsertJogkorok()
-    End Sub
-
-    Private Sub UpdateJogkorok(Cells As DataGridViewCellCollection)
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "UpdateJogkorok"
-        cmd.Parameters.AddWithValue("@FelhasznaloID", Cells.Item("FelhasznaloID").Value)
-        cmd.Parameters.AddWithValue("@Jogkor", Cells.Item("Jogkor").Value)
-        cmd.ExecuteNonQuery()
-        sqlConnection.sqlClose()
     End Sub
 
     Private Sub InsertMunkaidok(tabla As DataGridView)
@@ -337,6 +338,7 @@ Public Class wtForm
         btnMentes.Enabled = True
         btnTorles.Enabled = False
     End Sub
+
     Private Sub setDefaultWorkingHours(email As String)
         Dim datum, napStr, honapStr As String
         Dim napok, munkaido, felhaszid, ev, honap, rowCount As Integer
@@ -346,11 +348,11 @@ Public Class wtForm
         Dim holidays = getHolidays()
         Dim evhonap = getYearAndMonth()
         clearDataGridView(dgvUj)
-        dgvUj.DataSource = setSqlCommand(getCommand("MunkaidokAll", email))
+        dgvUj.DataSource = munkaidokManagement.FindByEmailAndDate(email, getYearAndMonth())
         rowCount = dgvUj.Rows.Count
         If rowCount = 1 Then
             clearDataGridView(dgvUj)
-            dgvUj.DataSource = setSqlCommand(getCommand("IDMunkaido", email))
+            dgvUj.DataSource = setSqlCommand(getCommand("IDMunkaido", email))MÓDOSÍTANDÓ_RÉSZ_JELÖLÉSE
         End If
         munkaido = isInteger(dgvUj.Item("munkaido", 0).Value)
         felhaszid = isInteger(dgvUj.Item("id", 0).Value)
@@ -420,6 +422,7 @@ Public Class wtForm
         InsertMunkaidok(dgvTabla)
         clearDataGridView(dgvTabla)
     End Sub
+
     Private Sub getUserData() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
         clearDataGridView(dgvTabla)
         dgvTabla.DataSource = setSqlCommand(getCommand("Felhasznalo", ""))
@@ -439,11 +442,13 @@ Public Class wtForm
         lblMunkaidoOsszes.Visible = False
         lblOra.Visible = False
     End Sub
+
     Private Sub getFszhLtb() 'A felhasználók kiválasztásához szükséges ListBox feltöltése
         ltbFelhasznalok.DataSource = setSqlCommand(getCommand("FelhasznaloLista", ""))
         ltbFelhasznalok.DisplayMember = "Nev"
         ltbFelhasznalok.ValueMember = "Email"
     End Sub
+
     Private Sub getSummary()
         clearDataGridView(dgvUj)
         Select Case user.role
@@ -466,12 +471,14 @@ Public Class wtForm
         btnTorles.Enabled = False
         getWorkingHoursSummary()
     End Sub
+
     Private Sub setHoliday()
         clearDataGridView(dgvTabla)
         dgvTabla.DataSource = setSqlCommand(getCommand("Unnepnap", ""))
         btnMentes.Enabled = True
         btnTorles.Enabled = True
     End Sub
+
     Private Sub getWorkingHoursSummary() 'Az összesített munkaidők megjelenítése egy táblázatban
         Dim kulonbseg, teljesora, eloirtora As Decimal
         Dim nev, email As String
@@ -559,7 +566,7 @@ Public Class wtForm
             editedRows.ForEach(Sub(i) UpdateUnnenpnapok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 3 Then
-            editedRows.ForEach(Sub(i) UpdateJogkorok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.ForEach(Sub(i) jogkorokManagement.Update(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         End If
 
@@ -612,6 +619,7 @@ Public Class wtForm
     Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
         dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
     End Sub
+
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         Try
             If Not dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(dgvTabla.Rows.Item(e.RowIndex).Tag) Then
@@ -644,6 +652,7 @@ Public Class wtForm
         Dim b As Brush = SystemBrushes.ControlText
         e.Graphics.DrawString(rowNumber, dg.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2))
     End Sub
+
     Private Sub dgvTabla_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvTabla.DataError
         MessageBox.Show("Error:  " & e.Context.ToString())
         If (e.Context = DataGridViewDataErrorContexts.Commit) Then

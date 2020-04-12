@@ -11,7 +11,7 @@ Public Class FelhasznalokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Sub InsertOrUpdateFelhasznalok(Cells As DataGridViewCellCollection)
+    Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure

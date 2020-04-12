@@ -1,6 +1,6 @@
 ﻿Imports System.Data.SqlClient
 
-Public Class JogkorokManagement
+Public Class UnnepnapokManagement
     Private sqlConnection As sqlConn
     Private con As New SqlConnection
     Private cmd As New SqlCommand
@@ -11,15 +11,17 @@ Public Class JogkorokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Sub Update(Cells As DataGridViewCellCollection)
+    Public Function GetUnnepnapok() As DataTable
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "UpdateJogkorok"
-        cmd.Parameters.AddWithValue("@FelhasznaloID", Cells.Item("FelhasznaloID").Value)
-        cmd.Parameters.AddWithValue("@Jogkor", Cells.Item("Jogkor").Value)
+        cmd.CommandType = CommandType.Text
+        cmd.CommandText = "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
         cmd.ExecuteNonQuery()
+        Dim dt As New DataTable()
+        Dim sda As New SqlDataAdapter(cmd)
+        sda.Fill(dt)
         sqlConnection.sqlClose()
-    End Sub
+        Return dt
+    End Function
 
 End Class

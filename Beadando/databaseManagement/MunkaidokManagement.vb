@@ -4,6 +4,10 @@ Public Class MunkaidokManagement
     Private sqlConnection As sqlConn
     Private con As New SqlConnection
     Private cmd As New SqlCommand
+    Dim itemEv = "ev"
+    Dim itemHonap = "honap"
+    Dim itemMunkaIdo = "munkaido"
+    Dim itemNapiIdo = "napiido"
 
     Public Sub New()
         sqlConnection = New sqlConn()
@@ -11,7 +15,7 @@ Public Class MunkaidokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Function FindMunkaidoByDate(Email As String, TolDatum As String, IgDatum As String) As DataTable
+    Public Function FindByDate(Email As String, TolDatum As String, IgDatum As String) As DataTable
         sqlConnection.sqlConnect()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M
@@ -56,4 +60,20 @@ Public Class MunkaidokManagement
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+
+    Public Function FindByEmailAndDate(Email As String, evhonap As Dictionary(Of String, Integer)) As DataTable
+        sqlConnection.sqlConnect()
+        cmd.CommandType = CommandType.Text
+        cmd.CommandText = "SELECT M.Datum, F.Munkaido, M.Kezdo_ido, M.Befejezo_ido, F.id FROM Munkaidok M
+                   INNER JOIN Felhasznalok F
+                   ON M.FelhasznaloID = F.id
+                            WHERE F.Email = '" & Email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+                            AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
+        cmd.ExecuteNonQuery()
+        Dim dt As New DataTable()
+        Dim sda As New SqlDataAdapter(cmd)
+        sda.Fill(dt)
+        sqlConnection.sqlClose()
+        Return dt
+    End Function
 End Class
