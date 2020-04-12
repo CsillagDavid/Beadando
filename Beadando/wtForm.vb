@@ -1,7 +1,9 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class wtForm
-
+    Dim authentication As New AuthenticationManagement
+    Dim munkaidokManagement As New MunkaidokManagement
+    Dim felhasznalokManagement As New FelhasznalokManagement
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
     Dim sqlConnection As sqlConn
@@ -13,6 +15,7 @@ Public Class wtForm
     Dim itemMunkaIdo = "munkaido"
     Dim itemNapiIdo = "napiido"
     Dim munkanap As Integer
+
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
         sqlConnection = New sqlConn()
@@ -22,7 +25,7 @@ Public Class wtForm
         checkAuthentication()
         getWeekdaysNumber()
     End Sub
-    'Jogosultságkezelő
+#Region "Jogosultságkezelő"
     Private Sub checkAuthentication() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
         Select Case user.role
             Case "Admin"
@@ -48,8 +51,9 @@ Public Class wtForm
                 userEmail = user.email
         End Select
     End Sub
+#End Region
 
-    'Inicializálások és számítási függvények, segédfüggvények
+#Region "Inicializálások és számítási függvények, segédfüggvények"
     Private Sub readYearAndMonth() 'Az év és hónap kiválasztó feltöltése értékekkel
         Dim yr, mh As Integer
         yr = DateTime.Now.Year
@@ -63,6 +67,7 @@ Public Class wtForm
         cmbEv.SelectedIndex = 0
         cmbHonap.SelectedIndex = (mh - 1)
     End Sub
+
     Private Sub getWorkTimeofDay(tabla As DataGridView, index As Integer) 'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
         Try
             Dim kezdo, befejezo, mkoSum As Decimal
@@ -87,12 +92,14 @@ Public Class wtForm
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
+
     Private Function getYearAndMonth()
         Dim lista As New Dictionary(Of String, Integer)
         lista.Add(itemEv, isInteger(cmbEv.SelectedItem))
         lista.Add(itemHonap, isInteger(cmbHonap.SelectedItem))
         Return lista
     End Function
+
     Private Function getCommand(value As String, email As String)
         Dim evhonap = getYearAndMonth()
         Select Case value
@@ -224,8 +231,9 @@ Public Class wtForm
         clearDataGridView(dgvUj)
         Return lista
     End Function
+#End Region
 
-    'SQL tárolt eljárások
+#Region "SQL tárolt eljárások"
     Private Sub InsertJogkorok()
         clearDataGridView(dgvUj)
         dgvUj.DataSource = setSqlCommand(getCommand("Jogkor", ""))
@@ -242,36 +250,17 @@ Public Class wtForm
         sqlConnection.sqlClose()
         clearDataGridView(dgvUj)
     End Sub
+
     Private Sub UpdateMunkaidok(Cells As DataGridViewCellCollection)
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "InsertOrUpdateMunkaidok"
-        cmd.Parameters.AddWithValue("@Datum", isDate(Cells.Item("Datum").Value))
-        cmd.Parameters.AddWithValue("@Kezdo_ido", isDecimal(Cells.Item("Kezdo_ido").Value))
-        cmd.Parameters.AddWithValue("@Befejezo_ido", isDecimal(Cells.Item("Befejezo_ido").Value))
-        cmd.Parameters.AddWithValue("@FelhasznaloID", isInteger(Cells.Item("FelhasznaloID").Value))
-        cmd.ExecuteNonQuery()
-        sqlConnection.sqlClose()
+        munkaidokManagement.InsertOrUpdate(Cells)
     End Sub
+
     Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "InsertOrUpdateFelhasznalok"
-        cmd.Parameters.AddWithValue("@id", Cells.Item("id").Value.ToString())
-        cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value.ToString())
-        If Cells.Item("Jelszo").Value.ToString() = "" Then
-            cmd.Parameters.AddWithValue("@Jelszo", "Password1")
-        Else
-            cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value.ToString())
-        End If
-        cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
-        cmd.Parameters.AddWithValue("@Munkaido", isInteger(Cells.Item("Munkaido").Value.ToString()))
-        cmd.ExecuteNonQuery()
-        sqlConnection.sqlClose()
+
+        felhasznalokManagement.InsertOrUpdateFelhasznalok(Cells)
         InsertJogkorok()
     End Sub
+
     Private Sub UpdateJogkorok(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -282,26 +271,15 @@ Public Class wtForm
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+
     Private Sub InsertMunkaidok(tabla As DataGridView)
         Try
-            Dim rowCount = tabla.Rows.Count
-            cmd = con.CreateCommand()
-            cmd.CommandText = "InsertOrUpdateMunkaidok"
-            cmd.CommandType = CommandType.StoredProcedure
-            sqlConnection.sqlConnect()
-            For index = 0 To rowCount - 2
-                cmd.Parameters.Clear()
-                cmd.Parameters.AddWithValue("@Datum", isDate(dgvTabla.Item("datum", index).Value))
-                cmd.Parameters.AddWithValue("@Kezdo_ido", isDecimal(dgvTabla.Item("kezdo_ido", index).Value))
-                cmd.Parameters.AddWithValue("@Befejezo_ido", isDecimal(dgvTabla.Item("befejezo_ido", index).Value))
-                cmd.Parameters.AddWithValue("@FelhasznaloID", isInteger(dgvTabla.Item("felhasznaloid", index).Value))
-                cmd.ExecuteNonQuery()
-            Next
-            sqlConnection.sqlClose()
+            munkaidokManagement.InsertOrUpdate(tabla, dgvTabla)
         Catch ex As Exception
             Console.WriteLine("Hiba az adatbázis frissítése közben")
         End Try
     End Sub
+
     Private Sub UpdateUnnenpnapok(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -312,6 +290,7 @@ Public Class wtForm
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+
     Private Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -323,59 +302,17 @@ Public Class wtForm
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+#End Region
 
     'Dátum, Integer, Decimal ellenőrzés, és táblaresetelés
-    Private Function isDate(parameter As Object)
-        Dim result As Date
-        If Date.TryParse(parameter, result) Then
-            Return result
-        Else
-            Return DateTime.Now
-        End If
-    End Function
-    Private Function isInteger(parameter As Object)
-        Dim result As Integer
-        If Integer.TryParse(parameter, result) Then
-            Return result
-        Else
-            Return 0
-        End If
-    End Function
-    Private Function isDecimal(parameter As Object)
-        Dim result As Decimal
-        If Decimal.TryParse(parameter, result) Then
-            Return result
-        Else
-            Return 0
-        End If
-    End Function
     Private Sub clearDataGridView(tabla As DataGridView)
         tabla.ReadOnly = False
         tabla.DataSource = Nothing
         tabla.Columns.Clear()
         tabla.Rows.Clear()
     End Sub
-    Private Function isHolidayOrWeekend(datum As Date, holidays As Dictionary(Of Date, Integer))
-        If datum.DayOfWeek = DayOfWeek.Sunday Then
-            Return False
-        ElseIf datum.DayOfWeek() = DayOfWeek.Saturday Then
-            Return False
-        End If
-        For Each item In holidays
-            If item.Key = datum Then
-                If item.Value = 0 Then
-                    Return False
-                ElseIf item.Value = 1 Then
-                    Return False
-                Else
-                    Return True
-                End If
-            End If
-        Next
-        Return True
-    End Function
 
-    'Funkciót ellátó függvények
+#Region "Funkciót ellátó függvények"
     Private Sub getUserWorkingHours(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
         clearDataGridView(dgvTabla)
         dgvTabla.DataSource = setSqlCommand(getCommand("Munkaido", email))
@@ -602,8 +539,8 @@ Public Class wtForm
         dgvTabla.Columns("Nev").ReadOnly = True
         btnMentes.Enabled = True
     End Sub
-
-    'Funkciógombok működtetése
+#End Region
+#Region "Funkciógombok működtetése"
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click
         getUserData()
         If user.userName = "Rendszergazda" Then
@@ -669,8 +606,9 @@ Public Class wtForm
     Private Sub btnJogkor_Click(sender As Object, e As EventArgs) Handles btnJogkor.Click
         getJogkorok()
     End Sub
+#End Region
 
-    'DataGridView automatikus függvényei
+#Region "DataGridView automatikus függvényei"
     Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
         dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
     End Sub
@@ -730,5 +668,6 @@ Public Class wtForm
             e.ThrowException = False
         End If
     End Sub
+#End Region
 
 End Class

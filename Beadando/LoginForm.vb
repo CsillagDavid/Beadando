@@ -1,4 +1,3 @@
-Imports System.Data.SqlClient
 
 Public Class Login
 
@@ -11,25 +10,14 @@ Public Class Login
     ' such as the username, display name, etc.
 
     Dim sqlConnection As sqlConn
+    Dim authentication As New AuthenticationManagement
 
     Private Sub OK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK.Click
-        sqlConnection.cmd = sqlConnection.con.CreateCommand()
-        sqlConnection.cmd.CommandType = CommandType.Text
-        'cmd.CommandText = "SELECT f.Nev, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE f.Jelszo = '" + PasswordTextBox.Text & "'"
-        sqlConnection.cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & UsernameTextBox.Text & "' AND f.Jelszo = '" + PasswordTextBox.Text & "')"
-        'sqlConnection.cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & "a" & "' AND f.Jelszo = '" + "1" & "')"
-        Dim reader As SqlDataReader
-        reader = sqlConnection.cmd.ExecuteReader()
-        If reader.Read() Then
-            wtForm.user.userName = reader.Item(0)
-            wtForm.user.email = reader.Item(1)
-            wtForm.user.role = reader.Item(2)
+        Dim user = authentication.authenticate(UsernameTextBox.Text, PasswordTextBox.Text)
+        If (user.userName.Length > 0) Then
+            wtForm.user = user
             Me.Close()
-        Else
-            MsgBox("Hibás felhasználónév vagy jelszó!", , "Hiba!")
         End If
-        reader.Close()
-        sqlConnection.sqlClose()
     End Sub
 
     Private Sub Cancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel.Click
@@ -46,5 +34,12 @@ Public Class Login
 
     Private Sub PasswordLabel_Click(sender As Object, e As EventArgs) Handles PasswordLabel.Click
 
+    End Sub
+
+    Private Sub Login_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If wtForm.user.userName = "" Then
+            Application.Exit()
+            End
+        End If
     End Sub
 End Class
