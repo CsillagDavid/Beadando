@@ -17,6 +17,7 @@ Public Class MunkaidokManagement
 
     Public Function FindByDate(Email As String, TolDatum As String, IgDatum As String) As DataTable
         sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M
                             INNER JOIN Felhasznalok F
@@ -63,6 +64,7 @@ Public Class MunkaidokManagement
 
     Public Function FindByEmailAndDate(Email As String, evhonap As Dictionary(Of String, Integer)) As DataTable
         sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT M.Datum, F.Munkaido, M.Kezdo_ido, M.Befejezo_ido, F.id FROM Munkaidok M
                    INNER JOIN Felhasznalok F
