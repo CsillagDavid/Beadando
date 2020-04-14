@@ -177,18 +177,19 @@ Public Class wtForm
     End Function
 
     Private Function checkTable(tabla As DataGridView)
+        Dim ret As Integer
         If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" Then
-            Return 1
+            ret = 1
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" Then
-            Return 0
+            ret = 0
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Tipus" Then
-            Return 2
+            ret = 2
         ElseIf tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "FelhasznaloID" Then
-            Return 3
+            ret = 3
         Else
-            Return -1
+            ret = -1
         End If
-        Return -1
+        Return ret
     End Function
 
     'Az összes munkaidő és a ledolgozott órák különbsége
@@ -564,6 +565,7 @@ Public Class wtForm
         If checkTable(dgvTabla) = 1 Then
             editedRows.ForEach(Sub(i) UpdateFelhasznalok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
+            getFszhLtb()
         ElseIf checkTable(dgvTabla) = 0 Then
             editedRows.ForEach(Sub(i) munkaidokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
@@ -626,7 +628,7 @@ Public Class wtForm
 
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         Try
-            If dgvTabla.Rows.Item(e.RowIndex).Tag And Not dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(dgvTabla.Rows.Item(e.RowIndex).Tag) Then
+            If Not dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(dgvTabla.Rows.Item(e.RowIndex).Tag) Then
                 If Not editedRows.Contains(e.RowIndex) Then
                     editedRows.Add(e.RowIndex)
                 End If

@@ -24,6 +24,7 @@ Public Class JogkorokManagement
 
     Public Function GetIds() As DataTable
         sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT F.id FROM Felhasznalok F
                         WHERE F.Munkaido > " & 0
