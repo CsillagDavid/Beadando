@@ -17,24 +17,21 @@ Public Class wtForm
     Dim itemMunkaIdo = "munkaido"
     Dim itemNapiIdo = "napiido"
     Dim munkanap As Integer
-    Dim felhaszlista As New List(Of Felhasznalok)
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
         sqlConnection = New sqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
-
         readYearAndMonth()
         checkAuthentication()
-        getWeekdaysNumber()
+        'getWeekdaysNumber()
     End Sub
 
 #Region "Jogosultságkezelő"
     Private Sub checkAuthentication() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
         Select Case user.role
             Case "Admin"
-
                 getFszhLtb()
                 If Not user.userName = "Rendszergazda" Then
                     setDefaultWorkingHours(user.email)
@@ -685,15 +682,6 @@ Public Class wtForm
             MsgBox("error")
             e.ThrowException = False
         End If
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        clearDataGridView(dgvTabla)
-        felhasznalokManagement.getFelhasznalok(felhaszlista)
-        Dim PeopleBindingSource As New BindingSource
-        PeopleBindingSource.DataSource = felhaszlista
-        dgvTabla.DataSource = PeopleBindingSource
-        'dgvTabla.DataSource = felhasznalokManagement.createFelhasznalok()
     End Sub
 #End Region
 
