@@ -268,7 +268,6 @@ Public Class wtForm
     End Sub
 
     Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
-
         felhasznalokManagement.InsertOrUpdate(Cells)
         InsertJogkorok()
     End Sub
@@ -352,7 +351,7 @@ Public Class wtForm
         rowCount = dgvUj.Rows.Count
         If rowCount = 1 Then
             clearDataGridView(dgvUj)
-            dgvUj.DataSource = setSqlCommand(getCommand("IDMunkaido", email))MÓDOSÍTANDÓ_RÉSZ_JELÖLÉSE
+            dgvUj.DataSource = setSqlCommand(getCommand("IDMunkaido", email)) 'MÓDOSÍTANDÓ_RÉSZ_JELÖLÉSE
         End If
         munkaido = isInteger(dgvUj.Item("munkaido", 0).Value)
         felhaszid = isInteger(dgvUj.Item("id", 0).Value)

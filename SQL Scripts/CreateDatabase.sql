@@ -25,6 +25,10 @@ IF OBJECT_ID('[dbo].[Munkaidok]', 'U') IS NOT NULL
   DROP TABLE [dbo].[Munkaidok]
 GO
 
+IF OBJECT_ID('[dbo].[Szabadsag]', 'U') IS NOT NULL
+  DROP TABLE [dbo].[Szabadsag]
+GO
+
 IF OBJECT_ID('[dbo].[Felhasznalok]', 'U') IS NOT NULL
   DROP TABLE [dbo].[Felhasznalok]
 GO
@@ -69,6 +73,18 @@ CREATE TABLE [dbo].[Jogkorok] (
 
 GO
 
+--Szabadság tábla létrehozása
+CREATE TABLE [dbo].[Szabadsag](
+    [id]            INT          IDENTITY (1, 1) NOT NULL,
+    [Datum]         DATE         NOT NULL,
+	[Tipus]			INT			NOT NULL,
+    [FelhasznaloID] INT          NOT NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [fk_szabadsag_felhasznalok] FOREIGN KEY ([FelhasznaloID]) REFERENCES [dbo].[Felhasznalok] ([id])
+);
+
+GO
+
 --Ünnepnapok tábla létrehozása
 CREATE TABLE [dbo].[Unnepnapok]
 (
@@ -94,7 +110,6 @@ INSERT INTO [dbo].[Jogkorok] VALUES ('4','Admin')
 INSERT INTO [dbo].[Jogkorok] VALUES ('5','Felhasznalo')
 
 --Ünnepnapok tábla feltöltése
-
 INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 01. 01','0')
 INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 03. 15','0')
 INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 04. 10','0')
