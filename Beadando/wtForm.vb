@@ -248,18 +248,8 @@ Public Class wtForm
 #Region "SQL tárolt eljárások"
     Private Sub InsertJogkorok()
         clearDataGridView(dgvUj)
-        dgvUj.DataSource = setSqlCommand(getCommand("Jogkor", ""))
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "InsertJogkorok"
-        For index = 0 To dgvUj.Rows.Count - 2
-            cmd.Parameters.Clear()
-            cmd.Parameters.AddWithValue("@FelhasznaloID", dgvUj.Item("id", index).Value)
-            cmd.Parameters.AddWithValue("@Jogkor", "Felhasznalo")
-            cmd.ExecuteNonQuery()
-        Next
-        sqlConnection.sqlClose()
+        dgvUj.DataSource = jogkorokManagement.GetIds()
+        jogkorokManagement.InsertJogkorok(dgvUj)
         clearDataGridView(dgvUj)
     End Sub
 
@@ -268,7 +258,6 @@ Public Class wtForm
     End Sub
 
     Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
-
         felhasznalokManagement.InsertOrUpdate(Cells)
         InsertJogkorok()
     End Sub
@@ -316,14 +305,14 @@ Public Class wtForm
 #Region "Funkciót ellátó függvények"
     Private Sub getUserWorkingHours(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = setSqlCommand(getCommand("Munkaido", email))
+        dgvTabla.DataSource = munkaidokManagement.FindByEmailAndDate(email, getYearAndMonth())
         dgvTabla.Columns("Datum").HeaderText = "Dátum"
         dgvTabla.Columns("Datum").ValueType = GetType(Date)
         dgvTabla.Columns("Kezdo_ido").HeaderText = "Kezdés"
         dgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns("Befejezo_ido").HeaderText = "Befejezés"
         dgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
-        dgvTabla.Columns("FelhasznaloID").Visible = False
+        'dgvTabla.Columns("FelhasznaloID").Visible = False
         dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
         dgvTabla.Columns("napi_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns.Add("tavollet", "Távollét")
@@ -352,7 +341,7 @@ Public Class wtForm
         rowCount = dgvUj.Rows.Count
         If rowCount = 1 Then
             clearDataGridView(dgvUj)
-            dgvUj.DataSource = setSqlCommand(getCommand("IDMunkaido", email))MÓDOSÍTANDÓ_RÉSZ_JELÖLÉSE
+            dgvUj.DataSource = munkaidokManagement.GetIdAndMunkaidoId(email)
         End If
         munkaido = isInteger(dgvUj.Item("munkaido", 0).Value)
         felhaszid = isInteger(dgvUj.Item("id", 0).Value)
@@ -425,7 +414,7 @@ Public Class wtForm
 
     Private Sub getUserData() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = setSqlCommand(getCommand("Felhasznalo", ""))
+        dgvTabla.DataSource = felhasznalokManagement.GetAll()
         dgvTabla.Columns("id").Visible = False
         dgvTabla.Columns("nev").HeaderText = "Név"
         dgvTabla.Columns("email").HeaderText = "E-Mail"
@@ -444,7 +433,7 @@ Public Class wtForm
     End Sub
 
     Private Sub getFszhLtb() 'A felhasználók kiválasztásához szükséges ListBox feltöltése
-        ltbFelhasznalok.DataSource = setSqlCommand(getCommand("FelhasznaloLista", ""))
+        ltbFelhasznalok.DataSource = felhasznalokManagement.GetAllNevAndEmail(userEmail)
         ltbFelhasznalok.DisplayMember = "Nev"
         ltbFelhasznalok.ValueMember = "Email"
     End Sub
@@ -560,16 +549,15 @@ Public Class wtForm
             editedRows.ForEach(Sub(i) UpdateFelhasznalok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 0 Then
-            editedRows.ForEach(Sub(i) UpdateMunkaidok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.ForEach(Sub(i) munkaidokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 2 Then
-            editedRows.ForEach(Sub(i) UpdateUnnenpnapok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.ForEach(Sub(i) unnepnapokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 3 Then
             editedRows.ForEach(Sub(i) jogkorokManagement.Update(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         End If
-
     End Sub
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
         Select Case user.role
@@ -622,7 +610,7 @@ Public Class wtForm
 
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         Try
-            If Not dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(dgvTabla.Rows.Item(e.RowIndex).Tag) Then
+            If dgvTabla.Rows.Item(e.RowIndex).Tag And Not dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(dgvTabla.Rows.Item(e.RowIndex).Tag) Then
                 If Not editedRows.Contains(e.RowIndex) Then
                     editedRows.Add(e.RowIndex)
                 End If
