@@ -305,14 +305,14 @@ Public Class wtForm
 #Region "Funkciót ellátó függvények"
     Private Sub getUserWorkingHours(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = munkaidokManagement.FindByEmailAndDate(email, getYearAndMonth())
+        dgvTabla.DataSource = munkaidokManagement.FindByDate(email, getYearAndMonth())
         dgvTabla.Columns("Datum").HeaderText = "Dátum"
         dgvTabla.Columns("Datum").ValueType = GetType(Date)
         dgvTabla.Columns("Kezdo_ido").HeaderText = "Kezdés"
         dgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns("Befejezo_ido").HeaderText = "Befejezés"
         dgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
-        'dgvTabla.Columns("FelhasznaloID").Visible = False
+        dgvTabla.Columns("FelhasznaloID").Visible = False
         dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
         dgvTabla.Columns("napi_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns.Add("tavollet", "Távollét")

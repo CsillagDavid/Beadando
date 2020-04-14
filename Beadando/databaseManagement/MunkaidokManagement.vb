@@ -28,15 +28,15 @@ Public Class MunkaidokManagement
         Return dt
     End Function
 
-    Public Function FindByDate(Email As String, TolDatum As String, IgDatum As String) As DataTable
+    Public Function FindByDate(Email As String, evhonap As Dictionary(Of String, Integer)) As DataTable
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M
-                            INNER JOIN Felhasznalok F
-                            ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & Email & "' AND M.Datum >= '" & TolDatum &
-                            "And M.Datum < '" & IgDatum
+                   INNER JOIN Felhasznalok F
+                   ON M.FelhasznaloID = F.id
+                            WHERE F.Email = '" & Email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+                            AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
         cmd.ExecuteNonQuery()
         Dim dt As New DataTable()
         Dim sda As New SqlDataAdapter(cmd)
