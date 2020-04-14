@@ -104,55 +104,55 @@ Public Class wtForm
         Return lista
     End Function
 
-    Private Function getCommand(value As String, email As String)
-        Dim evhonap = getYearAndMonth()
-        Select Case value
-            Case "Munkaido"
-                Return "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M
-                            INNER JOIN Felhasznalok F
-                            ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-                            AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-            Case "MunkaidokAll"
-                Return "SELECT M.Datum, F.Munkaido, M.Kezdo_ido, M.Befejezo_ido, F.id FROM Munkaidok M
-                   INNER JOIN Felhasznalok F
-                   ON M.FelhasznaloID = F.id
-                            WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-                            AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-            Case "IDMunkaido"
-                Return "SELECT F.id, F.Munkaido FROM Felhasznalok F
-                            WHERE F.Email = '" & email & "'"
-            Case "Felhasznalo"
-                Return "SELECT F.id, F.Nev, F.Jelszo, F.Email, F.Munkaido FROM Felhasznalok F
-                                     WHERE F.Munkaido >" & 0
-            Case "FelhasznaloLista"
-                Return "SELECT F.Nev, F.Email FROM Felhasznalok F
-                                            WHERE F.Munkaido >" & 0
-            Case "OsszesitoAdmin"
-                Return "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
-                                    INNER JOIN Munkaidok M
-                                    ON F.id = M.FelhasznaloID
-                                    WHERE M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-                                    AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-            Case "OsszesitoFelhasznalo"
-                Return "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
-                                    INNER JOIN Munkaidok M
-                                    ON F.id = M.FelhasznaloID 
-                                    WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-                                    AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-            Case "Unnepnap"
-                Return "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
-            Case "Jogkor"
-                Return "SELECT F.id FROM Felhasznalok F
-                        WHERE F.Munkaido > " & 0
-            Case "UpdateJogkor"
-                Return "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
-                        INNER JOIN Felhasznalok F
-                        ON F.id = J.FelhasznaloID
-                        WHERE F.Munkaido > " & 0
-        End Select
-        Return ""
-    End Function
+    'Private Function getCommand(value As String, email As String)
+    '    Dim evhonap = getYearAndMonth()
+    '    Select Case value
+    '        Case "Munkaido"
+    '            Return "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M
+    '                        INNER JOIN Felhasznalok F
+    '                        ON M.FelhasznaloID = F.id
+    '                        WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+    '                        AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
+    '        Case "MunkaidokAll"
+    '            Return "SELECT M.Datum, F.Munkaido, M.Kezdo_ido, M.Befejezo_ido, F.id FROM Munkaidok M
+    '               INNER JOIN Felhasznalok F
+    '               ON M.FelhasznaloID = F.id
+    '                        WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+    '                        AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
+    '        Case "IDMunkaido"
+    '            Return "SELECT F.id, F.Munkaido FROM Felhasznalok F
+    '                        WHERE F.Email = '" & email & "'"
+    '        Case "Felhasznalo"
+    '            Return "SELECT F.id, F.Nev, F.Jelszo, F.Email, F.Munkaido FROM Felhasznalok F
+    '                                 WHERE F.Munkaido >" & 0
+    '        Case "FelhasznaloLista"
+    '            Return "SELECT F.Nev, F.Email FROM Felhasznalok F
+    '                                        WHERE F.Munkaido >" & 0
+    '        Case "OsszesitoAdmin"
+    '            Return "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
+    '                                INNER JOIN Munkaidok M
+    '                                ON F.id = M.FelhasznaloID
+    '                                WHERE M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+    '                                AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
+    '        Case "OsszesitoFelhasznalo"
+    '            Return "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
+    '                                INNER JOIN Munkaidok M
+    '                                ON F.id = M.FelhasznaloID 
+    '                                WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+    '                                AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
+    '        Case "Unnepnap"
+    '            Return "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
+    '        Case "Jogkor"
+    '            Return "SELECT F.id FROM Felhasznalok F
+    '                    WHERE F.Munkaido > " & 0
+    '        Case "UpdateJogkor"
+    '            Return "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
+    '                    INNER JOIN Felhasznalok F
+    '                    ON F.id = J.FelhasznaloID
+    '                    WHERE F.Munkaido > " & 0
+    '    End Select
+    '    Return ""
+    'End Function
 
     'A táblázat feltöltése parancs megadásával
     Private Function setSqlCommand(command As String)
@@ -440,12 +440,23 @@ Public Class wtForm
 
     Private Sub getSummary()
         clearDataGridView(dgvUj)
+        Dim evhonap = getYearAndMonth()
+        Dim command = ""
         Select Case user.role
             Case "Admin"
-                dgvUj.DataSource = setSqlCommand(getCommand("OsszesitoAdmin", ""))
+                command = "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
+                                    INNER JOIN Munkaidok M
+                                    ON F.id = M.FelhasznaloID
+                                    WHERE M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+                                    AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
             Case "Felhasznalo"
-                dgvUj.DataSource = setSqlCommand(getCommand("OsszesitoFelhasznalo", userEmail))
+                command = "Select F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
+                                    INNER Join Munkaidok M
+                                    On F.id = M.FelhasznaloID 
+                                    WHERE F.Email = '" & userEmail & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
+                                    And M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
         End Select
+        dgvUj.DataSource = setSqlCommand(command)
         dgvUj.Columns.Add("napi_ido", "Napi munkaidő")
         dgvUj.Columns.Add("tavollet", "Távollét")
         For index = 0 To dgvUj.Rows.Count - 2
@@ -463,7 +474,8 @@ Public Class wtForm
 
     Private Sub setHoliday()
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = setSqlCommand(getCommand("Unnepnap", ""))
+        Dim command = "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
+        dgvTabla.DataSource = setSqlCommand(command)
         btnMentes.Enabled = True
         btnTorles.Enabled = True
     End Sub
@@ -530,7 +542,11 @@ Public Class wtForm
     End Sub
     Private Sub getJogkorok()
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = setSqlCommand(getCommand("UpdateJogkor", ""))
+        Dim command = "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
+                        INNER JOIN Felhasznalok F
+                        ON F.id = J.FelhasznaloID
+                        WHERE F.Munkaido > " & 0
+        dgvTabla.DataSource = setSqlCommand(command)
         dgvTabla.Columns("FelhasznaloID").Visible = False
         dgvTabla.Columns("Nev").ReadOnly = True
         btnMentes.Enabled = True
