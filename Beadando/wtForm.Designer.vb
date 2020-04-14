@@ -43,6 +43,7 @@ Partial Class wtForm
         Me.lblUnnep = New System.Windows.Forms.Label()
         Me.lblJogkor = New System.Windows.Forms.Label()
         Me.btnJogkor = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -244,12 +245,22 @@ Partial Class wtForm
         Me.btnJogkor.UseVisualStyleBackColor = True
         Me.btnJogkor.Visible = False
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(366, 551)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 24
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'wtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(954, 578)
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.btnJogkor)
         Me.Controls.Add(Me.lblJogkor)
         Me.Controls.Add(Me.lblUnnep)
@@ -301,4 +312,5 @@ Partial Class wtForm
     Friend WithEvents lblUnnep As Label
     Friend WithEvents lblJogkor As Label
     Friend WithEvents btnJogkor As Button
+    Friend WithEvents Button1 As Button
 End Class
