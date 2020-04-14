@@ -24,4 +24,15 @@ Public Class UnnepnapokManagement
         Return dt
     End Function
 
+    Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "InsertOrUpdateUnnepnapok"
+        cmd.Parameters.AddWithValue("@Datum", isDate(Cells.Item("Datum").Value))
+        cmd.Parameters.AddWithValue("@Tipus", isInteger(Cells.Item("Tipus").Value))
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+    End Sub
+
 End Class

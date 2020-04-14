@@ -11,6 +11,20 @@ Public Class FelhasznalokManagement
         cmd = sqlConnection.cmd
     End Sub
 
+    Public Function GetAllNevAndEmail(Email As String) As DataTable
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.Text
+        cmd.CommandText = "SELECT F.Nev, F.Email FROM Felhasznalok F
+                                            WHERE F.Munkaido >" & 0
+        cmd.ExecuteNonQuery()
+        Dim dt As New DataTable()
+        Dim sda As New SqlDataAdapter(cmd)
+        sda.Fill(dt)
+        sqlConnection.sqlClose()
+        Return dt
+    End Function
+
     Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
@@ -28,5 +42,19 @@ Public Class FelhasznalokManagement
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+
+    Public Function GetAll() As DataTable
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.Text
+        cmd.CommandText = "SELECT F.id, F.Nev, F.Jelszo, F.Email, F.Munkaido FROM Felhasznalok F
+                                     WHERE F.Munkaido >" & 0
+        cmd.ExecuteNonQuery()
+        Dim dt As New DataTable()
+        Dim sda As New SqlDataAdapter(cmd)
+        sda.Fill(dt)
+        sqlConnection.sqlClose()
+        Return dt
+    End Function
 
 End Class
