@@ -1,60 +1,60 @@
 ﻿Public Class Felhasznalok
-    Private Id As Integer
-    Public Property propId() As String
+    Private valueId As Integer
+    Public Property id() As Integer
         Get
-            Return Id
+            Return valueId
         End Get
-        Set(ByVal value As String)
-            Id = value
+        Set(ByVal value As Integer)
+            valueId = value
         End Set
     End Property
 
-    Private Nev As String
-    Public Property propNev() As String
+    Private valueNev As String
+    Public Property Nev() As String
         Get
-            Return Nev
+            Return valueNev
         End Get
         Set(ByVal value As String)
-            Nev = value
+            valueNev = value
         End Set
     End Property
 
-    Private Jelszo As String
-    Public Property propJelszo() As String
+    Private valueJelszo As String
+    Public Property Jelszo() As String
         Get
-            Return Jelszo
+            Return valueJelszo
         End Get
         Set(ByVal value As String)
-            Jelszo = value
+            valueJelszo = value
         End Set
     End Property
 
-    Private Email As String
-    Public Property propEmail() As String
+    Private valueEmail As String
+    Public Property Email() As String
         Get
-            Return Email
+            Return valueEmail
         End Get
         Set(ByVal value As String)
-            Email = value
+            valueEmail = value
         End Set
     End Property
 
-    Private Munkaido As Integer
-    Public Property propMunkaido() As String
+    Private valueMunkaido As Integer
+    Public Property Munkaido() As Integer
         Get
-            Return Munkaido
+            Return valueMunkaido
         End Get
-        Set(ByVal value As String)
-            Munkaido = value
+        Set(ByVal value As Integer)
+            valueMunkaido = value
         End Set
     End Property
 
     Public Sub New(id As Integer, nev As String, jelszo As String, email As String, munkaido As Integer)
-        Me.id = id
-        Me.Nev = nev
-        Me.Jelszo = jelszo
-        Me.Email = email
-        Me.Munkaido = munkaido
+        Me.valueId = id
+        Me.valueNev = nev
+        Me.valueJelszo = jelszo
+        Me.valueEmail = email
+        Me.valueMunkaido = munkaido
     End Sub
 
 End Class

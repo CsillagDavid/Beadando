@@ -18,13 +18,14 @@ Public Class wtForm
     Dim itemNapiIdo = "napiido"
     Dim munkanap As Integer
     Dim felhaszlista As New List(Of Felhasznalok)
+    Dim munkaidok As New List(Of Munkaidok)
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
         sqlConnection = New sqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
-
+        felhasznalokManagement.getFelhasznalok(felhaszlista)
         readYearAndMonth()
         checkAuthentication()
         getWeekdaysNumber()
@@ -34,7 +35,6 @@ Public Class wtForm
     Private Sub checkAuthentication() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
         Select Case user.role
             Case "Admin"
-
                 getFszhLtb()
                 If Not user.userName = "Rendszergazda" Then
                     setDefaultWorkingHours(user.email)
@@ -73,6 +73,12 @@ Public Class wtForm
         cmbEv.SelectedIndex = 0
         cmbHonap.SelectedIndex = (mh - 1)
     End Sub
+    Private Function getYearAndMonth()
+        Dim lista As New Dictionary(Of String, Integer)
+        lista.Add(itemEv, isInteger(cmbEv.SelectedItem))
+        lista.Add(itemHonap, isInteger(cmbHonap.SelectedItem))
+        Return lista
+    End Function
 
     'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
     Private Sub getWorkTimeofDay(tabla As DataGridView, index As Integer)
@@ -99,64 +105,6 @@ Public Class wtForm
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
-
-    Private Function getYearAndMonth()
-        Dim lista As New Dictionary(Of String, Integer)
-        lista.Add(itemEv, isInteger(cmbEv.SelectedItem))
-        lista.Add(itemHonap, isInteger(cmbHonap.SelectedItem))
-        Return lista
-    End Function
-
-    'Private Function getCommand(value As String, email As String)
-    '    Dim evhonap = getYearAndMonth()
-    '    Select Case value
-    '        Case "Munkaido"
-    '            Return "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M
-    '                        INNER JOIN Felhasznalok F
-    '                        ON M.FelhasznaloID = F.id
-    '                        WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-    '                        AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-    '        Case "MunkaidokAll"
-    '            Return "SELECT M.Datum, F.Munkaido, M.Kezdo_ido, M.Befejezo_ido, F.id FROM Munkaidok M
-    '               INNER JOIN Felhasznalok F
-    '               ON M.FelhasznaloID = F.id
-    '                        WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-    '                        AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-    '        Case "IDMunkaido"
-    '            Return "SELECT F.id, F.Munkaido FROM Felhasznalok F
-    '                        WHERE F.Email = '" & email & "'"
-    '        Case "Felhasznalo"
-    '            Return "SELECT F.id, F.Nev, F.Jelszo, F.Email, F.Munkaido FROM Felhasznalok F
-    '                                 WHERE F.Munkaido >" & 0
-    '        Case "FelhasznaloLista"
-    '            Return "SELECT F.Nev, F.Email FROM Felhasznalok F
-    '                                        WHERE F.Munkaido >" & 0
-    '        Case "OsszesitoAdmin"
-    '            Return "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
-    '                                INNER JOIN Munkaidok M
-    '                                ON F.id = M.FelhasznaloID
-    '                                WHERE M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-    '                                AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-    '        Case "OsszesitoFelhasznalo"
-    '            Return "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
-    '                                INNER JOIN Munkaidok M
-    '                                ON F.id = M.FelhasznaloID 
-    '                                WHERE F.Email = '" & email & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-    '                                AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-    '        Case "Unnepnap"
-    '            Return "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
-    '        Case "Jogkor"
-    '            Return "SELECT F.id FROM Felhasznalok F
-    '                    WHERE F.Munkaido > " & 0
-    '        Case "UpdateJogkor"
-    '            Return "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
-    '                    INNER JOIN Felhasznalok F
-    '                    ON F.id = J.FelhasznaloID
-    '                    WHERE F.Munkaido > " & 0
-    '    End Select
-    '    Return ""
-    'End Function
-
     'A táblázat feltöltése parancs megadásával
     Private Function setSqlCommand(command As String)
         sqlConnection.sqlConnect()
@@ -309,23 +257,26 @@ Public Class wtForm
 #Region "Funkciót ellátó függvények"
     Private Sub getUserWorkingHours(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = munkaidokManagement.FindByDate(email, getYearAndMonth())
+        Dim evhonap = getYearAndMonth()
+        munkaidok.Clear()
+        munkaidokManagement.getMunkaidok(munkaidok, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        Dim pbs As New BindingSource
+        pbs.DataSource = munkaidok
+        dgvTabla.DataSource = pbs
         dgvTabla.Columns("Datum").HeaderText = "Dátum"
-        dgvTabla.Columns("Datum").ValueType = GetType(Date)
         dgvTabla.Columns("Kezdo_ido").HeaderText = "Kezdés"
-        dgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns("Befejezo_ido").HeaderText = "Befejezés"
-        dgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns("FelhasznaloID").Visible = False
         dgvTabla.Columns.Add("napi_ido", "Napi munkaidő")
         dgvTabla.Columns("napi_ido").ValueType = GetType(Decimal)
         dgvTabla.Columns.Add("tavollet", "Távollét")
         dgvTabla.Columns("tavollet").ValueType = GetType(DataGridViewComboBoxCell)
         txtMunkaidoOsszes.Text = 0
-        For index = 0 To dgvTabla.Rows.Count - 2
+        For index = 0 To dgvTabla.Rows.Count - 1
             dgvTabla.Item("tavollet", index) = initComboBox()
             getWorkTimeofDay(dgvTabla, index)
         Next
+        dgvTabla.ReadOnly = False
         dgvTabla.Columns("Datum").ReadOnly = True
         dgvTabla.Columns("napi_ido").ReadOnly = True
         btnMentes.Enabled = True
@@ -418,17 +369,15 @@ Public Class wtForm
 
     Private Sub getUserData() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = felhasznalokManagement.GetAll()
+        Dim pbs As New BindingSource
+        pbs.DataSource = felhaszlista
+        dgvTabla.DataSource = pbs
         dgvTabla.Columns("id").Visible = False
-        dgvTabla.Columns("nev").HeaderText = "Név"
-        dgvTabla.Columns("email").HeaderText = "E-Mail"
-        dgvTabla.Columns("munkaido").HeaderText = "Munkaidő"
-        dgvTabla.Columns("jelszo").Visible = False
-        dgvTabla.Columns("jelszo").ReadOnly = True
-        dgvTabla.Columns("id").ValueType = GetType(Integer)
-        dgvTabla.Columns("id").ValueType = GetType(String)
-        dgvTabla.Columns("id").ValueType = GetType(String)
-        dgvTabla.Columns("id").ValueType = GetType(Integer)
+        dgvTabla.Columns("Nev").HeaderText = "Név"
+        dgvTabla.Columns("Email").HeaderText = "E-Mail"
+        dgvTabla.Columns("Munkaido").HeaderText = "Munkaidő"
+        dgvTabla.Columns("Jelszo").Visible = False
+        dgvTabla.Columns("Jelszo").ReadOnly = True
         btnMentes.Enabled = True
         btnTorles.Enabled = True
         txtMunkaidoOsszes.Visible = False
@@ -437,9 +386,15 @@ Public Class wtForm
     End Sub
 
     Private Sub getFszhLtb() 'A felhasználók kiválasztásához szükséges ListBox feltöltése
-        ltbFelhasznalok.DataSource = felhasznalokManagement.GetAllNevAndEmail(userEmail)
-        ltbFelhasznalok.DisplayMember = "Nev"
-        ltbFelhasznalok.ValueMember = "Email"
+        Dim szures As New Dictionary(Of String, String)
+        For Each felhasz In felhaszlista
+            szures.Add(felhasz.Nev, felhasz.Email)
+        Next
+        Dim pbs As New BindingSource
+        pbs.DataSource = szures
+        ltbFelhasznalok.DataSource = pbs
+        ltbFelhasznalok.DisplayMember = "Key"
+        ltbFelhasznalok.ValueMember = "Value"
     End Sub
 
     Private Sub getSummary()
@@ -568,7 +523,6 @@ Public Class wtForm
         If checkTable(dgvTabla) = 1 Then
             editedRows.ForEach(Sub(i) UpdateFelhasznalok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
-            getFszhLtb()
         ElseIf checkTable(dgvTabla) = 0 Then
             editedRows.ForEach(Sub(i) munkaidokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
@@ -610,7 +564,6 @@ Public Class wtForm
                 nev = dgvTabla.SelectedRows(0).Cells("nev").Value
                 dgvTabla.Rows.Remove(dgvTabla.SelectedRows(0))
                 DeleteFelhasznalok(nev, email, id)
-                getFszhLtb()
             Else
                 MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
             End If
@@ -685,15 +638,6 @@ Public Class wtForm
             MsgBox("error")
             e.ThrowException = False
         End If
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        clearDataGridView(dgvTabla)
-        felhasznalokManagement.getFelhasznalok(felhaszlista)
-        Dim PeopleBindingSource As New BindingSource
-        PeopleBindingSource.DataSource = felhaszlista
-        dgvTabla.DataSource = PeopleBindingSource
-        'dgvTabla.DataSource = felhasznalokManagement.createFelhasznalok()
     End Sub
 #End Region
 

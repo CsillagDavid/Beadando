@@ -91,4 +91,31 @@ Public Class MunkaidokManagement
         sqlConnection.sqlClose()
         Return dt
     End Function
+
+    Public Sub getMunkaidok(list As List(Of Munkaidok), Email As String, KezdoDatum As String, BefejezoDatum As String)
+        sqlConnection.sqlConnect()
+        Dim sdr As SqlDataReader
+        Dim sda As New SqlDataAdapter
+        cmd.CommandType = CommandType.Text
+        Dim sqlquery As String = "SELECT M.Datum, M.Kezdo_ido, M.Befejezo_ido, M.FelhasznaloID FROM Munkaidok M                   
+                                INNER JOIN Felhasznalok F
+                                ON M.FelhasznaloID = F.id
+                                WHERE F.Email = '" & Email & "' AND M.Datum >= '" & KezdoDatum & ". " & BefejezoDatum & ". 01' 
+                                AND M.Datum < '" & KezdoDatum & ". " & (BefejezoDatum + 1) & ". 01'"
+        cmd.CommandText = sqlquery
+        cmd.Connection = con
+        sda.SelectCommand = cmd
+        sdr = cmd.ExecuteReader()
+        While sdr.Read
+            Dim munkaido = New Munkaidok(
+                sdr.Item("Datum"),
+                sdr.Item("Kezdo_ido"),
+                sdr.Item("Befejezo_ido"),
+                sdr.Item("FelhasznaloID")
+                )
+            list.Add(munkaido)
+        End While
+        sqlConnection.sqlClose()
+    End Sub
+
 End Class
