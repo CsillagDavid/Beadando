@@ -82,6 +82,7 @@
     <Compile Include="databaseManagement\FelhasznalokManagement.vb" />
     <Compile Include="databaseManagement\JogkorokManagement.vb" />
     <Compile Include="databaseManagement\MunkaidokManagement.vb" />
+    <Compile Include="databaseManagement\UnnepnapokManagement.vb" />
     <Compile Include="LoginForm.Designer.vb">
       <DependentUpon>LoginForm.vb</DependentUpon>
     </Compile>
