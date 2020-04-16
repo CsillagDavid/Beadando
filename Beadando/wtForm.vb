@@ -453,6 +453,7 @@ Public Class wtForm
             getWorkTimeofDay(dgvUj, index)
         Next
 
+        dgvUj.AllowUserToAddRows = False
         dgvUj.ReadOnly = True
         txtMunkaidoOsszes.Visible = False
         lblOra.Visible = False
@@ -505,7 +506,7 @@ Public Class wtForm
 
         rowCount = tabla.Rows.Count
 
-        For index = 0 To rowCount - 2
+        For index = 0 To rowCount - 1
 
             Dim nev = tabla.Item("Nev", index).Value
             Dim email = tabla.Item("email", index).Value
