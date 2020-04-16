@@ -2,30 +2,40 @@
 
 Public Class WtForm
 
+#Region "Változók"
+
+    'Adatbázis Management osztályok betöltése
     Dim authMan As New AuthenticationManagement
     Dim mkidoMan As New MunkaidokManagement
     Dim fhszMan As New FelhasznalokManagement
     Dim unnepMan As New UnnepnapokManagement
     Dim jgkkMan As New JogkorokManagement
+
+    'SQL kapcsolathoz szükséges változók
     Dim szabMan As New SzabadsagokManagement
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
     Dim sqlConnection As SqlConn
 
+    'Egyéb változók
     Public Property User = New User()
-
     Dim editedRows As List(Of Integer) = New List(Of Integer)
     Dim userEmail As String
 
+    'Statikus változók
     ReadOnly itemEv = "ev"
     ReadOnly itemHonap = "honap"
     ReadOnly itemMunkaIdo = "munkaido"
     ReadOnly itemNapiIdo = "napiido"
 
+    'Adatbázis objectjeit tartalmazó listák
     Dim fhszLista As New List(Of Felhasznalok)
     Dim mkiLista As New List(Of Munkaidok)
     Dim unnepLista As New List(Of Unnepnapok)
 
+#End Region
+
+    'Load függvény
     Private Sub WtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
         sqlConnection = New SqlConn()
@@ -38,7 +48,9 @@ Public Class WtForm
     End Sub
 
 #Region "Jogosultságkezelő"
-    Private Sub CheckAuthentication() 'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
+
+    'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
+    Private Sub CheckAuthentication()
         Select Case User.role
             Case "Admin"
                 GetFszhLtb()
@@ -61,10 +73,13 @@ Public Class WtForm
                 userEmail = User.email
         End Select
     End Sub
+
 #End Region
 
 #Region "Inicializálások és számítási függvények, segédfüggvények"
-    Private Sub ReadYearAndMonth() 'Az év és hónap kiválasztó feltöltése értékekkel
+
+    'Az év és hónap comboboxok inicializálása
+    Private Sub ReadYearAndMonth()
         Dim yr, mh As Integer
         yr = DateTime.Now.Year
         mh = DateTime.Now.Month
@@ -77,6 +92,8 @@ Public Class WtForm
         CmbEv.SelectedIndex = 0
         CmbHonap.SelectedIndex = (mh - 1)
     End Sub
+
+    'A kiválasztott év és hónap lekérése a comboboxokból
     Private Function GetYearAndMonth()
         Dim lista As New Dictionary(Of String, Integer)
         lista.Add(itemEv, IsInteger(CmbEv.SelectedItem))
@@ -84,7 +101,7 @@ Public Class WtForm
         Return lista
     End Function
 
-    'A napi ledolgozott órák kiszámítása, valamint a havi összesített munkaidő számolása
+    'A naponként ledolgozott órák kiszámolása a táblázatba, valamint a textbox mezőbe az adott havi összesítés megjelenítése
     Private Sub GetWorkTimeofDay(tabla As DataGridView, index As Integer)
         Try
             Dim kezdo, befejezo, mkoSum As Decimal
@@ -109,7 +126,9 @@ Public Class WtForm
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
-    Private Function InitComboBox(valasztottIndex As Integer) As DataGridViewComboBoxCell
+
+    'Szabadságok beállításához szükséges combobox cella beállításai
+    Private Function InitComboBox()
         Dim tavolletBox As New DataGridViewComboBoxCell
         tavolletBox.Items.Add("Szabadság")
         tavolletBox.Items.Add("Betegség")
@@ -117,13 +136,8 @@ Public Class WtForm
         'tavolletBox.Value = tavolletBox.Items.Item(1)
         Return tavolletBox
     End Function
-    Private Function InitComboBox() As DataGridViewComboBoxCell
-        Dim tavolletBox As New DataGridViewComboBoxCell
-        tavolletBox.Items.Add("Szabadság")
-        tavolletBox.Items.Add("Betegség")
-        tavolletBox.Items.Add("Fizetetlen szabadság")
-        Return tavolletBox
-    End Function
+
+    'A generált táblázatok ellenőrzése, ezáltal értékadása a mentés és törlés funkciókhoz
     Private Function CheckTable(tabla As DataGridView)
         Dim ret As Integer
         If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" Then
@@ -140,7 +154,7 @@ Public Class WtForm
         Return ret
     End Function
 
-    'Az összes munkaidő és a ledolgozott órák különbsége
+    'Egy felhasználó összes előírt órájának kiszámítása
     Private Function GetDifferenceWorkingHours(munkanap As Integer, napiIdo As Integer, munkaIdo As Integer, aktDate As DateTime)
         Dim lista As New Dictionary(Of String, Integer)
         Dim evhonap = GetYearAndMonth()
@@ -153,6 +167,8 @@ Public Class WtForm
         End If
         Return lista
     End Function
+
+    'A munkanapok számának megállapítására szolgáló függvény
     Private Function GetWeekdaysNumber()
         Dim ev, honap, nap, munkanap As Integer
         Dim datum As DateTime
@@ -170,49 +186,26 @@ Public Class WtForm
         Return munkanap
     End Function
 
-    'DataGridView adattörlése
+    'DataGridView táblák "resetelése", adatok törlése a táblából, nullázás
     Private Sub ClearDataGridView(table As DataGridView)
         table.ReadOnly = False
         table.DataSource = Nothing
         table.Columns.Clear()
         table.Rows.Clear()
     End Sub
-#End Region
 
-#Region "SQL tárolt eljárások"
-    Private Sub NewFhszsetJogkor() 'Új felhasználóknak beállítja az alapértelmezett Felhasználó jogkört
-
-        ClearDataGridView(DgvUj)
-
-        DgvUj.Columns.Add("id", "Id")
-        DgvUj.Columns("id").ValueType = GetType(Integer)
-
-        For index = 0 To fhszLista.Count - 1
-            DgvUj.Rows.Add()
-            DgvUj.Item("id", index).Value = fhszLista(index).Id
-        Next
-
-        jgkkMan.InsertJogkorok(DgvUj)
-        ClearDataGridView(DgvUj)
-
-    End Sub
-    Private Sub InsertMunkaidok(tabla As DataGridView)
-        Try
-            mkidoMan.InsertOrUpdate(tabla)
-        Catch ex As Exception
-            Console.WriteLine("Hiba az adatbázis frissítése közben")
-        End Try
-    End Sub
 #End Region
 
 #Region "Funkciót ellátó függvények"
-    Private Sub GetUserWorkingHours(email As String) 'A kiválasztott felhasználó adott havi munkaidejének a lekérdezése
+
+    'A kiválasztott vagy bejelentkezett felhasználó adott havi munkaidejének a lekérdezése
+    Private Sub GetUserWorkingHours(email As String)
 
         ClearDataGridView(DgvTabla)
         Dim evhonap = GetYearAndMonth()
         Dim szabLista = szabMan.GetByEmailAndDate(User.email, evhonap.Item(itemEv), evhonap.Item(itemHonap))
         mkiLista.Clear()
-        mkidoMan.getMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         DgvTabla.Columns.Add("Datum", "Dátum")
         DgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
@@ -272,6 +265,8 @@ Public Class WtForm
         End Select
 
     End Sub
+
+    'Az első bejelentkezéskor legenerált alapértelmezett munkaidők generálása a felhasználó munkaideje alapján
     Private Sub SetDefaultWorkingHours(email As String)
 
         Dim datum, napStr, honapStr As String
@@ -282,7 +277,7 @@ Public Class WtForm
         Dim evhonap = GetYearAndMonth()
 
         mkiLista.Clear()
-        mkidoMan.getMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         For Each felhasznalo In fhszLista
             If felhasznalo.Email = email Then
@@ -360,11 +355,14 @@ Public Class WtForm
             End If
         Next
 
-        InsertMunkaidok(DgvTabla)
+        mkidoMan.InsertOrUpdate(DgvTabla)
         ClearDataGridView(DgvTabla)
 
     End Sub
-    Private Sub GetUserData() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
+
+    'A felhasználók adatainak lekérdezése az SQL Adatbázisból
+    Private Sub GetUserData()
+
         ClearDataGridView(DgvTabla)
 
         DgvTabla.Columns.Add("id", "id")
@@ -407,7 +405,9 @@ Public Class WtForm
         LblOra.Visible = False
 
     End Sub
-    Private Sub GetFszhLtb() 'A felhasználók kiválasztásához szükséges ListBox feltöltése
+
+    'A felhasználók kiválasztásához szükséges ListBox feltöltése
+    Private Sub GetFszhLtb()
 
         Dim szures As New Dictionary(Of String, String)
 
@@ -422,6 +422,8 @@ Public Class WtForm
         LtbFelhasznalok.ValueMember = "Value"
 
     End Sub
+
+    'A munkaidő összesítéshez szükséges segédtábla készítése
     Private Function GetSummaryTable()
 
         ClearDataGridView(DgvUj)
@@ -434,18 +436,18 @@ Public Class WtForm
             Case "Admin"
                 For index = 0 To fhszLista.Count - 1
                     Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
             Case "Vezeto"
                 For index = 0 To fhszLista.Count - 1
                     Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
             Case "Beosztott"
                 Dim ujmunkaido As New List(Of Munkaidok)
-                mkidoMan.getMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
+                mkidoMan.GetMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
                 felhaszMunkaido.Add(ujmunkaido)
         End Select
 
@@ -489,6 +491,8 @@ Public Class WtForm
 
         Return DgvUj
     End Function
+
+    'Új ünnepnapok vagy mostaniak törlésére szolgáló függvény Admin jogként
     Private Sub SetHoliday()
         ClearDataGridView(DgvTabla)
 
@@ -507,7 +511,9 @@ Public Class WtForm
         BtnMentes.Enabled = True
         BtnTorles.Enabled = True
     End Sub
-    Private Sub GetWorkingHoursSummary() 'Az összesített munkaidők megjelenítése egy táblázatban
+
+    'A felhasználók munkaidejének összesítése az adott hónapra
+    Private Sub GetWorkingHoursSummary()
 
         ClearDataGridView(DgvTabla)
 
@@ -564,12 +570,14 @@ Public Class WtForm
         DgvTabla.ReadOnly = True
 
     End Sub
+
+    'Jogkorok bekérése módosításhoz, Admin jogként
     Private Sub GetJogkorok()
 
         ClearDataGridView(DgvTabla)
 
         Dim jogkorok As New List(Of Jogkorok)
-        jgkkMan.getJogkorok(jogkorok)
+        jgkkMan.GetJogkorok(jogkorok)
 
         DgvTabla.Columns.Add("Nev", "Név")
         DgvTabla.Columns.Add("Jogkor", "Jogkör")
@@ -600,12 +608,34 @@ Public Class WtForm
 
     End Sub
 
+    'Új felhasználóknak beállítja az alapértelmezett Beosztott jogkört
+    Private Sub NewFhszsetJogkor()
+
+        ClearDataGridView(DgvUj)
+
+        DgvUj.Columns.Add("id", "Id")
+        DgvUj.Columns("id").ValueType = GetType(Integer)
+
+        For index = 0 To fhszLista.Count - 1
+            DgvUj.Rows.Add()
+            DgvUj.Item("id", index).Value = fhszLista(index).Id
+        Next
+
+        jgkkMan.InsertJogkorok(DgvUj)
+        ClearDataGridView(DgvUj)
+
+    End Sub
+
 #End Region
 
 #Region "Funkciógombok működtetése"
+
+    'Felhasználó adatainak lekérdezése
     Private Sub BtnFelhasznalok_Click(sender As Object, e As EventArgs) Handles BtnFelhasznalok.Click
         GetUserData()
     End Sub
+
+    'Mentés gomb működtetése
     Private Sub BtnMentes_Click(sender As Object, e As EventArgs) Handles BtnMentes.Click
         If CheckTable(DgvTabla) = 1 Then
             editedRows.ForEach(Sub(i) fhszMan.InsertOrUpdate(DgvTabla.Rows.Item(i).Cells))
@@ -629,6 +659,8 @@ Public Class WtForm
             GetJogkorok()
         End If
     End Sub
+
+    'Felhasználó munkaidejének lekérdezése
     Private Sub BtnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles BtnMunkaidoleker.Click
         Select Case User.role
             Case "Admin"
@@ -639,9 +671,13 @@ Public Class WtForm
                 GetUserWorkingHours(userEmail)
         End Select
     End Sub
+
+    'Munkaidő összesítés gomb
     Private Sub BtnMunkaidoossz_Click(sender As Object, e As EventArgs) Handles BtnMunkaidoossz.Click
         GetWorkingHoursSummary()
     End Sub
+
+    'Teszt gomb, később törlésre kerül
     Private Sub TstButton_Click(sender As Object, e As EventArgs) Handles TstButton.Click
         Select Case User.role
             Case "Admin"
@@ -652,6 +688,8 @@ Public Class WtForm
                 SetDefaultWorkingHours(userEmail)
         End Select
     End Sub
+
+    'Törlés gomb működtetése
     Private Sub BtnTorles_Click(sender As Object, e As EventArgs) Handles BtnTorles.Click
         If CheckTable(DgvTabla) = 1 Then
             Dim email, nev As String
@@ -682,15 +720,22 @@ Public Class WtForm
             End If
         End If
     End Sub
+
+    'Ünnepnapok lekérdezése és szerkesztése
     Private Sub BtnUnnep_Click(sender As Object, e As EventArgs) Handles BtnUnnep.Click
         SetHoliday()
     End Sub
+
+    'Jogkörök lekérdezése és szerkesztése
     Private Sub BtnJogkor_Click(sender As Object, e As EventArgs) Handles BtnJogkor.Click
         GetJogkorok()
     End Sub
+
 #End Region
 
 #Region "DataGridView automatikus függvényei"
+
+    'Cellamódosítás kezdésének érzékelése
     Private Sub DgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvTabla.CellBeginEdit
         Try
             DgvTabla.Rows.Item(e.RowIndex).Tag = DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
@@ -698,6 +743,8 @@ Public Class WtForm
 
         End Try
     End Sub
+
+    'Cellamódosítás befejézésnek érzékelése
     Private Sub DgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvTabla.CellEndEdit
         Try
             If Not DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(DgvTabla.Rows.Item(e.RowIndex).Tag) Then
@@ -717,6 +764,8 @@ Public Class WtForm
             Console.WriteLine("Hiba a cellamódosításban.")
         End Try
     End Sub
+
+    'Táblázat sorszámozására szolgál
     Private Sub DgvTabla_RowPostPaint(sender As Object, e As DataGridViewRowPostPaintEventArgs) Handles DgvTabla.RowPostPaint
         Try
             Dim dg As DataGridView = DirectCast(sender, DataGridView)
@@ -734,6 +783,8 @@ Public Class WtForm
 
         End Try
     End Sub
+
+    'Error függvény, még nincs kifejtve!
     Private Sub DgvTabla_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvTabla.DataError
         MessageBox.Show("Error:  " & e.Context.ToString())
         If (e.Context = DataGridViewDataErrorContexts.Commit) Then
@@ -758,6 +809,7 @@ Public Class WtForm
             e.ThrowException = False
         End If
     End Sub
+
 #End Region
 
 End Class
