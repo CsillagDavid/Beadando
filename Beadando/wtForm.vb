@@ -226,18 +226,17 @@ Public Class wtForm
             dgvTabla.Item("Kezdo_ido", index).Value = mkiLista(index).Kezdo_ido
             dgvTabla.Item("Befejezo_ido", index).Value = mkiLista(index).Befejezo_ido
             dgvTabla.Item("FelhasznaloID", index).Value = mkiLista(index).FelhasznaloID
-        Next
-
-        txtMunkaidoOsszes.Text = 0
-        For index = 0 To dgvTabla.Rows.Count - 1
             dgvTabla.Item("Tavollet", index) = initComboBox()
             getWorkTimeofDay(dgvTabla, index)
         Next
 
         dgvTabla.Columns("Datum").ReadOnly = True
         dgvTabla.Columns("Napi_ido").ReadOnly = True
+
+        txtMunkaidoOsszes.Text = 0
         btnMentes.Enabled = True
         btnTorles.Enabled = False
+
         Select Case user.role
             Case "Admin"
                 dgvTabla.AllowUserToAddRows = True
@@ -354,7 +353,6 @@ Public Class wtForm
         dgvTabla.Columns("Email").ValueType = GetType(String)
         dgvTabla.Columns("Munkaido").ValueType = GetType(Decimal)
 
-
         For index = 0 To fhszLista.Count - 1
             dgvTabla.Rows.Add()
             dgvTabla.Item("id", index).Value = fhszLista(index).Id
@@ -375,6 +373,7 @@ Public Class wtForm
             dgvTabla.Columns("Jelszo").ReadOnly = True
         End If
 
+        dgvTabla.AllowUserToAddRows = True
         btnMentes.Enabled = True
         btnTorles.Enabled = True
         txtMunkaidoOsszes.Visible = False
@@ -443,13 +442,10 @@ Public Class wtForm
                 dgvUj.Item("Datum", rowindex).Value = szemelyes(Index).Datum
                 dgvUj.Item("Kezdo_ido", rowindex).Value = szemelyes(Index).Kezdo_ido
                 dgvUj.Item("Befejezo_ido", rowindex).Value = szemelyes(Index).Befejezo_ido
+                dgvUj.Item("Tavollet", rowindex) = initComboBox()
+                getWorkTimeofDay(dgvUj, rowindex)
                 rowindex += 1
             Next
-        Next
-
-        For index = 0 To dgvUj.Rows.Count - 2
-            dgvUj.Item("Tavollet", index) = initComboBox()
-            getWorkTimeofDay(dgvUj, index)
         Next
 
         dgvUj.AllowUserToAddRows = False
