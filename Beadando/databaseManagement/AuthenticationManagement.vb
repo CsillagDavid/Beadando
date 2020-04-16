@@ -11,7 +11,7 @@ Public Class AuthenticationManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Function authenticate(UserName As String, Password As String) As User
+    Public Function Authenticate(UserName As String, Password As String) As User
         Dim user = New User()
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
