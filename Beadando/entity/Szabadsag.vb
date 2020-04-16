@@ -43,6 +43,6 @@
         Me.id = id
         Me.Datum = datum
         Me.Tipus = tipus
-        Me.valueFelhasznaloID = felhasznaloId
+        Me.FelhasznaloID = felhasznaloId
     End Sub
 End Class
