@@ -1,4 +1,4 @@
-﻿Public Class Szabadsag
+﻿Public Class Szabadsagok
     Private valueId As Integer
     Public Property id() As Integer
         Get

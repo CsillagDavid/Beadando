@@ -82,12 +82,12 @@
     <Compile Include="databaseManagement\FelhasznalokManagement.vb" />
     <Compile Include="databaseManagement\JogkorokManagement.vb" />
     <Compile Include="databaseManagement\MunkaidokManagement.vb" />
-    <Compile Include="databaseManagement\SzabadsagManagement.vb" />
+    <Compile Include="databaseManagement\SzabadsagokManagement.vb" />
     <Compile Include="databaseManagement\UnnepnapokManagement.vb" />
     <Compile Include="entity\Felhasznalok.vb" />
     <Compile Include="entity\Jogkorok.vb" />
     <Compile Include="entity\Munkaidok.vb" />
-    <Compile Include="entity\Szabadsag.vb" />
+    <Compile Include="entity\Szabadsagok.vb" />
     <Compile Include="entity\Unnepnapok.vb" />
     <Compile Include="LoginForm.Designer.vb">
       <DependentUpon>LoginForm.vb</DependentUpon>
