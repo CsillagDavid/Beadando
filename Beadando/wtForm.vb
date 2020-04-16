@@ -25,6 +25,7 @@ Public Class wtForm
         sqlConnection = New sqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
+        'itt összeakadt a merge
         felhasznalokManagement.getFelhasznalok(felhasznalokLista)
         unnepnapokManagement.GetUnnepnapok(unnepnapokLista)
         readYearAndMonth()
