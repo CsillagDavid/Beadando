@@ -398,9 +398,10 @@ Public Class wtForm
         ltbFelhasznalok.ValueMember = "Value"
 
     End Sub
-    Private Function getSummary()
+    Private Function getSummaryTable()
 
         clearDataGridView(dgvUj)
+        clearDataGridView(dgvTabla)
 
         Dim evhonap = getYearAndMonth()
         Dim command = ""
@@ -453,7 +454,6 @@ Public Class wtForm
         Next
 
         dgvUj.ReadOnly = True
-        dgvUj.Visible = False
         txtMunkaidoOsszes.Visible = False
         lblOra.Visible = False
         lblMunkaidoOsszes.Visible = False
@@ -482,16 +482,15 @@ Public Class wtForm
     End Sub
     Private Sub getWorkingHoursSummary() 'Az összesített munkaidők megjelenítése egy táblázatban
 
-        Dim kulonbseg, teljesora, eloirtora As Decimal
-        Dim nev, email As String
+        clearDataGridView(dgvTabla)
+
+        Dim kulonbseg As Decimal
         Dim row As String()
         Dim nevLista As New List(Of String)
         Dim lsindex = 0
         Dim rowCount As Integer
         Dim munkanap = getWeekdaysNumber()
-        Dim tabla = getSummary()
-
-        clearDataGridView(dgvTabla)
+        Dim tabla = getSummaryTable()
 
         dgvTabla.Columns.Add("Nev", "Név")
         dgvTabla.Columns.Add("Email", "E-Mail")
@@ -501,7 +500,7 @@ Public Class wtForm
 
         dgvTabla.Columns("Nev").ValueType = GetType(String)
         dgvTabla.Columns("Email").ValueType = GetType(String)
-        dgvTabla.Columns("Eloirtora").ValueType = GetType(Integer)
+        dgvTabla.Columns("Eloirtora").ValueType = GetType(Decimal)
         dgvTabla.Columns("Teljesora").ValueType = GetType(Decimal)
         dgvTabla.Columns("Kulonbseg").ValueType = GetType(Decimal)
 
@@ -509,9 +508,8 @@ Public Class wtForm
 
         For index = 0 To rowCount - 2
 
-            nev = tabla.Item("Nev", index).Value
-            email = tabla.Item("email", index).Value
-
+            Dim nev = tabla.Item("Nev", index).Value
+            Dim email = tabla.Item("email", index).Value
             Dim diffworkhours = getDifferenceWorkingHours(index, munkanap, isInteger(tabla.Item("napi_ido", index).Value), isInteger(tabla.Item("munkaido", index).Value), isDate(tabla.Item("datum", index).Value))
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
@@ -529,8 +527,8 @@ Public Class wtForm
                 dgvTabla.Rows.Add(row)
             Else
                 If nevLista.Contains(nev) Then
-                    eloirtora = isDecimal(dgvTabla.Item("eloirtora", lsindex).Value)
-                    teljesora = isDecimal(dgvTabla.Item("teljesora", lsindex).Value)
+                    Dim eloirtora = isDecimal(dgvTabla.Item("eloirtora", lsindex).Value)
+                    Dim teljesora = isDecimal(dgvTabla.Item("teljesora", lsindex).Value)
                     kulonbseg = isDecimal(dgvTabla.Item("kulonbseg", lsindex).Value)
                     dgvTabla.Item("teljesora", lsindex).Value = teljesora + napiIdo
                     dgvTabla.Item("kulonbseg", lsindex).Value = (teljesora + napiIdo) - eloirtora
@@ -589,20 +587,23 @@ Public Class wtForm
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
         If checkTable(dgvTabla) = 1 Then
             editedRows.ForEach(Sub(i) felhasznalokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
+            editedRows.Clear()
             felhasznalokLista.Clear()
             felhasznalokManagement.getFelhasznalok(felhasznalokLista)
             getFszhLtb()
             newFhszsetJogkor()
-            editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 0 Then
             editedRows.ForEach(Sub(i) munkaidokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 2 Then
             editedRows.ForEach(Sub(i) unnepnapokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
+            unnepnapokLista.Clear()
+            unnepnapokManagement.GetUnnepnapok(unnepnapokLista)
         ElseIf checkTable(dgvTabla) = 3 Then
             editedRows.ForEach(Sub(i) jogkorokManagement.UpdateJogkorok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
+            getJogkorok()
         End If
     End Sub
     Private Sub btnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles btnMunkaidoleker.Click
@@ -687,7 +688,6 @@ Public Class wtForm
         Dim b As Brush = SystemBrushes.ControlText
         e.Graphics.DrawString(rowNumber, dg.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2))
     End Sub
-
     Private Sub dgvTabla_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvTabla.DataError
         MessageBox.Show("Error:  " & e.Context.ToString())
         If (e.Context = DataGridViewDataErrorContexts.Commit) Then

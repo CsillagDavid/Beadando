@@ -176,9 +176,9 @@ Partial Class wtForm
         '
         Me.dgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvUj.Enabled = False
-        Me.dgvUj.Location = New System.Drawing.Point(9, 556)
+        Me.dgvUj.Location = New System.Drawing.Point(9, 561)
         Me.dgvUj.Name = "dgvUj"
-        Me.dgvUj.Size = New System.Drawing.Size(10, 15)
+        Me.dgvUj.Size = New System.Drawing.Size(10, 10)
         Me.dgvUj.TabIndex = 17
         Me.dgvUj.Visible = False
         '
@@ -249,7 +249,7 @@ Partial Class wtForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
-        Me.ClientSize = New System.Drawing.Size(954, 578)
+        Me.ClientSize = New System.Drawing.Size(959, 578)
         Me.Controls.Add(Me.btnJogkor)
         Me.Controls.Add(Me.lblJogkor)
         Me.Controls.Add(Me.lblUnnep)
