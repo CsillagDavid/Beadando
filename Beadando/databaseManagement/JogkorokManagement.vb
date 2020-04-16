@@ -11,7 +11,7 @@ Public Class JogkorokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Sub Update(Cells As DataGridViewCellCollection)
+    Public Sub UpdateJogkorok(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
@@ -22,31 +22,38 @@ Public Class JogkorokManagement
         sqlConnection.sqlClose()
     End Sub
 
-    Public Function GetIds() As DataTable
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT F.id FROM Felhasznalok F
-                        WHERE F.Munkaido > " & 0
-        cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
-        sqlConnection.sqlClose()
-        Return dt
-    End Function
-
-    Public Sub InsertJogkorok(dgvUj As DataGridView)
+    Public Sub InsertJogkorok(tabla As DataGridView)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertJogkorok"
-        For index = 0 To dgvUj.Rows.Count - 2
+        For index = 0 To tabla.Rows.Count - 2
             cmd.Parameters.Clear()
-            cmd.Parameters.AddWithValue("@FelhasznaloID", dgvUj.Item("id", index).Value)
+            cmd.Parameters.AddWithValue("@FelhasznaloID", tabla.Item("id", index).Value)
             cmd.Parameters.AddWithValue("@Jogkor", "Felhasznalo")
             cmd.ExecuteNonQuery()
         Next
         sqlConnection.sqlClose()
     End Sub
+
+    Public Sub getJogkorok(list As List(Of Jogkorok))
+        sqlConnection.sqlConnect()
+        Dim sdr As SqlDataReader
+        Dim sda As New SqlDataAdapter
+        cmd.CommandType = CommandType.Text
+        Dim sqlquery As String = "SELECT J.FelhasznaloID, J.Jogkor FROM Jogkorok J"
+        cmd.CommandText = sqlquery
+        cmd.Connection = con
+        sda.SelectCommand = cmd
+        sdr = cmd.ExecuteReader()
+        While sdr.Read
+            Dim jogkor = New Jogkorok(
+                sdr.Item("FelhasznaloID"),
+                sdr.Item("Jogkor")
+                )
+            list.Add(jogkor)
+        End While
+        sqlConnection.sqlClose()
+    End Sub
+
 End Class

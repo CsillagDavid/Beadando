@@ -27,17 +27,17 @@
         End If
     End Function
 
-    Public Function isHolidayOrWeekend(datum As Date, holidays As Dictionary(Of Date, Integer))
+    Public Function isHolidayOrWeekend(datum As Date, holidays As List(Of Unnepnapok))
         If datum.DayOfWeek = DayOfWeek.Sunday Then
             Return False
         ElseIf datum.DayOfWeek() = DayOfWeek.Saturday Then
             Return False
         End If
         For Each item In holidays
-            If item.Key = datum Then
-                If item.Value = 0 Then
+            If item.Datum = datum Then
+                If item.Tipus = 0 Then
                     Return False
-                ElseIf item.Value = 1 Then
+                ElseIf item.Tipus = 1 Then
                     Return False
                 Else
                     Return True

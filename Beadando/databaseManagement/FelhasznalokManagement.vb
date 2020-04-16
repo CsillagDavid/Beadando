@@ -11,28 +11,13 @@ Public Class FelhasznalokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Function GetAllNevAndEmail(Email As String) As DataTable
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT F.Nev, F.Email FROM Felhasznalok F
-                                            WHERE F.Munkaido >" & 0
-        cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
-        sqlConnection.sqlClose()
-        Return dt
-    End Function
-
     Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateFelhasznalok"
-        cmd.Parameters.AddWithValue("@id", Cells.Item("id").Value.ToString())
         cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value.ToString())
-        If Cells.Item("Jelszo").Value.ToString() = "" Then
+        If Cells.Item("Jelszo").Value = Nothing Then
             cmd.Parameters.AddWithValue("@Jelszo", "Password1")
         Else
             cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value.ToString())
@@ -43,18 +28,16 @@ Public Class FelhasznalokManagement
         sqlConnection.sqlClose()
     End Sub
 
-    Public Function GetAll() As DataTable
+    Public Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT F.id, F.Nev, F.Jelszo, F.Email, F.Munkaido FROM Felhasznalok F
-                                     WHERE F.Munkaido >" & 0
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "DeleteFelhasznalok"
+        cmd.Parameters.AddWithValue("@id", id)
+        cmd.Parameters.AddWithValue("@Nev", nev)
+        cmd.Parameters.AddWithValue("@Email", email)
         cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
         sqlConnection.sqlClose()
-        Return dt
-    End Function
+    End Sub
 
 End Class

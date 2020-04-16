@@ -69,9 +69,9 @@ Partial Class wtForm
         Me.dgvTabla.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvTabla.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         Me.dgvTabla.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvTabla.Location = New System.Drawing.Point(186, 9)
+        Me.dgvTabla.Location = New System.Drawing.Point(171, 9)
         Me.dgvTabla.Name = "dgvTabla"
-        Me.dgvTabla.Size = New System.Drawing.Size(765, 539)
+        Me.dgvTabla.Size = New System.Drawing.Size(780, 539)
         Me.dgvTabla.TabIndex = 4
         '
         'btnFelhasznalok
@@ -176,9 +176,9 @@ Partial Class wtForm
         '
         Me.dgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvUj.Enabled = False
-        Me.dgvUj.Location = New System.Drawing.Point(9, 558)
+        Me.dgvUj.Location = New System.Drawing.Point(9, 556)
         Me.dgvUj.Name = "dgvUj"
-        Me.dgvUj.Size = New System.Drawing.Size(10, 10)
+        Me.dgvUj.Size = New System.Drawing.Size(10, 15)
         Me.dgvUj.TabIndex = 17
         Me.dgvUj.Visible = False
         '
@@ -256,7 +256,7 @@ Partial Class wtForm
         Me.Controls.Add(Me.btnUnnep)
         Me.Controls.Add(Me.tstButton)
         Me.Controls.Add(Me.lblOra)
-        Me.Controls.Add(Me.dgvUj)
+        Me.Controls.Add(Me.dgvTabla)
         Me.Controls.Add(Me.lvlHonap)
         Me.Controls.Add(Me.lblEv)
         Me.Controls.Add(Me.cmbHonap)
@@ -268,7 +268,7 @@ Partial Class wtForm
         Me.Controls.Add(Me.btnMentes)
         Me.Controls.Add(Me.btnMunkaidoleker)
         Me.Controls.Add(Me.btnFelhasznalok)
-        Me.Controls.Add(Me.dgvTabla)
+        Me.Controls.Add(Me.dgvUj)
         Me.Controls.Add(Me.ltbFelhasznalok)
         Me.Controls.Add(Me.lblFelhasznalok)
         Me.Name = "wtForm"
