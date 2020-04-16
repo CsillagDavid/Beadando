@@ -17,9 +17,8 @@ Public Class FelhasznalokManagement
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateFelhasznalok"
-        cmd.Parameters.AddWithValue("@id", Cells.Item("id").Value.ToString())
         cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value.ToString())
-        If Cells.Item("Jelszo").Value.ToString() = "" Then
+        If Cells.Item("Jelszo").Value = Nothing Then
             cmd.Parameters.AddWithValue("@Jelszo", "Password1")
         Else
             cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value.ToString())

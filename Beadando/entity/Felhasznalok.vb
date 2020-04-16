@@ -1,6 +1,6 @@
 ﻿Public Class Felhasznalok
     Private valueId As Integer
-    Public Property id() As Integer
+    Public Property Id() As Integer
         Get
             Return valueId
         End Get
@@ -50,11 +50,11 @@
     End Property
 
     Public Sub New(id As Integer, nev As String, jelszo As String, email As String, munkaido As Integer)
-        Me.valueId = id
-        Me.valueNev = nev
-        Me.valueJelszo = jelszo
-        Me.valueEmail = email
-        Me.valueMunkaido = munkaido
+        Me.Id = id
+        Me.Nev = nev
+        Me.Jelszo = jelszo
+        Me.Email = email
+        Me.Munkaido = munkaido
     End Sub
 
 End Class

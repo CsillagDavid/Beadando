@@ -39,10 +39,10 @@
         End Set
     End Property
 
-    Public Sub New(valueDatum As String, valueKezdo_ido As Decimal, valueBefejezo_ido As Decimal, valueFelhasznaloID As Integer)
-        Me.valueDatum = valueDatum
-        Me.valueKezdo_ido = valueKezdo_ido
-        Me.valueBefejezo_ido = valueBefejezo_ido
-        Me.valueFelhasznaloID = valueFelhasznaloID
+    Public Sub New(datum As String, kezdo_ido As Decimal, befejezo_ido As Decimal, felhasznaloID As Integer)
+        Me.Datum = datum
+        Me.Kezdo_ido = kezdo_ido
+        Me.Befejezo_ido = befejezo_ido
+        Me.FelhasznaloID = felhasznaloID
     End Sub
 End Class

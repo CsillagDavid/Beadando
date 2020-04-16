@@ -11,7 +11,6 @@ IF EXISTS (
 GO
 
 CREATE PROCEDURE [dbo].[InsertOrUpdateFelhasznalok]
-	@id int, 
 	@Nev nvarchar (255), 
 	@Jelszo nvarchar (255), 
 	@Email nvarchar (255), 
