@@ -7,7 +7,7 @@ Public Class WtForm
     Dim fhszMan As New FelhasznalokManagement
     Dim unnepMan As New UnnepnapokManagement
     Dim jgkkMan As New JogkorokManagement
-
+    Dim szabMan As New SzabadsagokManagement
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
     Dim sqlConnection As SqlConn
@@ -109,7 +109,15 @@ Public Class WtForm
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
-    Private Function InitComboBox()
+    Private Function InitComboBox(valasztottIndex As Integer) As DataGridViewComboBoxCell
+        Dim tavolletBox As New DataGridViewComboBoxCell
+        tavolletBox.Items.Add("Szabadság")
+        tavolletBox.Items.Add("Betegség")
+        tavolletBox.Items.Add("Fizetetlen szabadság")
+        'tavolletBox.Value = tavolletBox.Items.Item(1)
+        Return tavolletBox
+    End Function
+    Private Function InitComboBox() As DataGridViewComboBoxCell
         Dim tavolletBox As New DataGridViewComboBoxCell
         tavolletBox.Items.Add("Szabadság")
         tavolletBox.Items.Add("Betegség")
@@ -202,6 +210,7 @@ Public Class WtForm
 
         ClearDataGridView(DgvTabla)
         Dim evhonap = GetYearAndMonth()
+        Dim szabLista = szabMan.GetByEmailAndDate(User.email, evhonap.Item(itemEv), evhonap.Item(itemHonap))
         mkiLista.Clear()
         mkidoMan.getMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
@@ -229,6 +238,20 @@ Public Class WtForm
             DgvTabla.Item("Kezdo_ido", index).Value = mkiLista(index).Kezdo_ido
             DgvTabla.Item("Befejezo_ido", index).Value = mkiLista(index).Befejezo_ido
             DgvTabla.Item("FelhasznaloID", index).Value = mkiLista(index).FelhasznaloID
+            'If szabLista.Count > 0 Then
+            '    Dim szabIndex = szabLista.FindIndex(Function(szab)
+            '                                            Return szab.Datum.Equals(mkiLista(index).Datum)
+            '                                        End Function)
+            '    If szabIndex > -1 Then
+            '        DgvTabla.Item("Tavollet", index) = InitComboBox(1)
+            '    Else
+            '        DgvTabla.Item("Tavollet", index) = InitComboBox()
+            '    End If
+            '    GetWorkTimeofDay(DgvTabla, index)
+            'Else
+            '    DgvTabla.Item("Tavollet", index) = InitComboBox()
+            '    GetWorkTimeofDay(DgvTabla, index)
+            'End If
             DgvTabla.Item("Tavollet", index) = InitComboBox()
             GetWorkTimeofDay(DgvTabla, index)
         Next
@@ -342,7 +365,6 @@ Public Class WtForm
 
     End Sub
     Private Sub GetUserData() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
-
         ClearDataGridView(DgvTabla)
 
         DgvTabla.Columns.Add("id", "id")

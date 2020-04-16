@@ -52,8 +52,8 @@ Public Class SzabadsagokManagement
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT SZ.id, SZ.Datum, SZ.Tipus, SZ.FelhasznaloID
                             FROM Szabadsagok SZ INNER JOIN Felhasznalok F ON SZ.FelhasznaloID = F.id
-                            WHERE F.Email='" & Email & "' AND M.Datum >= '" & KezdoDatum & ". " & BefejezoDatum & ". 01' 
-                                AND M.Datum < '" & KezdoDatum & ". " & (BefejezoDatum + 1) & ". 01'"
+                            WHERE F.Email='" & Email & "' AND SZ.Datum >= '" & KezdoDatum & ". " & BefejezoDatum & ". 01' 
+                                AND SZ.Datum < '" & KezdoDatum & ". " & (BefejezoDatum + 1) & ". 01'"
         Dim reader As SqlDataReader
         reader = cmd.ExecuteReader()
         While reader.Read()
