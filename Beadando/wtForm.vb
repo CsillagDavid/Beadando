@@ -468,7 +468,7 @@ Public Class wtForm
         dgvTabla.Columns("Datum").ValueType = GetType(Date)
         dgvTabla.Columns("Tipus").ValueType = GetType(Integer)
 
-        For index = 0 To unnepLista.Count - 2
+        For index = 0 To unnepLista.Count - 1
             dgvTabla.Rows.Add()
             dgvTabla.Item("Datum", index).Value = unnepLista(index).Datum
             dgvTabla.Item("Tipus", index).Value = unnepLista(index).Tipus
@@ -535,6 +535,7 @@ Public Class wtForm
 
     End Sub
     Private Sub getJogkorok()
+
         clearDataGridView(dgvTabla)
 
         Dim jogkorok As New List(Of Jogkorok)
@@ -542,9 +543,12 @@ Public Class wtForm
 
         dgvTabla.Columns.Add("Nev", "Név")
         dgvTabla.Columns.Add("Jogkor", "Jogkör")
+        dgvTabla.Columns.Add("FelhasznaloID", "Felhasználó ID")
+
 
         dgvTabla.Columns("Nev").ValueType = GetType(String)
         dgvTabla.Columns("Jogkor").ValueType = GetType(String)
+        dgvTabla.Columns("FelhasznaloID").ValueType = GetType(Integer)
 
         For index = 0 To fhszLista.Count - 1
             dgvTabla.Rows.Add()
@@ -552,12 +556,17 @@ Public Class wtForm
             For jkindex = 0 To jogkorok.Count - 1
                 If fhszLista(index).Id = jogkorok(jkindex).FelhasznaloID Then
                     dgvTabla.Item("Jogkor", index).Value = jogkorok(jkindex).Jogkor
+                    dgvTabla.Item("FelhasznaloID", index).Value = jogkorok(jkindex).FelhasznaloID
                 End If
             Next
         Next
 
         dgvTabla.Columns("Nev").ReadOnly = True
+        dgvTabla.Columns("FelhasznaloID").ReadOnly = True
+        dgvTabla.Columns("FelhasznaloID").Visible = False
+
         btnMentes.Enabled = True
+        btnTorles.Enabled = False
 
     End Sub
 
@@ -582,6 +591,7 @@ Public Class wtForm
             editedRows.Clear()
             unnepLista.Clear()
             unnepMan.GetUnnepnapok(unnepLista)
+            setHoliday()
         ElseIf checkTable(dgvTabla) = 3 Then
             editedRows.ForEach(Sub(i) jgkkMan.UpdateJogkorok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
@@ -623,6 +633,18 @@ Public Class wtForm
             Else
                 MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
             End If
+        ElseIf checkTable(dgvTabla) = 2 Then
+            Dim datum As DateTime
+            If dgvTabla.SelectedRows.Count > 0 Then
+                datum = dgvTabla.SelectedRows(0).Cells("Datum").Value
+                dgvTabla.Rows.Remove(dgvTabla.SelectedRows(0))
+                unnepMan.DeleteUnnepnap(datum)
+                unnepLista.Clear()
+                unnepMan.GetUnnepnapok(unnepLista)
+                setHoliday()
+            Else
+                MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
+            End If
         End If
     End Sub
     Private Sub btnUnnep_Click(sender As Object, e As EventArgs) Handles btnUnnep.Click
@@ -635,7 +657,11 @@ Public Class wtForm
 
 #Region "DataGridView automatikus függvényei"
     Private Sub dgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvTabla.CellBeginEdit
-        dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
+        Try
+            dgvTabla.Rows.Item(e.RowIndex).Tag = dgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
+        Catch ex As Exception
+
+        End Try
     End Sub
     Private Sub dgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTabla.CellEndEdit
         Try
@@ -657,17 +683,21 @@ Public Class wtForm
         End Try
     End Sub
     Private Sub dgvTabla_RowPostPaint(sender As Object, e As DataGridViewRowPostPaintEventArgs) Handles dgvTabla.RowPostPaint
-        Dim dg As DataGridView = DirectCast(sender, DataGridView)
-        Dim rowNumber As String = (e.RowIndex + 1).ToString()
-        While rowNumber.Length < dg.RowCount.ToString().Length
-            rowNumber = "0" & rowNumber
-        End While
-        Dim size As SizeF = e.Graphics.MeasureString(rowNumber, Me.Font)
-        If dg.RowHeadersWidth < CInt(size.Width + 20) Then
-            dg.RowHeadersWidth = CInt(size.Width + 20)
-        End If
-        Dim b As Brush = SystemBrushes.ControlText
-        e.Graphics.DrawString(rowNumber, dg.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2))
+        Try
+            Dim dg As DataGridView = DirectCast(sender, DataGridView)
+            Dim rowNumber As String = (e.RowIndex + 1).ToString()
+            While rowNumber.Length < dg.RowCount.ToString().Length
+                rowNumber = "0" & rowNumber
+            End While
+            Dim size As SizeF = e.Graphics.MeasureString(rowNumber, Me.Font)
+            If dg.RowHeadersWidth < CInt(size.Width + 20) Then
+                dg.RowHeadersWidth = CInt(size.Width + 20)
+            End If
+            Dim b As Brush = SystemBrushes.ControlText
+            e.Graphics.DrawString(rowNumber, dg.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2))
+        Catch ex As Exception
+
+        End Try
     End Sub
     Private Sub dgvTabla_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvTabla.DataError
         MessageBox.Show("Error:  " & e.Context.ToString())

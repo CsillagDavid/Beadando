@@ -42,4 +42,14 @@ Public Class UnnepnapokManagement
         sqlConnection.sqlClose()
     End Sub
 
+    Public Sub DeleteUnnepnap(datum As DateTime)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "DeleteUnnepnapok"
+        cmd.Parameters.AddWithValue("@Datum", datum)
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+    End Sub
+
 End Class
