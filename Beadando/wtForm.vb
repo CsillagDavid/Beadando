@@ -487,7 +487,6 @@ Public Class wtForm
         Dim kulonbseg As Decimal
         Dim row As String()
         Dim nevLista As New List(Of String)
-        Dim lsindex = 0
         Dim rowCount As Integer
         Dim munkanap = getWeekdaysNumber()
         Dim tabla = getSummaryTable()
@@ -513,38 +512,24 @@ Public Class wtForm
             Dim diffworkhours = getDifferenceWorkingHours(index, munkanap, isInteger(tabla.Item("napi_ido", index).Value), isInteger(tabla.Item("munkaido", index).Value), isDate(tabla.Item("datum", index).Value))
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
+            Dim nevIndex = nevLista.IndexOf(nev)
 
-            If dgvTabla.Rows.Count = 1 Then
-                kulonbseg = napiIdo - munkaIdo
+            If nevIndex = -1 Then
                 nevLista.Add(nev)
+                kulonbseg = napiIdo - munkaIdo
                 row = New String() {
                                 nev,
-                                email,
-                                munkaIdo,
-                                napiIdo,
-                                kulonbseg
-                            }
+                                    email,
+                                    munkaIdo,
+                                    napiIdo,
+                                    kulonbseg
+                                }
                 dgvTabla.Rows.Add(row)
             Else
-                If nevLista.Contains(nev) Then
-                    Dim eloirtora = isDecimal(dgvTabla.Item("eloirtora", lsindex).Value)
-                    Dim teljesora = isDecimal(dgvTabla.Item("teljesora", lsindex).Value)
-                    kulonbseg = isDecimal(dgvTabla.Item("kulonbseg", lsindex).Value)
-                    dgvTabla.Item("teljesora", lsindex).Value = teljesora + napiIdo
-                    dgvTabla.Item("kulonbseg", lsindex).Value = (teljesora + napiIdo) - eloirtora
-                Else
-                    nevLista.Add(nev)
-                    kulonbseg = napiIdo - munkaIdo
-                    row = New String() {
-                                nev,
-                                email,
-                                munkaIdo,
-                                napiIdo,
-                                kulonbseg
-                            }
-                    lsindex += 1
-                    dgvTabla.Rows.Add(row)
-                End If
+                Dim eloirtora = isDecimal(dgvTabla.Item("eloirtora", nevIndex).Value)
+                Dim teljesora = isDecimal(dgvTabla.Item("teljesora", nevIndex).Value)
+                dgvTabla.Item("teljesora", nevIndex).Value = teljesora + napiIdo
+                dgvTabla.Item("kulonbseg", nevIndex).Value = (teljesora + napiIdo) - eloirtora
             End If
         Next
 
