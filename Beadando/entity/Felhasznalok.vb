@@ -1,4 +1,5 @@
 ﻿Public Class Felhasznalok
+
     Private valueId As Integer
     Public Property Id() As Integer
         Get

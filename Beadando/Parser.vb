@@ -1,6 +1,6 @@
 ﻿Public Module Parser
 
-    Public Function isDate(parameter As Object)
+    Public Function IsDate(parameter As Object)
         Dim result As Date
         If Date.TryParse(parameter, result) Then
             Return result
@@ -9,7 +9,7 @@
         End If
     End Function
 
-    Public Function isInteger(parameter As Object)
+    Public Function IsInteger(parameter As Object)
         Dim result As Integer
         If Integer.TryParse(parameter, result) Then
             Return result
@@ -18,7 +18,7 @@
         End If
     End Function
 
-    Public Function isDecimal(parameter As Object)
+    Public Function IsDecimal(parameter As Object)
         Dim result As Decimal
         If Decimal.TryParse(parameter, result) Then
             Return result
@@ -27,7 +27,7 @@
         End If
     End Function
 
-    Public Function isHolidayOrWeekend(datum As Date, holidays As List(Of Unnepnapok))
+    Public Function IsHolidayOrWeekend(datum As Date, holidays As List(Of Unnepnapok))
         If datum.DayOfWeek = DayOfWeek.Sunday Then
             Return False
         ElseIf datum.DayOfWeek() = DayOfWeek.Saturday Then

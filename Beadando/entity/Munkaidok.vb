@@ -1,4 +1,5 @@
 ﻿Public Class Munkaidok
+
     Private valueDatum As String
     Public Property Datum() As String
         Get
@@ -45,4 +46,5 @@
         Me.Befejezo_ido = befejezo_ido
         Me.FelhasznaloID = felhasznaloID
     End Sub
+
 End Class

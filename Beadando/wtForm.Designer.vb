@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class wtForm
+Partial Class WtForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,283 +22,283 @@ Partial Class wtForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.lblFelhasznalok = New System.Windows.Forms.Label()
-        Me.ltbFelhasznalok = New System.Windows.Forms.ListBox()
-        Me.dgvTabla = New System.Windows.Forms.DataGridView()
-        Me.btnFelhasznalok = New System.Windows.Forms.Button()
-        Me.btnMunkaidoleker = New System.Windows.Forms.Button()
-        Me.btnMentes = New System.Windows.Forms.Button()
-        Me.btnTorles = New System.Windows.Forms.Button()
-        Me.btnMunkaidoossz = New System.Windows.Forms.Button()
-        Me.txtMunkaidoOsszes = New System.Windows.Forms.TextBox()
-        Me.lblMunkaidoOsszes = New System.Windows.Forms.Label()
-        Me.cmbEv = New System.Windows.Forms.ComboBox()
-        Me.cmbHonap = New System.Windows.Forms.ComboBox()
-        Me.lblEv = New System.Windows.Forms.Label()
-        Me.lvlHonap = New System.Windows.Forms.Label()
-        Me.dgvUj = New System.Windows.Forms.DataGridView()
-        Me.lblOra = New System.Windows.Forms.Label()
-        Me.tstButton = New System.Windows.Forms.Button()
-        Me.btnUnnep = New System.Windows.Forms.Button()
-        Me.lblUnnep = New System.Windows.Forms.Label()
-        Me.lblJogkor = New System.Windows.Forms.Label()
-        Me.btnJogkor = New System.Windows.Forms.Button()
-        CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.LblFelhasznalok = New System.Windows.Forms.Label()
+        Me.LtbFelhasznalok = New System.Windows.Forms.ListBox()
+        Me.DgvTabla = New System.Windows.Forms.DataGridView()
+        Me.BtnFelhasznalok = New System.Windows.Forms.Button()
+        Me.BtnMunkaidoleker = New System.Windows.Forms.Button()
+        Me.BtnMentes = New System.Windows.Forms.Button()
+        Me.BtnTorles = New System.Windows.Forms.Button()
+        Me.BtnMunkaidoossz = New System.Windows.Forms.Button()
+        Me.TxtMunkaidoOsszes = New System.Windows.Forms.TextBox()
+        Me.LblMunkaidoOsszes = New System.Windows.Forms.Label()
+        Me.CmbEv = New System.Windows.Forms.ComboBox()
+        Me.CmbHonap = New System.Windows.Forms.ComboBox()
+        Me.LblEv = New System.Windows.Forms.Label()
+        Me.LvlHonap = New System.Windows.Forms.Label()
+        Me.DgvUj = New System.Windows.Forms.DataGridView()
+        Me.LblOra = New System.Windows.Forms.Label()
+        Me.TstButton = New System.Windows.Forms.Button()
+        Me.BtnUnnep = New System.Windows.Forms.Button()
+        Me.LblUnnep = New System.Windows.Forms.Label()
+        Me.LblJogkor = New System.Windows.Forms.Label()
+        Me.BtnJogkor = New System.Windows.Forms.Button()
+        CType(Me.DgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'lblFelhasznalok
+        'LblFelhasznalok
         '
-        Me.lblFelhasznalok.AutoSize = True
-        Me.lblFelhasznalok.Location = New System.Drawing.Point(6, 159)
-        Me.lblFelhasznalok.Name = "lblFelhasznalok"
-        Me.lblFelhasznalok.Size = New System.Drawing.Size(72, 13)
-        Me.lblFelhasznalok.TabIndex = 0
-        Me.lblFelhasznalok.Text = "Felhasználók:"
+        Me.LblFelhasznalok.AutoSize = True
+        Me.LblFelhasznalok.Location = New System.Drawing.Point(6, 159)
+        Me.LblFelhasznalok.Name = "LblFelhasznalok"
+        Me.LblFelhasznalok.Size = New System.Drawing.Size(72, 13)
+        Me.LblFelhasznalok.TabIndex = 0
+        Me.LblFelhasznalok.Text = "Felhasználók:"
         '
-        'ltbFelhasznalok
+        'LtbFelhasznalok
         '
-        Me.ltbFelhasznalok.FormattingEnabled = True
-        Me.ltbFelhasznalok.Location = New System.Drawing.Point(9, 175)
-        Me.ltbFelhasznalok.Name = "ltbFelhasznalok"
-        Me.ltbFelhasznalok.Size = New System.Drawing.Size(153, 160)
-        Me.ltbFelhasznalok.TabIndex = 1
+        Me.LtbFelhasznalok.FormattingEnabled = True
+        Me.LtbFelhasznalok.Location = New System.Drawing.Point(9, 175)
+        Me.LtbFelhasznalok.Name = "LtbFelhasznalok"
+        Me.LtbFelhasznalok.Size = New System.Drawing.Size(153, 160)
+        Me.LtbFelhasznalok.TabIndex = 1
         '
-        'dgvTabla
+        'DgvTabla
         '
-        Me.dgvTabla.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.dgvTabla.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        Me.dgvTabla.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvTabla.Location = New System.Drawing.Point(171, 9)
-        Me.dgvTabla.Name = "dgvTabla"
-        Me.dgvTabla.Size = New System.Drawing.Size(780, 539)
-        Me.dgvTabla.TabIndex = 4
+        Me.DgvTabla.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DgvTabla.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DgvTabla.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvTabla.Location = New System.Drawing.Point(171, 9)
+        Me.DgvTabla.Name = "DgvTabla"
+        Me.DgvTabla.Size = New System.Drawing.Size(780, 539)
+        Me.DgvTabla.TabIndex = 4
         '
-        'btnFelhasznalok
+        'BtnFelhasznalok
         '
-        Me.btnFelhasznalok.Location = New System.Drawing.Point(9, 341)
-        Me.btnFelhasznalok.Name = "btnFelhasznalok"
-        Me.btnFelhasznalok.Size = New System.Drawing.Size(153, 23)
-        Me.btnFelhasznalok.TabIndex = 5
-        Me.btnFelhasznalok.Text = "Felhasználók adatai"
-        Me.btnFelhasznalok.UseVisualStyleBackColor = True
+        Me.BtnFelhasznalok.Location = New System.Drawing.Point(9, 341)
+        Me.BtnFelhasznalok.Name = "BtnFelhasznalok"
+        Me.BtnFelhasznalok.Size = New System.Drawing.Size(153, 23)
+        Me.BtnFelhasznalok.TabIndex = 5
+        Me.BtnFelhasznalok.Text = "Felhasználók adatai"
+        Me.BtnFelhasznalok.UseVisualStyleBackColor = True
         '
-        'btnMunkaidoleker
+        'BtnMunkaidoleker
         '
-        Me.btnMunkaidoleker.Location = New System.Drawing.Point(9, 52)
-        Me.btnMunkaidoleker.Name = "btnMunkaidoleker"
-        Me.btnMunkaidoleker.Size = New System.Drawing.Size(153, 46)
-        Me.btnMunkaidoleker.TabIndex = 6
-        Me.btnMunkaidoleker.Text = "Munkaidő lekérdezése"
-        Me.btnMunkaidoleker.UseVisualStyleBackColor = True
+        Me.BtnMunkaidoleker.Location = New System.Drawing.Point(9, 52)
+        Me.BtnMunkaidoleker.Name = "BtnMunkaidoleker"
+        Me.BtnMunkaidoleker.Size = New System.Drawing.Size(153, 46)
+        Me.BtnMunkaidoleker.TabIndex = 6
+        Me.BtnMunkaidoleker.Text = "Munkaidő lekérdezése"
+        Me.BtnMunkaidoleker.UseVisualStyleBackColor = True
         '
-        'btnMentes
+        'BtnMentes
         '
-        Me.btnMentes.Enabled = False
-        Me.btnMentes.Location = New System.Drawing.Point(9, 525)
-        Me.btnMentes.Name = "btnMentes"
-        Me.btnMentes.Size = New System.Drawing.Size(75, 23)
-        Me.btnMentes.TabIndex = 7
-        Me.btnMentes.Text = "Mentés"
-        Me.btnMentes.UseVisualStyleBackColor = True
+        Me.BtnMentes.Enabled = False
+        Me.BtnMentes.Location = New System.Drawing.Point(9, 525)
+        Me.BtnMentes.Name = "BtnMentes"
+        Me.BtnMentes.Size = New System.Drawing.Size(75, 23)
+        Me.BtnMentes.TabIndex = 7
+        Me.BtnMentes.Text = "Mentés"
+        Me.BtnMentes.UseVisualStyleBackColor = True
         '
-        'btnTorles
+        'BtnTorles
         '
-        Me.btnTorles.Enabled = False
-        Me.btnTorles.Location = New System.Drawing.Point(90, 525)
-        Me.btnTorles.Name = "btnTorles"
-        Me.btnTorles.Size = New System.Drawing.Size(75, 23)
-        Me.btnTorles.TabIndex = 8
-        Me.btnTorles.Text = "Törlés"
-        Me.btnTorles.UseVisualStyleBackColor = True
+        Me.BtnTorles.Enabled = False
+        Me.BtnTorles.Location = New System.Drawing.Point(90, 525)
+        Me.BtnTorles.Name = "BtnTorles"
+        Me.BtnTorles.Size = New System.Drawing.Size(75, 23)
+        Me.BtnTorles.TabIndex = 8
+        Me.BtnTorles.Text = "Törlés"
+        Me.BtnTorles.UseVisualStyleBackColor = True
         '
-        'btnMunkaidoossz
+        'BtnMunkaidoossz
         '
-        Me.btnMunkaidoossz.Location = New System.Drawing.Point(9, 104)
-        Me.btnMunkaidoossz.Name = "btnMunkaidoossz"
-        Me.btnMunkaidoossz.Size = New System.Drawing.Size(153, 23)
-        Me.btnMunkaidoossz.TabIndex = 9
-        Me.btnMunkaidoossz.Text = "Munkaidő összesítése"
-        Me.btnMunkaidoossz.UseVisualStyleBackColor = True
+        Me.BtnMunkaidoossz.Location = New System.Drawing.Point(9, 104)
+        Me.BtnMunkaidoossz.Name = "BtnMunkaidoossz"
+        Me.BtnMunkaidoossz.Size = New System.Drawing.Size(153, 23)
+        Me.BtnMunkaidoossz.TabIndex = 9
+        Me.BtnMunkaidoossz.Text = "Munkaidő összesítése"
+        Me.BtnMunkaidoossz.UseVisualStyleBackColor = True
         '
-        'txtMunkaidoOsszes
+        'TxtMunkaidoOsszes
         '
-        Me.txtMunkaidoOsszes.Location = New System.Drawing.Point(887, 551)
-        Me.txtMunkaidoOsszes.Name = "txtMunkaidoOsszes"
-        Me.txtMunkaidoOsszes.ReadOnly = True
-        Me.txtMunkaidoOsszes.Size = New System.Drawing.Size(36, 20)
-        Me.txtMunkaidoOsszes.TabIndex = 10
+        Me.TxtMunkaidoOsszes.Location = New System.Drawing.Point(887, 551)
+        Me.TxtMunkaidoOsszes.Name = "TxtMunkaidoOsszes"
+        Me.TxtMunkaidoOsszes.ReadOnly = True
+        Me.TxtMunkaidoOsszes.Size = New System.Drawing.Size(36, 20)
+        Me.TxtMunkaidoOsszes.TabIndex = 10
         '
-        'lblMunkaidoOsszes
+        'LblMunkaidoOsszes
         '
-        Me.lblMunkaidoOsszes.AutoSize = True
-        Me.lblMunkaidoOsszes.Location = New System.Drawing.Point(788, 556)
-        Me.lblMunkaidoOsszes.Name = "lblMunkaidoOsszes"
-        Me.lblMunkaidoOsszes.Size = New System.Drawing.Size(93, 13)
-        Me.lblMunkaidoOsszes.TabIndex = 11
-        Me.lblMunkaidoOsszes.Text = "Összes munkaidő:"
+        Me.LblMunkaidoOsszes.AutoSize = True
+        Me.LblMunkaidoOsszes.Location = New System.Drawing.Point(788, 556)
+        Me.LblMunkaidoOsszes.Name = "LblMunkaidoOsszes"
+        Me.LblMunkaidoOsszes.Size = New System.Drawing.Size(93, 13)
+        Me.LblMunkaidoOsszes.TabIndex = 11
+        Me.LblMunkaidoOsszes.Text = "Összes munkaidő:"
         '
-        'cmbEv
+        'CmbEv
         '
-        Me.cmbEv.FormattingEnabled = True
-        Me.cmbEv.Location = New System.Drawing.Point(9, 25)
-        Me.cmbEv.Name = "cmbEv"
-        Me.cmbEv.Size = New System.Drawing.Size(75, 21)
-        Me.cmbEv.TabIndex = 13
+        Me.CmbEv.FormattingEnabled = True
+        Me.CmbEv.Location = New System.Drawing.Point(9, 25)
+        Me.CmbEv.Name = "CmbEv"
+        Me.CmbEv.Size = New System.Drawing.Size(75, 21)
+        Me.CmbEv.TabIndex = 13
         '
-        'cmbHonap
+        'CmbHonap
         '
-        Me.cmbHonap.FormattingEnabled = True
-        Me.cmbHonap.Location = New System.Drawing.Point(90, 25)
-        Me.cmbHonap.Name = "cmbHonap"
-        Me.cmbHonap.Size = New System.Drawing.Size(72, 21)
-        Me.cmbHonap.TabIndex = 14
+        Me.CmbHonap.FormattingEnabled = True
+        Me.CmbHonap.Location = New System.Drawing.Point(90, 25)
+        Me.CmbHonap.Name = "CmbHonap"
+        Me.CmbHonap.Size = New System.Drawing.Size(72, 21)
+        Me.CmbHonap.TabIndex = 14
         '
-        'lblEv
+        'LblEv
         '
-        Me.lblEv.AutoSize = True
-        Me.lblEv.Location = New System.Drawing.Point(6, 9)
-        Me.lblEv.Name = "lblEv"
-        Me.lblEv.Size = New System.Drawing.Size(23, 13)
-        Me.lblEv.TabIndex = 15
-        Me.lblEv.Text = "Év:"
+        Me.LblEv.AutoSize = True
+        Me.LblEv.Location = New System.Drawing.Point(6, 9)
+        Me.LblEv.Name = "LblEv"
+        Me.LblEv.Size = New System.Drawing.Size(23, 13)
+        Me.LblEv.TabIndex = 15
+        Me.LblEv.Text = "Év:"
         '
-        'lvlHonap
+        'LvlHonap
         '
-        Me.lvlHonap.AutoSize = True
-        Me.lvlHonap.Location = New System.Drawing.Point(87, 9)
-        Me.lvlHonap.Name = "lvlHonap"
-        Me.lvlHonap.Size = New System.Drawing.Size(42, 13)
-        Me.lvlHonap.TabIndex = 16
-        Me.lvlHonap.Text = "Hónap:"
+        Me.LvlHonap.AutoSize = True
+        Me.LvlHonap.Location = New System.Drawing.Point(87, 9)
+        Me.LvlHonap.Name = "LvlHonap"
+        Me.LvlHonap.Size = New System.Drawing.Size(42, 13)
+        Me.LvlHonap.TabIndex = 16
+        Me.LvlHonap.Text = "Hónap:"
         '
-        'dgvUj
+        'DgvUj
         '
-        Me.dgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvUj.Enabled = False
-        Me.dgvUj.Location = New System.Drawing.Point(9, 561)
-        Me.dgvUj.Name = "dgvUj"
-        Me.dgvUj.Size = New System.Drawing.Size(10, 10)
-        Me.dgvUj.TabIndex = 17
-        Me.dgvUj.Visible = False
+        Me.DgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvUj.Enabled = False
+        Me.DgvUj.Location = New System.Drawing.Point(9, 561)
+        Me.DgvUj.Name = "DgvUj"
+        Me.DgvUj.Size = New System.Drawing.Size(10, 10)
+        Me.DgvUj.TabIndex = 17
+        Me.DgvUj.Visible = False
         '
-        'lblOra
+        'LblOra
         '
-        Me.lblOra.AutoSize = True
-        Me.lblOra.Location = New System.Drawing.Point(929, 555)
-        Me.lblOra.Name = "lblOra"
-        Me.lblOra.Size = New System.Drawing.Size(22, 13)
-        Me.lblOra.TabIndex = 18
-        Me.lblOra.Text = "óra"
+        Me.LblOra.AutoSize = True
+        Me.LblOra.Location = New System.Drawing.Point(929, 555)
+        Me.LblOra.Name = "LblOra"
+        Me.LblOra.Size = New System.Drawing.Size(22, 13)
+        Me.LblOra.TabIndex = 18
+        Me.LblOra.Text = "óra"
         '
-        'tstButton
+        'TstButton
         '
-        Me.tstButton.Location = New System.Drawing.Point(197, 554)
-        Me.tstButton.Name = "tstButton"
-        Me.tstButton.Size = New System.Drawing.Size(75, 23)
-        Me.tstButton.TabIndex = 19
-        Me.tstButton.Text = "teszt"
-        Me.tstButton.UseVisualStyleBackColor = True
+        Me.TstButton.Location = New System.Drawing.Point(197, 554)
+        Me.TstButton.Name = "TstButton"
+        Me.TstButton.Size = New System.Drawing.Size(75, 23)
+        Me.TstButton.TabIndex = 19
+        Me.TstButton.Text = "teszt"
+        Me.TstButton.UseVisualStyleBackColor = True
         '
-        'btnUnnep
+        'BtnUnnep
         '
-        Me.btnUnnep.Enabled = False
-        Me.btnUnnep.Location = New System.Drawing.Point(9, 414)
-        Me.btnUnnep.Name = "btnUnnep"
-        Me.btnUnnep.Size = New System.Drawing.Size(75, 23)
-        Me.btnUnnep.TabIndex = 20
-        Me.btnUnnep.Text = "Szerkesztés"
-        Me.btnUnnep.UseVisualStyleBackColor = True
-        Me.btnUnnep.Visible = False
+        Me.BtnUnnep.Enabled = False
+        Me.BtnUnnep.Location = New System.Drawing.Point(9, 414)
+        Me.BtnUnnep.Name = "BtnUnnep"
+        Me.BtnUnnep.Size = New System.Drawing.Size(75, 23)
+        Me.BtnUnnep.TabIndex = 20
+        Me.BtnUnnep.Text = "Szerkesztés"
+        Me.BtnUnnep.UseVisualStyleBackColor = True
+        Me.BtnUnnep.Visible = False
         '
-        'lblUnnep
+        'LblUnnep
         '
-        Me.lblUnnep.AutoSize = True
-        Me.lblUnnep.Enabled = False
-        Me.lblUnnep.Location = New System.Drawing.Point(6, 398)
-        Me.lblUnnep.Name = "lblUnnep"
-        Me.lblUnnep.Size = New System.Drawing.Size(136, 13)
-        Me.lblUnnep.TabIndex = 21
-        Me.lblUnnep.Text = "Ünnepnapok szerkesztése:"
-        Me.lblUnnep.Visible = False
+        Me.LblUnnep.AutoSize = True
+        Me.LblUnnep.Enabled = False
+        Me.LblUnnep.Location = New System.Drawing.Point(6, 398)
+        Me.LblUnnep.Name = "LblUnnep"
+        Me.LblUnnep.Size = New System.Drawing.Size(136, 13)
+        Me.LblUnnep.TabIndex = 21
+        Me.LblUnnep.Text = "Ünnepnapok szerkesztése:"
+        Me.LblUnnep.Visible = False
         '
-        'lblJogkor
+        'LblJogkor
         '
-        Me.lblJogkor.AutoSize = True
-        Me.lblJogkor.Enabled = False
-        Me.lblJogkor.Location = New System.Drawing.Point(9, 444)
-        Me.lblJogkor.Name = "lblJogkor"
-        Me.lblJogkor.Size = New System.Drawing.Size(54, 13)
-        Me.lblJogkor.TabIndex = 22
-        Me.lblJogkor.Text = "Jogkörök:"
-        Me.lblJogkor.Visible = False
+        Me.LblJogkor.AutoSize = True
+        Me.LblJogkor.Enabled = False
+        Me.LblJogkor.Location = New System.Drawing.Point(9, 444)
+        Me.LblJogkor.Name = "LblJogkor"
+        Me.LblJogkor.Size = New System.Drawing.Size(54, 13)
+        Me.LblJogkor.TabIndex = 22
+        Me.LblJogkor.Text = "Jogkörök:"
+        Me.LblJogkor.Visible = False
         '
-        'btnJogkor
+        'BtnJogkor
         '
-        Me.btnJogkor.Enabled = False
-        Me.btnJogkor.Location = New System.Drawing.Point(9, 460)
-        Me.btnJogkor.Name = "btnJogkor"
-        Me.btnJogkor.Size = New System.Drawing.Size(75, 23)
-        Me.btnJogkor.TabIndex = 23
-        Me.btnJogkor.Text = "Szerkesztés"
-        Me.btnJogkor.UseVisualStyleBackColor = True
-        Me.btnJogkor.Visible = False
+        Me.BtnJogkor.Enabled = False
+        Me.BtnJogkor.Location = New System.Drawing.Point(9, 460)
+        Me.BtnJogkor.Name = "BtnJogkor"
+        Me.BtnJogkor.Size = New System.Drawing.Size(75, 23)
+        Me.BtnJogkor.TabIndex = 23
+        Me.BtnJogkor.Text = "Szerkesztés"
+        Me.BtnJogkor.UseVisualStyleBackColor = True
+        Me.BtnJogkor.Visible = False
         '
-        'wtForm
+        'WtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(959, 578)
-        Me.Controls.Add(Me.btnJogkor)
-        Me.Controls.Add(Me.lblJogkor)
-        Me.Controls.Add(Me.lblUnnep)
-        Me.Controls.Add(Me.btnUnnep)
-        Me.Controls.Add(Me.tstButton)
-        Me.Controls.Add(Me.lblOra)
-        Me.Controls.Add(Me.dgvTabla)
-        Me.Controls.Add(Me.lvlHonap)
-        Me.Controls.Add(Me.lblEv)
-        Me.Controls.Add(Me.cmbHonap)
-        Me.Controls.Add(Me.cmbEv)
-        Me.Controls.Add(Me.lblMunkaidoOsszes)
-        Me.Controls.Add(Me.txtMunkaidoOsszes)
-        Me.Controls.Add(Me.btnMunkaidoossz)
-        Me.Controls.Add(Me.btnTorles)
-        Me.Controls.Add(Me.btnMentes)
-        Me.Controls.Add(Me.btnMunkaidoleker)
-        Me.Controls.Add(Me.btnFelhasznalok)
-        Me.Controls.Add(Me.dgvUj)
-        Me.Controls.Add(Me.ltbFelhasznalok)
-        Me.Controls.Add(Me.lblFelhasznalok)
-        Me.Name = "wtForm"
+        Me.Controls.Add(Me.BtnJogkor)
+        Me.Controls.Add(Me.LblJogkor)
+        Me.Controls.Add(Me.LblUnnep)
+        Me.Controls.Add(Me.BtnUnnep)
+        Me.Controls.Add(Me.TstButton)
+        Me.Controls.Add(Me.LblOra)
+        Me.Controls.Add(Me.DgvTabla)
+        Me.Controls.Add(Me.LvlHonap)
+        Me.Controls.Add(Me.LblEv)
+        Me.Controls.Add(Me.CmbHonap)
+        Me.Controls.Add(Me.CmbEv)
+        Me.Controls.Add(Me.LblMunkaidoOsszes)
+        Me.Controls.Add(Me.TxtMunkaidoOsszes)
+        Me.Controls.Add(Me.BtnMunkaidoossz)
+        Me.Controls.Add(Me.BtnTorles)
+        Me.Controls.Add(Me.BtnMentes)
+        Me.Controls.Add(Me.BtnMunkaidoleker)
+        Me.Controls.Add(Me.BtnFelhasznalok)
+        Me.Controls.Add(Me.DgvUj)
+        Me.Controls.Add(Me.LtbFelhasznalok)
+        Me.Controls.Add(Me.LblFelhasznalok)
+        Me.Name = "WtForm"
         Me.Text = "Munkaidő nyilvántartó"
-        CType(Me.dgvTabla, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvUj, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvTabla, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvUj, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents lblFelhasznalok As Label
-    Friend WithEvents ltbFelhasznalok As ListBox
-    Friend WithEvents dgvTabla As DataGridView
-    Friend WithEvents btnFelhasznalok As Button
-    Friend WithEvents btnMunkaidoleker As Button
-    Friend WithEvents btnMentes As Button
-    Friend WithEvents btnTorles As Button
-    Friend WithEvents btnMunkaidoossz As Button
-    Friend WithEvents txtMunkaidoOsszes As TextBox
-    Friend WithEvents lblMunkaidoOsszes As Label
-    Friend WithEvents cmbEv As ComboBox
-    Friend WithEvents cmbHonap As ComboBox
-    Friend WithEvents lblEv As Label
-    Friend WithEvents lvlHonap As Label
-    Friend WithEvents dgvUj As DataGridView
-    Friend WithEvents lblOra As Label
-    Friend WithEvents tstButton As Button
-    Friend WithEvents btnUnnep As Button
-    Friend WithEvents lblUnnep As Label
-    Friend WithEvents lblJogkor As Label
-    Friend WithEvents btnJogkor As Button
+    Friend WithEvents LblFelhasznalok As Label
+    Friend WithEvents LtbFelhasznalok As ListBox
+    Friend WithEvents DgvTabla As DataGridView
+    Friend WithEvents BtnFelhasznalok As Button
+    Friend WithEvents BtnMunkaidoleker As Button
+    Friend WithEvents BtnMentes As Button
+    Friend WithEvents BtnTorles As Button
+    Friend WithEvents BtnMunkaidoossz As Button
+    Friend WithEvents TxtMunkaidoOsszes As TextBox
+    Friend WithEvents LblMunkaidoOsszes As Label
+    Friend WithEvents CmbEv As ComboBox
+    Friend WithEvents CmbHonap As ComboBox
+    Friend WithEvents LblEv As Label
+    Friend WithEvents LvlHonap As Label
+    Friend WithEvents DgvUj As DataGridView
+    Friend WithEvents LblOra As Label
+    Friend WithEvents TstButton As Button
+    Friend WithEvents BtnUnnep As Button
+    Friend WithEvents LblUnnep As Label
+    Friend WithEvents LblJogkor As Label
+    Friend WithEvents BtnJogkor As Button
 End Class

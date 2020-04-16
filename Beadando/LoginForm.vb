@@ -9,27 +9,27 @@ Public Class Login
     ' Subsequently, My.User will return identity information encapsulated in the CustomPrincipal object
     ' such as the username, display name, etc.
 
-    Dim sqlConnection As sqlConn
+    Dim sqlConnection As SqlConn
     Dim authentication As New AuthenticationManagement
 
     Private Sub OK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK.Click
         Dim user = authentication.authenticate(UsernameTextBox.Text, PasswordTextBox.Text)
-        If (user.userName.Length > 0) Then
-            wtForm.user = user
+        If (user.UserName.Length > 0) Then
+            WtForm.User = user
             Me.Close()
         End If
     End Sub
 
     Private Sub Cancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel.Click
         Me.Close()
-        If wtForm.user.userName = "" Then
+        If WtForm.User.userName = "" Then
             Application.Exit()
             End
         End If
     End Sub
 
     Private Sub LoginForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        sqlConnection = New sqlConn()
+        sqlConnection = New SqlConn()
     End Sub
 
     Private Sub PasswordLabel_Click(sender As Object, e As EventArgs) Handles PasswordLabel.Click
@@ -37,7 +37,7 @@ Public Class Login
     End Sub
 
     Private Sub Login_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        If wtForm.user.userName = "" Then
+        If WtForm.User.userName = "" Then
             Application.Exit()
             End
         End If

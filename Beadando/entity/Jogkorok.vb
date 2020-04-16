@@ -24,4 +24,5 @@
         Me.FelhasznaloID = felhasznaloID
         Me.Jogkor = jogkor
     End Sub
+
 End Class
