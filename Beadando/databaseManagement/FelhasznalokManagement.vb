@@ -1,18 +1,18 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class FelhasznalokManagement
-    Private sqlConnection As sqlConn
+    Private sqlConnection As SqlConn
     Private con As New SqlConnection
     Private cmd As New SqlCommand
 
     Public Sub New()
-        sqlConnection = New sqlConn()
+        sqlConnection = New SqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
     End Sub
 
     Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
-        sqlConnection.sqlConnect()
+        sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateFelhasznalok"
@@ -23,13 +23,13 @@ Public Class FelhasznalokManagement
             cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value.ToString())
         End If
         cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
-        cmd.Parameters.AddWithValue("@Munkaido", isInteger(Cells.Item("Munkaido").Value.ToString()))
+        cmd.Parameters.AddWithValue("@Munkaido", IsInteger(Cells.Item("Munkaido").Value.ToString()))
         cmd.ExecuteNonQuery()
-        sqlConnection.sqlClose()
+        sqlConnection.SqlClose()
     End Sub
 
     Public Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
-        sqlConnection.sqlConnect()
+        sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "DeleteFelhasznalok"
@@ -37,10 +37,10 @@ Public Class FelhasznalokManagement
         cmd.Parameters.AddWithValue("@Nev", nev)
         cmd.Parameters.AddWithValue("@Email", email)
         cmd.ExecuteNonQuery()
-        sqlConnection.sqlClose()
+        sqlConnection.SqlClose()
     End Sub
-    Public Sub getFelhasznalok(list As List(Of Felhasznalok))
-        sqlConnection.sqlConnect()
+    Public Sub GetFelhasznalok(list As List(Of Felhasznalok))
+        sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
         cmd.CommandType = CommandType.Text
@@ -59,7 +59,7 @@ Public Class FelhasznalokManagement
                 sdr.Item("Munkaido"))
             list.Add(felhasznalo)
         End While
-        sqlConnection.sqlClose()
+        sqlConnection.SqlClose()
     End Sub
 
 End Class

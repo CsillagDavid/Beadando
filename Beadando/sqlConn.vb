@@ -1,11 +1,11 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Configuration
-Public Class sqlConn
+Public Class SqlConn
     Public con As New SqlConnection
     Public cmd As New SqlCommand
 
     Public Sub New()
-        readConnectionString()
+        ReadConnectionString()
         'sqlConnect()
     End Sub
 
@@ -18,8 +18,8 @@ Public Class sqlConn
         End If
     End Sub
 
-    Public Sub sqlConnect()
-        sqlClose()
+    Public Sub SqlConnect()
+        SqlClose()
         Try
             con.Open()
         Catch ex As Exception
@@ -28,7 +28,7 @@ Public Class sqlConn
         End Try
     End Sub
 
-    Public Sub sqlClose()
+    Public Sub SqlClose()
         If con.State = ConnectionState.Open Then
             Try
                 con.Close()
@@ -37,7 +37,7 @@ Public Class sqlConn
         End If
     End Sub
 
-    Private Sub readConnectionString()
+    Private Sub ReadConnectionString()
         Try
             con.ConnectionString = ConfigurationManager.ConnectionStrings("sqlConnection").ConnectionString
         Catch ex As Exception

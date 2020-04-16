@@ -96,13 +96,13 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Parser.vb" />
-    <Compile Include="sqlConn.vb" />
+    <Compile Include="SqlConn.vb" />
     <Compile Include="User.vb" />
-    <Compile Include="wtForm.vb">
+    <Compile Include="WtForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wtForm.Designer.vb">
-      <DependentUpon>wtForm.vb</DependentUpon>
+    <Compile Include="WtForm.Designer.vb">
+      <DependentUpon>WtForm.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -125,8 +125,8 @@
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wtForm.resx">
-      <DependentUpon>wtForm.vb</DependentUpon>
+    <EmbeddedResource Include="WtForm.resx">
+      <DependentUpon>WtForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

@@ -32,7 +32,7 @@ Namespace My
 
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()> _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.Beadando.wtForm
+            Me.MainForm = Global.Beadando.WtForm
         End Sub
     End Class
 End Namespace

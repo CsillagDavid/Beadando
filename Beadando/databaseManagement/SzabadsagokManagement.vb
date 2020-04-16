@@ -1,19 +1,19 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class SzabadsagokManagement
-    Private sqlConnection As sqlConn
+    Private sqlConnection As SqlConn
     Private con As New SqlConnection
     Private cmd As New SqlCommand
 
     Public Sub New()
-        sqlConnection = New sqlConn()
+        sqlConnection = New SqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
     End Sub
 
     Public Function GetAll() As List(Of Szabadsagok)
         Dim lista As New List(Of Szabadsagok)
-        sqlConnection.sqlConnect()
+        sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT * FROM Szabadsagok"
@@ -23,13 +23,13 @@ Public Class SzabadsagokManagement
             Dim szabadsag = New Szabadsagok(reader.GetInt32(0), reader.GetDateTime(1), reader.GetInt32(2), reader.GetInt32(3))
             lista.Add(szabadsag)
         End While
-        sqlConnection.sqlClose()
+        sqlConnection.SqlClose()
         Return lista
     End Function
 
     Public Function GetByEmail(Email As String) As List(Of Szabadsagok)
         Dim lista As New List(Of Szabadsagok)
-        sqlConnection.sqlConnect()
+        sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = "SELECT SZ.id, SZ.Datum, SZ.Tipus, SZ.FelhasznaloID
@@ -41,7 +41,7 @@ Public Class SzabadsagokManagement
             Dim szabadsag = New Szabadsagok(reader.GetInt32(0), reader.GetDateTime(1), reader.GetInt32(2), reader.GetInt32(3))
             lista.Add(szabadsag)
         End While
-        sqlConnection.sqlClose()
+        sqlConnection.SqlClose()
         Return lista
     End Function
 
