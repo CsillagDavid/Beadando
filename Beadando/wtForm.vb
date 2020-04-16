@@ -220,6 +220,8 @@ Public Class wtForm
 
         dgvTabla.Columns("FelhasznaloID").Visible = False
 
+        txtMunkaidoOsszes.Text = 0
+
         For index = 0 To mkiLista.Count - 1
             dgvTabla.Rows.Add()
             dgvTabla.Item("Datum", index).Value = mkiLista(index).Datum
@@ -233,7 +235,6 @@ Public Class wtForm
         dgvTabla.Columns("Datum").ReadOnly = True
         dgvTabla.Columns("Napi_ido").ReadOnly = True
 
-        txtMunkaidoOsszes.Text = 0
         btnMentes.Enabled = True
         btnTorles.Enabled = False
 
