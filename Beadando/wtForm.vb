@@ -514,7 +514,7 @@ Public Class wtForm
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
 
-            If dgvTabla.Rows.Count = 1 Then
+            If dgvTabla.Rows.Count = 0 Then
                 kulonbseg = napiIdo - munkaIdo
                 nevLista.Add(nev)
                 row = New String() {
@@ -529,7 +529,6 @@ Public Class wtForm
                 If nevLista.Contains(nev) Then
                     Dim eloirtora = isDecimal(dgvTabla.Item("eloirtora", lsindex).Value)
                     Dim teljesora = isDecimal(dgvTabla.Item("teljesora", lsindex).Value)
-                    kulonbseg = isDecimal(dgvTabla.Item("kulonbseg", lsindex).Value)
                     dgvTabla.Item("teljesora", lsindex).Value = teljesora + napiIdo
                     dgvTabla.Item("kulonbseg", lsindex).Value = (teljesora + napiIdo) - eloirtora
                 Else
