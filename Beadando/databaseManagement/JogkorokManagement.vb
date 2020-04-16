@@ -11,7 +11,7 @@ Public Class JogkorokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Sub Update(Cells As DataGridViewCellCollection)
+    Public Sub UpdateJogkorok(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
@@ -22,11 +22,27 @@ Public Class JogkorokManagement
         sqlConnection.sqlClose()
     End Sub
 
-    Public Function GetIds() As DataTable
+    Public Sub InsertJogkorok(tabla As DataGridView)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "InsertJogkorok"
+        For index = 0 To tabla.Rows.Count - 2
+            cmd.Parameters.Clear()
+            cmd.Parameters.AddWithValue("@FelhasznaloID", tabla.Item("id", index).Value)
+            cmd.Parameters.AddWithValue("@Jogkor", "Felhasznalo")
+            cmd.ExecuteNonQuery()
+        Next
+        sqlConnection.sqlClose()
+    End Sub
+
+    Public Function getJogrok() As DataTable
         sqlConnection.sqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT F.id FROM Felhasznalok F
+        cmd.CommandText = "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
+                        INNER JOIN Felhasznalok F
+                        ON F.id = J.FelhasznaloID
                         WHERE F.Munkaido > " & 0
         cmd.ExecuteNonQuery()
         Dim dt As New DataTable()
@@ -36,17 +52,4 @@ Public Class JogkorokManagement
         Return dt
     End Function
 
-    Public Sub InsertJogkorok(dgvUj As DataGridView)
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "InsertJogkorok"
-        For index = 0 To dgvUj.Rows.Count - 2
-            cmd.Parameters.Clear()
-            cmd.Parameters.AddWithValue("@FelhasznaloID", dgvUj.Item("id", index).Value)
-            cmd.Parameters.AddWithValue("@Jogkor", "Felhasznalo")
-            cmd.ExecuteNonQuery()
-        Next
-        sqlConnection.sqlClose()
-    End Sub
 End Class

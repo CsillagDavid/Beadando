@@ -29,6 +29,18 @@ Public Class FelhasznalokManagement
         sqlConnection.sqlClose()
     End Sub
 
+    Public Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
+        sqlConnection.sqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "DeleteFelhasznalok"
+        cmd.Parameters.AddWithValue("@id", id)
+        cmd.Parameters.AddWithValue("@Nev", nev)
+        cmd.Parameters.AddWithValue("@Email", email)
+        cmd.ExecuteNonQuery()
+        sqlConnection.sqlClose()
+    End Sub
+
     Public Sub getFelhasznalok(list As List(Of Felhasznalok))
         sqlConnection.sqlConnect()
         Dim sdr As SqlDataReader

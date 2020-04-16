@@ -157,7 +157,6 @@ Public Class wtForm
         End If
         Return lista
     End Function
-
     Private Function getWeekdaysNumber()
         Dim evhonap As New Dictionary(Of String, Integer)
         Dim ev, honap, nap, munkanap As Integer
@@ -176,7 +175,6 @@ Public Class wtForm
         Next
         Return munkanap
     End Function
-
     Private Function getHolidays()
         clearDataGridView(dgvUj)
         dgvUj.DataSource = unnepnapokManagement.GetUnnepnapok()
@@ -192,51 +190,33 @@ Public Class wtForm
 #End Region
 
 #Region "SQL tárolt eljárások"
-    Private Sub InsertJogkorok()
+    Private Sub newFhszsetJogkor() 'Új felhasználóknak beállítja az alapértelmezett Felhasználó jogkört
+
         clearDataGridView(dgvUj)
-        dgvUj.DataSource = jogkorokManagement.GetIds()
+
+        dgvUj.Columns.Add("id", "Id")
+        dgvUj.Columns("id").ValueType = GetType(Integer)
+        For index = 0 To felhaszlista.Count - 1
+            dgvUj.Item("id", index).Value = felhaszlista(index).Id
+        Next
+
         jogkorokManagement.InsertJogkorok(dgvUj)
         clearDataGridView(dgvUj)
-    End Sub
 
+    End Sub
     Private Sub UpdateMunkaidok(Cells As DataGridViewCellCollection)
         munkaidokManagement.InsertOrUpdate(Cells)
     End Sub
-
     Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
         felhasznalokManagement.InsertOrUpdate(Cells)
-        InsertJogkorok()
+        newFhszsetJogkor()
     End Sub
-
     Private Sub InsertMunkaidok(tabla As DataGridView)
         Try
             munkaidokManagement.InsertOrUpdate(tabla)
         Catch ex As Exception
             Console.WriteLine("Hiba az adatbázis frissítése közben")
         End Try
-    End Sub
-
-    Private Sub UpdateUnnenpnapok(Cells As DataGridViewCellCollection)
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "InsertOrUpdateUnnepnapok"
-        cmd.Parameters.AddWithValue("@Datum", isDate(Cells.Item("Datum").Value))
-        cmd.Parameters.AddWithValue("@Tipus", isInteger(Cells.Item("Tipus").Value))
-        cmd.ExecuteNonQuery()
-        sqlConnection.sqlClose()
-    End Sub
-
-    Private Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.CommandText = "DeleteFelhasznalok"
-        cmd.Parameters.AddWithValue("@id", id)
-        cmd.Parameters.AddWithValue("@Nev", nev)
-        cmd.Parameters.AddWithValue("@Email", email)
-        cmd.ExecuteNonQuery()
-        sqlConnection.sqlClose()
     End Sub
 #End Region
 
@@ -292,7 +272,6 @@ Public Class wtForm
         btnTorles.Enabled = False
 
     End Sub
-
     Private Sub setDefaultWorkingHours(email As String)
 
         Dim datum, napStr, honapStr As String
@@ -386,7 +365,6 @@ Public Class wtForm
         clearDataGridView(dgvTabla)
 
     End Sub
-
     Private Sub getUserData() 'A felhasználók adatainak lekérdezése az SQL Adatbázisból
 
         clearDataGridView(dgvTabla)
@@ -423,7 +401,6 @@ Public Class wtForm
         lblOra.Visible = False
 
     End Sub
-
     Private Sub getFszhLtb() 'A felhasználók kiválasztásához szükséges ListBox feltöltése
 
         Dim szures As New Dictionary(Of String, String)
@@ -439,10 +416,9 @@ Public Class wtForm
         ltbFelhasznalok.ValueMember = "Value"
 
     End Sub
-    Private Sub getSummary()
+    Private Function getSummary()
 
         clearDataGridView(dgvUj)
-
         Dim evhonap = getYearAndMonth()
         Dim command = ""
         Dim felhaszMunkaido As New List(Of List(Of Munkaidok))
@@ -492,85 +468,59 @@ Public Class wtForm
             dgvUj.Item("Tavollet", index) = initComboBox()
             getWorkTimeofDay(dgvUj, index)
         Next
+
         dgvUj.ReadOnly = True
+        dgvUj.Visible = False
         txtMunkaidoOsszes.Visible = False
         lblOra.Visible = False
         lblMunkaidoOsszes.Visible = False
         btnMentes.Enabled = False
         btnTorles.Enabled = False
-        'dgvUj.Visible = True
-        'dgvUj.Enabled = True
-        'dgvTabla.Visible = False
-        getWorkingHoursSummary(dgvUj)
-    End Sub
-    'Private Sub getSummary()
-    '    clearDataGridView(dgvUj)
-    '    Dim evhonap = getYearAndMonth()
-    '    Dim command = ""
-    '    Select Case user.role
-    '        Case "Admin"
-    '            command = "SELECT F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
-    '                                INNER JOIN Munkaidok M
-    '                                ON F.id = M.FelhasznaloID
-    '                                WHERE M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-    '                                AND M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-    '        Case "Felhasznalo"
-    '            command = "Select F.Nev, F.Email, F.Munkaido, M.Datum, M.Kezdo_ido, M.Befejezo_ido FROM Felhasznalok F
-    '                                INNER Join Munkaidok M
-    '                                On F.id = M.FelhasznaloID 
-    '                                WHERE F.Email = '" & userEmail & "' AND M.Datum >= '" & evhonap.Item(itemEv) & ". " & evhonap.Item(itemHonap) & ". 01' 
-    '                                And M.Datum < '" & evhonap.Item(itemEv) & ". " & (evhonap.Item(itemHonap) + 1) & ". 01'"
-    '    End Select
-    '    dgvUj.DataSource = setSqlCommand(command)
-    '    dgvUj.Columns.Add("napi_ido", "Napi munkaidő")
-    '    dgvUj.Columns.Add("tavollet", "Távollét")
-    '    For index = 0 To dgvUj.Rows.Count - 2
-    '        dgvUj.Item("tavollet", index) = initComboBox()
-    '        getWorkTimeofDay(dgvUj, index)
-    '    Next
-    '    dgvUj.ReadOnly = True
-    '    txtMunkaidoOsszes.Visible = False
-    '    lblOra.Visible = False
-    '    lblMunkaidoOsszes.Visible = False
-    '    btnMentes.Enabled = False
-    '    btnTorles.Enabled = False
-    '    getWorkingHoursSummary(dgvUj)
-    'End Sub
 
+        Return dgvUj
+    End Function
     Private Sub setHoliday()
         clearDataGridView(dgvTabla)
-        Dim command = "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
-        dgvTabla.DataSource = setSqlCommand(command)
+        dgvTabla.DataSource = unnepnapokManagement.GetUnnepnapok()
         btnMentes.Enabled = True
         btnTorles.Enabled = True
     End Sub
+    Private Sub getWorkingHoursSummary() 'Az összesített munkaidők megjelenítése egy táblázatban
 
-    Private Sub getWorkingHoursSummary(tabla As DataGridView) 'Az összesített munkaidők megjelenítése egy táblázatban
         Dim kulonbseg, teljesora, eloirtora As Decimal
         Dim nev, email As String
         Dim row As String()
         Dim nevLista As New List(Of String)
         Dim lsindex = 0
         Dim rowCount As Integer
-        clearDataGridView(dgvTabla)
-        dgvTabla.Columns.Add("Nev", "Név")
-        dgvTabla.Columns("Nev").ValueType = GetType(String)
-        dgvTabla.Columns.Add("Email", "E-Mail")
-        dgvTabla.Columns("Nev").ValueType = GetType(String)
-        dgvTabla.Columns.Add("Eloirtora", "Előírt óraszám")
-        dgvTabla.Columns("Nev").ValueType = GetType(Decimal)
-        dgvTabla.Columns.Add("Teljesora", "Teljesített óraszám")
-        dgvTabla.Columns("Nev").ValueType = GetType(Decimal)
-        dgvTabla.Columns.Add("Kulonbseg", "Különbség")
-        dgvTabla.Columns("Nev").ValueType = GetType(Decimal)
-        rowCount = tabla.Rows.Count
         Dim munkanap = getWeekdaysNumber()
+        Dim tabla = getSummary()
+
+        clearDataGridView(dgvTabla)
+
+        dgvTabla.Columns.Add("Nev", "Név")
+        dgvTabla.Columns.Add("Email", "E-Mail")
+        dgvTabla.Columns.Add("Eloirtora", "Előírt óraszám")
+        dgvTabla.Columns.Add("Teljesora", "Teljesített óraszám")
+        dgvTabla.Columns.Add("Kulonbseg", "Különbség")
+
+        dgvTabla.Columns("Nev").ValueType = GetType(String)
+        dgvTabla.Columns("Email").ValueType = GetType(String)
+        dgvTabla.Columns("Eloirtora").ValueType = GetType(Integer)
+        dgvTabla.Columns("Teljesora").ValueType = GetType(Decimal)
+        dgvTabla.Columns("Kulonbseg").ValueType = GetType(Decimal)
+
+        rowCount = tabla.Rows.Count
+
         For index = 0 To rowCount - 2
+
             nev = tabla.Item("Nev", index).Value
             email = tabla.Item("email", index).Value
+
             Dim diffworkhours = getDifferenceWorkingHours(index, munkanap, isInteger(tabla.Item("napi_ido", index).Value), isInteger(tabla.Item("munkaido", index).Value), isDate(tabla.Item("datum", index).Value))
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
+
             If dgvTabla.Rows.Count = 1 Then
                 kulonbseg = napiIdo - munkaIdo
                 nevLista.Add(nev)
@@ -604,8 +554,12 @@ Public Class wtForm
                 End If
             End If
         Next
+
+        dgvTabla.AllowUserToAddRows = False
         dgvTabla.ReadOnly = True
+
     End Sub
+
     Private Sub getJogkorok()
         clearDataGridView(dgvTabla)
         Dim command = "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
@@ -637,7 +591,7 @@ Public Class wtForm
             editedRows.ForEach(Sub(i) unnepnapokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 3 Then
-            editedRows.ForEach(Sub(i) jogkorokManagement.Update(dgvTabla.Rows.Item(i).Cells))
+            editedRows.ForEach(Sub(i) jogkorokManagement.UpdateJogkorok(dgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         End If
     End Sub
@@ -650,8 +604,7 @@ Public Class wtForm
         End Select
     End Sub
     Private Sub btnMunkaidoossz_Click(sender As Object, e As EventArgs) Handles btnMunkaidoossz.Click
-        getWeekdaysNumber()
-        getSummary()
+        getWorkingHoursSummary()
     End Sub
     Private Sub tstButton_Click(sender As Object, e As EventArgs) Handles tstButton.Click
         Select Case user.role
@@ -670,7 +623,7 @@ Public Class wtForm
                 id = dgvTabla.SelectedRows(0).Cells("id").Value
                 nev = dgvTabla.SelectedRows(0).Cells("nev").Value
                 dgvTabla.Rows.Remove(dgvTabla.SelectedRows(0))
-                DeleteFelhasznalok(nev, email, id)
+                felhasznalokManagement.DeleteFelhasznalok(nev, email, id)
             Else
                 MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
             End If
