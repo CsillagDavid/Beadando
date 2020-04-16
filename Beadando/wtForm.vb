@@ -115,7 +115,7 @@ Public Class wtForm
 
     Private Function checkTable(tabla As DataGridView)
         Dim ret As Integer
-        If tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "Jelszo" Then
+        If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" Then
             ret = 1
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" Then
             ret = 0
@@ -171,17 +171,15 @@ Public Class wtForm
 
         dgvUj.Columns.Add("id", "Id")
         dgvUj.Columns("id").ValueType = GetType(Integer)
+
         For index = 0 To felhasznalokLista.Count - 1
+            dgvUj.Rows.Add()
             dgvUj.Item("id", index).Value = felhasznalokLista(index).Id
         Next
 
         jogkorokManagement.InsertJogkorok(dgvUj)
         clearDataGridView(dgvUj)
 
-    End Sub
-    Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
-        felhasznalokManagement.InsertOrUpdate(Cells)
-        newFhszsetJogkor()
     End Sub
     Private Sub InsertMunkaidok(tabla As DataGridView)
         Try
@@ -345,30 +343,37 @@ Public Class wtForm
 
         clearDataGridView(dgvTabla)
 
+        dgvTabla.Columns.Add("id", "id")
         dgvTabla.Columns.Add("Nev", "Név")
         dgvTabla.Columns.Add("Jelszo", "Jelszó")
         dgvTabla.Columns.Add("Email", "E-mail")
         dgvTabla.Columns.Add("Munkaido", "Munkaidő")
 
+        dgvTabla.Columns("id").ValueType = GetType(Integer)
         dgvTabla.Columns("Nev").ValueType = GetType(String)
         dgvTabla.Columns("Jelszo").ValueType = GetType(String)
         dgvTabla.Columns("Email").ValueType = GetType(String)
         dgvTabla.Columns("Munkaido").ValueType = GetType(Decimal)
 
-        dgvTabla.Columns("Jelszo").Visible = False
-        dgvTabla.Columns("Jelszo").ReadOnly = True
 
         For index = 0 To felhasznalokLista.Count - 1
             dgvTabla.Rows.Add()
+            dgvTabla.Item("id", index).Value = felhasznalokLista(index).Id
             dgvTabla.Item("Nev", index).Value = felhasznalokLista(index).Nev
             dgvTabla.Item("Jelszo", index).Value = felhasznalokLista(index).Jelszo
             dgvTabla.Item("Email", index).Value = felhasznalokLista(index).Email
             dgvTabla.Item("Munkaido", index).Value = felhasznalokLista(index).Munkaido
         Next
 
+        dgvTabla.Columns("id").Visible = False
+        dgvTabla.Columns("id").ReadOnly = True
+
         If user.userName = "Rendszergazda" Then
             dgvTabla.Columns("jelszo").Visible = True
             dgvTabla.Columns("jelszo").ReadOnly = False
+        Else
+            dgvTabla.Columns("Jelszo").Visible = False
+            dgvTabla.Columns("Jelszo").ReadOnly = True
         End If
 
         btnMentes.Enabled = True
@@ -396,6 +401,7 @@ Public Class wtForm
     Private Function getSummary()
 
         clearDataGridView(dgvUj)
+
         Dim evhonap = getYearAndMonth()
         Dim command = ""
         Dim felhaszMunkaido As New List(Of List(Of Munkaidok))
@@ -582,7 +588,11 @@ Public Class wtForm
     End Sub
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
         If checkTable(dgvTabla) = 1 Then
-            editedRows.ForEach(Sub(i) UpdateFelhasznalok(dgvTabla.Rows.Item(i).Cells))
+            editedRows.ForEach(Sub(i) felhasznalokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
+            felhasznalokLista.Clear()
+            felhasznalokManagement.getFelhasznalok(felhasznalokLista)
+            getFszhLtb()
+            newFhszsetJogkor()
             editedRows.Clear()
         ElseIf checkTable(dgvTabla) = 0 Then
             editedRows.ForEach(Sub(i) munkaidokManagement.InsertOrUpdate(dgvTabla.Rows.Item(i).Cells))
@@ -624,6 +634,9 @@ Public Class wtForm
                 nev = dgvTabla.SelectedRows(0).Cells("nev").Value
                 dgvTabla.Rows.Remove(dgvTabla.SelectedRows(0))
                 felhasznalokManagement.DeleteFelhasznalok(nev, email, id)
+                felhasznalokLista.Clear()
+                felhasznalokManagement.getFelhasznalok(felhasznalokLista)
+                getFszhLtb()
             Else
                 MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
             End If
