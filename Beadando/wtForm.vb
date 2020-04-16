@@ -192,7 +192,6 @@ Public Class wtForm
         End Try
     End Sub
 #End Region
-
     'Dátum, Integer, Decimal ellenőrzés, és táblaresetelés
     Private Sub clearDataGridView(table As DataGridView)
         table.ReadOnly = False
@@ -234,7 +233,7 @@ Public Class wtForm
         Next
 
         txtMunkaidoOsszes.Text = 0
-        For index = 0 To dgvTabla.Rows.Count - 2
+        For index = 0 To dgvTabla.Rows.Count - 1
             dgvTabla.Item("Tavollet", index) = initComboBox()
             getWorkTimeofDay(dgvTabla, index)
         Next
@@ -243,6 +242,12 @@ Public Class wtForm
         dgvTabla.Columns("Napi_ido").ReadOnly = True
         btnMentes.Enabled = True
         btnTorles.Enabled = False
+        Select Case user.role
+            Case "Admin"
+                dgvTabla.AllowUserToAddRows = True
+            Case "Felhasznalo"
+                dgvTabla.AllowUserToAddRows = False
+        End Select
 
     End Sub
     Private Sub setDefaultWorkingHours(email As String)
@@ -351,7 +356,6 @@ Public Class wtForm
         dgvTabla.Columns("Email").ValueType = GetType(String)
         dgvTabla.Columns("Munkaido").ValueType = GetType(Decimal)
 
-        dgvTabla.Columns("id").Visible = False
         dgvTabla.Columns("Jelszo").Visible = False
         dgvTabla.Columns("Jelszo").ReadOnly = True
 
