@@ -11,18 +11,25 @@ Public Class UnnepnapokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Function GetUnnepnapok() As DataTable
+    Public Sub GetUnnepnapok(list As List(Of Unnepnapok))
         sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
+        Dim sdr As SqlDataReader
+        Dim sda As New SqlDataAdapter
         cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
-        cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
+        Dim sqlquery As String = "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
+        cmd.CommandText = sqlquery
+        cmd.Connection = con
+        sda.SelectCommand = cmd
+        sdr = cmd.ExecuteReader()
+        While sdr.Read
+            Dim unnepnap = New Unnepnapok(
+                sdr.Item("Datum"),
+                sdr.Item("Tipus")
+                )
+            list.Add(unnepnap)
+        End While
         sqlConnection.sqlClose()
-        Return dt
-    End Function
+    End Sub
 
     Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.sqlConnect()

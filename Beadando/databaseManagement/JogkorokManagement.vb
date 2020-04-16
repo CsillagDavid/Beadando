@@ -36,20 +36,24 @@ Public Class JogkorokManagement
         sqlConnection.sqlClose()
     End Sub
 
-    Public Function getJogrok() As DataTable
+    Public Sub getJogkorok(list As List(Of Jogkorok))
         sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
+        Dim sdr As SqlDataReader
+        Dim sda As New SqlDataAdapter
         cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
-                        INNER JOIN Felhasznalok F
-                        ON F.id = J.FelhasznaloID
-                        WHERE F.Munkaido > " & 0
-        cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
+        Dim sqlquery As String = "SELECT J.FelhasznaloID, J.Jogkor FROM Jogkorok J"
+        cmd.CommandText = sqlquery
+        cmd.Connection = con
+        sda.SelectCommand = cmd
+        sdr = cmd.ExecuteReader()
+        While sdr.Read
+            Dim jogkor = New Jogkorok(
+                sdr.Item("FelhasznaloID"),
+                sdr.Item("Jogkor")
+                )
+            list.Add(jogkor)
+        End While
         sqlConnection.sqlClose()
-        Return dt
-    End Function
+    End Sub
 
 End Class

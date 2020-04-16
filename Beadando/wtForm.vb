@@ -16,15 +16,17 @@ Public Class wtForm
     Dim itemHonap = "honap"
     Dim itemMunkaIdo = "munkaido"
     Dim itemNapiIdo = "napiido"
-    Dim felhaszlista As New List(Of Felhasznalok)
-    Dim munkaidok As New List(Of Munkaidok)
+    Dim felhasznalokLista As New List(Of Felhasznalok)
+    Dim munkaidokLista As New List(Of Munkaidok)
+    Dim unnepnapokLista As New List(Of Unnepnapok)
 
     Private Sub wtForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Login.ShowDialog()
         sqlConnection = New sqlConn()
         con = sqlConnection.con
         cmd = sqlConnection.cmd
-        felhasznalokManagement.getFelhasznalok(felhaszlista)
+        felhasznalokManagement.getFelhasznalok(felhasznalokLista)
+        unnepnapokManagement.GetUnnepnapok(unnepnapokLista)
         readYearAndMonth()
         checkAuthentication()
     End Sub
@@ -103,20 +105,6 @@ Public Class wtForm
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
     End Sub
-    'A táblázat feltöltése parancs megadásával
-    Private Function setSqlCommand(command As String)
-        sqlConnection.sqlConnect()
-        cmd = con.CreateCommand()
-        cmd.CommandType = CommandType.Text
-        cmd.CommandText = command
-        cmd.ExecuteNonQuery()
-        Dim dt As New DataTable()
-        Dim sda As New SqlDataAdapter(cmd)
-        sda.Fill(dt)
-        sqlConnection.sqlClose()
-        Return dt
-    End Function
-
     Private Function initComboBox()
         Dim tavolletBox As New DataGridViewComboBoxCell
         tavolletBox.Items.Add("Szabadság")
@@ -127,13 +115,13 @@ Public Class wtForm
 
     Private Function checkTable(tabla As DataGridView)
         Dim ret As Integer
-        If tabla.Columns(0).Name = "id" And tabla.Columns(1).Name = "Nev" Then
+        If tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "Jelszo" Then
             ret = 1
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Kezdo_ido" Then
             ret = 0
         ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Tipus" Then
             ret = 2
-        ElseIf tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "FelhasznaloID" Then
+        ElseIf tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "Jogkor" Then
             ret = 3
         Else
             ret = -1
@@ -161,31 +149,18 @@ Public Class wtForm
         Dim evhonap As New Dictionary(Of String, Integer)
         Dim ev, honap, nap, munkanap As Integer
         Dim datum As DateTime
-        Dim holidays = getHolidays()
         evhonap = getYearAndMonth()
         ev = isInteger(evhonap.Item(itemEv))
         honap = isInteger(evhonap.Item(itemHonap))
         nap = DateTime.DaysInMonth(ev, honap)
         For index = 1 To nap
             datum = isDate(ev & ". " & honap & "." & index)
-            Dim ismunkanap = isHolidayOrWeekend(datum, holidays)
+            Dim ismunkanap = isHolidayOrWeekend(datum, unnepnapokLista)
             If ismunkanap Then
                 munkanap += 1
             End If
         Next
         Return munkanap
-    End Function
-    Private Function getHolidays()
-        clearDataGridView(dgvUj)
-        dgvUj.DataSource = unnepnapokManagement.GetUnnepnapok()
-        Dim lista As New Dictionary(Of Date, Integer)
-        For index = 0 To dgvUj.Rows.Count - 2
-            Dim datum = isDate(dgvUj.Item("Datum", index).Value)
-            Dim tipus = isInteger(dgvUj.Item("Tipus", index).Value)
-            lista.Add(datum, tipus)
-        Next
-        clearDataGridView(dgvUj)
-        Return lista
     End Function
 #End Region
 
@@ -196,16 +171,13 @@ Public Class wtForm
 
         dgvUj.Columns.Add("id", "Id")
         dgvUj.Columns("id").ValueType = GetType(Integer)
-        For index = 0 To felhaszlista.Count - 1
-            dgvUj.Item("id", index).Value = felhaszlista(index).Id
+        For index = 0 To felhasznalokLista.Count - 1
+            dgvUj.Item("id", index).Value = felhasznalokLista(index).Id
         Next
 
         jogkorokManagement.InsertJogkorok(dgvUj)
         clearDataGridView(dgvUj)
 
-    End Sub
-    Private Sub UpdateMunkaidok(Cells As DataGridViewCellCollection)
-        munkaidokManagement.InsertOrUpdate(Cells)
     End Sub
     Private Sub UpdateFelhasznalok(Cells As DataGridViewCellCollection)
         felhasznalokManagement.InsertOrUpdate(Cells)
@@ -233,8 +205,8 @@ Public Class wtForm
 
         clearDataGridView(dgvTabla)
         Dim evhonap = getYearAndMonth()
-        munkaidok.Clear()
-        munkaidokManagement.getMunkaidok(munkaidok, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        munkaidokLista.Clear()
+        munkaidokManagement.getMunkaidok(munkaidokLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         dgvTabla.Columns.Add("Datum", "Dátum")
         dgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
@@ -252,12 +224,12 @@ Public Class wtForm
 
         dgvTabla.Columns("FelhasznaloID").Visible = False
 
-        For index = 0 To munkaidok.Count - 1
+        For index = 0 To munkaidokLista.Count - 1
             dgvTabla.Rows.Add()
-            dgvTabla.Item("Datum", index).Value = munkaidok(index).Datum
-            dgvTabla.Item("Kezdo_ido", index).Value = munkaidok(index).Kezdo_ido
-            dgvTabla.Item("Befejezo_ido", index).Value = munkaidok(index).Befejezo_ido
-            dgvTabla.Item("FelhasznaloID", index).Value = munkaidok(index).FelhasznaloID
+            dgvTabla.Item("Datum", index).Value = munkaidokLista(index).Datum
+            dgvTabla.Item("Kezdo_ido", index).Value = munkaidokLista(index).Kezdo_ido
+            dgvTabla.Item("Befejezo_ido", index).Value = munkaidokLista(index).Befejezo_ido
+            dgvTabla.Item("FelhasznaloID", index).Value = munkaidokLista(index).FelhasznaloID
         Next
 
         txtMunkaidoOsszes.Text = 0
@@ -279,13 +251,12 @@ Public Class wtForm
         Dim kido, bido As Decimal
         Dim row As String()
         Dim dateResult As DateTime
-        Dim holidays = getHolidays()
         Dim evhonap = getYearAndMonth()
 
-        munkaidok.Clear()
-        munkaidokManagement.getMunkaidok(munkaidok, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        munkaidokLista.Clear()
+        munkaidokManagement.getMunkaidok(munkaidokLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
-        For Each felhasznalo In felhaszlista
+        For Each felhasznalo In felhasznalokLista
             If felhasznalo.Email = email Then
                 munkaido = isInteger(felhasznalo.Munkaido)
                 felhaszid = isInteger(felhasznalo.Id)
@@ -323,12 +294,12 @@ Public Class wtForm
             End If
             datum = ev & ". " & honapStr & ". " & napStr
             If Date.TryParse(datum, dateResult) Then
-                Dim ismunkanap = isHolidayOrWeekend(datum, holidays)
+                Dim ismunkanap = isHolidayOrWeekend(datum, unnepnapokLista)
                 If ismunkanap Then
                     kido = 8
                     bido = kido + munkaido
-                    If munkaidok.Count > 1 Then
-                        If Not munkaidok(datumindex).Datum = dateResult Then
+                    If munkaidokLista.Count > 1 Then
+                        If Not munkaidokLista(datumindex).Datum = dateResult Then
                             row = {
                                     dateResult,
                                     kido,
@@ -336,10 +307,10 @@ Public Class wtForm
                                     felhaszid
                                  }
                         Else
-                            dateResult = munkaidok(datumindex).Datum
-                            kido = munkaidok(datumindex).Kezdo_ido
-                            bido = munkaidok(datumindex).Befejezo_ido
-                            felhaszid = munkaidok(datumindex).FelhasznaloID
+                            dateResult = munkaidokLista(datumindex).Datum
+                            kido = munkaidokLista(datumindex).Kezdo_ido
+                            bido = munkaidokLista(datumindex).Befejezo_ido
+                            felhaszid = munkaidokLista(datumindex).FelhasznaloID
                             row = {
                                     dateResult,
                                     kido,
@@ -369,13 +340,11 @@ Public Class wtForm
 
         clearDataGridView(dgvTabla)
 
-        dgvTabla.Columns.Add("id", "ID")
         dgvTabla.Columns.Add("Nev", "Név")
         dgvTabla.Columns.Add("Jelszo", "Jelszó")
         dgvTabla.Columns.Add("Email", "E-mail")
         dgvTabla.Columns.Add("Munkaido", "Munkaidő")
 
-        dgvTabla.Columns("id").ValueType = GetType(Integer)
         dgvTabla.Columns("Nev").ValueType = GetType(String)
         dgvTabla.Columns("Jelszo").ValueType = GetType(String)
         dgvTabla.Columns("Email").ValueType = GetType(String)
@@ -385,14 +354,18 @@ Public Class wtForm
         dgvTabla.Columns("Jelszo").Visible = False
         dgvTabla.Columns("Jelszo").ReadOnly = True
 
-        For index = 0 To felhaszlista.Count - 1
+        For index = 0 To felhasznalokLista.Count - 1
             dgvTabla.Rows.Add()
-            dgvTabla.Item("id", index).Value = felhaszlista(index).Id
-            dgvTabla.Item("Nev", index).Value = felhaszlista(index).Nev
-            dgvTabla.Item("Jelszo", index).Value = felhaszlista(index).Jelszo
-            dgvTabla.Item("Email", index).Value = felhaszlista(index).Email
-            dgvTabla.Item("Munkaido", index).Value = felhaszlista(index).Munkaido
+            dgvTabla.Item("Nev", index).Value = felhasznalokLista(index).Nev
+            dgvTabla.Item("Jelszo", index).Value = felhasznalokLista(index).Jelszo
+            dgvTabla.Item("Email", index).Value = felhasznalokLista(index).Email
+            dgvTabla.Item("Munkaido", index).Value = felhasznalokLista(index).Munkaido
         Next
+
+        If user.userName = "Rendszergazda" Then
+            dgvTabla.Columns("jelszo").Visible = True
+            dgvTabla.Columns("jelszo").ReadOnly = False
+        End If
 
         btnMentes.Enabled = True
         btnTorles.Enabled = True
@@ -405,7 +378,7 @@ Public Class wtForm
 
         Dim szures As New Dictionary(Of String, String)
 
-        For Each felhasz In felhaszlista
+        For Each felhasz In felhasznalokLista
             szures.Add(felhasz.Nev, felhasz.Email)
         Next
 
@@ -425,9 +398,9 @@ Public Class wtForm
 
         Select Case user.role
             Case "Admin"
-                For index = 0 To felhaszlista.Count - 1
+                For index = 0 To felhasznalokLista.Count - 1
                     Dim ujmunkaido As New List(Of Munkaidok)
-                    munkaidokManagement.getMunkaidok(ujmunkaido, felhaszlista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    munkaidokManagement.getMunkaidok(ujmunkaido, felhasznalokLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
             Case "Felhasznalo"
@@ -449,11 +422,11 @@ Public Class wtForm
         For Each szemelyes In felhaszMunkaido
             For Index = 0 To szemelyes.Count - 1
                 dgvUj.Rows.Add()
-                For findex = 0 To felhaszlista.Count - 1
-                    If szemelyes(Index).FelhasznaloID = felhaszlista(findex).Id Then
-                        dgvUj.Item("Nev", rowindex).Value = felhaszlista(findex).Nev
-                        dgvUj.Item("Email", rowindex).Value = felhaszlista(findex).Email
-                        dgvUj.Item("Munkaido", rowindex).Value = felhaszlista(findex).Munkaido
+                For findex = 0 To felhasznalokLista.Count - 1
+                    If szemelyes(Index).FelhasznaloID = felhasznalokLista(findex).Id Then
+                        dgvUj.Item("Nev", rowindex).Value = felhasznalokLista(findex).Nev
+                        dgvUj.Item("Email", rowindex).Value = felhasznalokLista(findex).Email
+                        dgvUj.Item("Munkaido", rowindex).Value = felhasznalokLista(findex).Munkaido
                         Exit For
                     End If
                 Next
@@ -481,7 +454,19 @@ Public Class wtForm
     End Function
     Private Sub setHoliday()
         clearDataGridView(dgvTabla)
-        dgvTabla.DataSource = unnepnapokManagement.GetUnnepnapok()
+
+        dgvTabla.Columns.Add("Datum", "Dátum")
+        dgvTabla.Columns.Add("Tipus", "Típus")
+
+        dgvTabla.Columns("Datum").ValueType = GetType(Date)
+        dgvTabla.Columns("Tipus").ValueType = GetType(Integer)
+
+        For index = 0 To unnepnapokLista.Count - 2
+            dgvTabla.Rows.Add()
+            dgvTabla.Item("Datum", index).Value = unnepnapokLista(index).Datum
+            dgvTabla.Item("Tipus", index).Value = unnepnapokLista(index).Tipus
+        Next
+
         btnMentes.Enabled = True
         btnTorles.Enabled = True
     End Sub
@@ -559,26 +544,37 @@ Public Class wtForm
         dgvTabla.ReadOnly = True
 
     End Sub
-
     Private Sub getJogkorok()
         clearDataGridView(dgvTabla)
-        Dim command = "SELECT F.Nev, J.FelhasznaloID, J.Jogkor FROM Jogkorok J
-                        INNER JOIN Felhasznalok F
-                        ON F.id = J.FelhasznaloID
-                        WHERE F.Munkaido > " & 0
-        dgvTabla.DataSource = setSqlCommand(command)
-        dgvTabla.Columns("FelhasznaloID").Visible = False
+
+        Dim jogkorok As New List(Of Jogkorok)
+        jogkorokManagement.getJogkorok(jogkorok)
+
+        dgvTabla.Columns.Add("Nev", "Név")
+        dgvTabla.Columns.Add("Jogkor", "Jogkör")
+
+        dgvTabla.Columns("Nev").ValueType = GetType(String)
+        dgvTabla.Columns("Jogkor").ValueType = GetType(String)
+
+        For index = 0 To felhasznalokLista.Count - 1
+            dgvTabla.Rows.Add()
+            dgvTabla.Item("Nev", index).Value = felhasznalokLista(index).Nev
+            For jkindex = 0 To jogkorok.Count - 1
+                If felhasznalokLista(index).Id = jogkorok(jkindex).FelhasznaloID Then
+                    dgvTabla.Item("Jogkor", index).Value = jogkorok(jkindex).Jogkor
+                End If
+            Next
+        Next
+
         dgvTabla.Columns("Nev").ReadOnly = True
         btnMentes.Enabled = True
+
     End Sub
+
 #End Region
 #Region "Funkciógombok működtetése"
     Private Sub btnFelhasznalok_Click(sender As Object, e As EventArgs) Handles btnFelhasznalok.Click
         getUserData()
-        If user.userName = "Rendszergazda" Then
-            dgvTabla.Columns("jelszo").Visible = True
-            dgvTabla.Columns("jelszo").ReadOnly = False
-        End If
     End Sub
     Private Sub btnMentes_Click(sender As Object, e As EventArgs) Handles btnMentes.Click
         If checkTable(dgvTabla) = 1 Then
