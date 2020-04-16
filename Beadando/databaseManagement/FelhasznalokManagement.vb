@@ -39,5 +39,27 @@ Public Class FelhasznalokManagement
         cmd.ExecuteNonQuery()
         sqlConnection.sqlClose()
     End Sub
+    Public Sub getFelhasznalok(list As List(Of Felhasznalok))
+        sqlConnection.sqlConnect()
+        Dim sdr As SqlDataReader
+        Dim sda As New SqlDataAdapter
+        cmd.CommandType = CommandType.Text
+        Dim sqlquery As String = "SELECT F.id, F.Nev, F.Jelszo, F.Email, F.Munkaido FROM Felhasznalok F
+                                     WHERE F.Munkaido >" & 0
+        cmd.CommandText = sqlquery
+        cmd.Connection = con
+        sda.SelectCommand = cmd
+        sdr = cmd.ExecuteReader()
+        While sdr.Read
+            Dim felhasznalo = New Felhasznalok(
+                sdr.Item("id"),
+                sdr.Item("Nev"),
+                sdr.Item("Jelszo"),
+                sdr.Item("Email"),
+                sdr.Item("Munkaido"))
+            list.Add(felhasznalo)
+        End While
+        sqlConnection.sqlClose()
+    End Sub
 
 End Class
