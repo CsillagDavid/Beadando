@@ -36,20 +36,26 @@ Public Class wtForm
         Select Case user.role
             Case "Admin"
                 getFszhLtb()
-                If Not user.userName = "Rendszergazda" Then
-                    setDefaultWorkingHours(user.email)
-                Else
-                    sqlConnection.sqlConnect()
-                    lblUnnep.Visible = True
-                    lblUnnep.Enabled = True
-                    btnUnnep.Visible = True
-                    btnUnnep.Enabled = True
-                    lblJogkor.Visible = True
-                    lblJogkor.Enabled = True
-                    btnJogkor.Visible = True
-                    btnJogkor.Enabled = True
-                End If
-            Case "Felhasznalo"
+                lblUnnep.Visible = True
+                lblUnnep.Enabled = True
+                btnUnnep.Visible = True
+                btnUnnep.Enabled = True
+                lblJogkor.Visible = True
+                lblJogkor.Enabled = True
+                btnJogkor.Visible = True
+                btnJogkor.Enabled = True
+            Case "Vezeto"
+                getFszhLtb()
+                setDefaultWorkingHours(user.email)
+                lblUnnep.Visible = True
+                lblUnnep.Enabled = True
+                btnUnnep.Visible = True
+                btnUnnep.Enabled = True
+                lblJogkor.Visible = True
+                lblJogkor.Enabled = True
+                btnJogkor.Visible = True
+                btnJogkor.Enabled = True
+            Case "Beosztott"
                 ltbFelhasznalok.Enabled = False
                 btnFelhasznalok.Enabled = False
                 setDefaultWorkingHours(user.email)
@@ -241,7 +247,9 @@ Public Class wtForm
         Select Case user.role
             Case "Admin"
                 dgvTabla.AllowUserToAddRows = True
-            Case "Felhasznalo"
+            Case "Vezeto"
+                dgvTabla.AllowUserToAddRows = True
+            Case "Beosztott"
                 dgvTabla.AllowUserToAddRows = False
         End Select
 
@@ -366,7 +374,7 @@ Public Class wtForm
         dgvTabla.Columns("id").Visible = False
         dgvTabla.Columns("id").ReadOnly = True
 
-        If user.userName = "Rendszergazda" Then
+        If user.role = "Admin" Then
             dgvTabla.Columns("jelszo").Visible = True
             dgvTabla.Columns("jelszo").ReadOnly = False
         Else
@@ -413,7 +421,13 @@ Public Class wtForm
                     mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
-            Case "Felhasznalo"
+            Case "Vezeto"
+                For index = 0 To fhszLista.Count - 1
+                    Dim ujmunkaido As New List(Of Munkaidok)
+                    mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    felhaszMunkaido.Add(ujmunkaido)
+                Next
+            Case "Beosztott"
                 Dim ujmunkaido As New List(Of Munkaidok)
                 mkidoMan.getMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
                 felhaszMunkaido.Add(ujmunkaido)
@@ -602,7 +616,9 @@ Public Class wtForm
         Select Case user.role
             Case "Admin"
                 getUserWorkingHours(ltbFelhasznalok.SelectedValue)
-            Case "Felhasznalo"
+            Case "Vezeto"
+                getUserWorkingHours(ltbFelhasznalok.SelectedValue)
+            Case "Beosztott"
                 getUserWorkingHours(userEmail)
         End Select
     End Sub
@@ -613,7 +629,9 @@ Public Class wtForm
         Select Case user.role
             Case "Admin"
                 setDefaultWorkingHours(ltbFelhasznalok.SelectedValue)
-            Case "Felhasznalo"
+            Case "Vezeto"
+                setDefaultWorkingHours(ltbFelhasznalok.SelectedValue)
+            Case "Beosztott"
                 setDefaultWorkingHours(userEmail)
         End Select
     End Sub

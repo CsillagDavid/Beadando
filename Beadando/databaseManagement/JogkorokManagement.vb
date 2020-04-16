@@ -30,7 +30,7 @@ Public Class JogkorokManagement
         For index = 0 To tabla.Rows.Count - 2
             cmd.Parameters.Clear()
             cmd.Parameters.AddWithValue("@FelhasznaloID", tabla.Item("id", index).Value)
-            cmd.Parameters.AddWithValue("@Jogkor", "Felhasznalo")
+            cmd.Parameters.AddWithValue("@Jogkor", "Beosztott")
             cmd.ExecuteNonQuery()
         Next
         sqlConnection.sqlClose()

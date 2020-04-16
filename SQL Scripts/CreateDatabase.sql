@@ -104,10 +104,10 @@ INSERT INTO [dbo].[Felhasznalok] VALUES ('User Teszt','1','u','5')
 
 --Jogkörök tábla feltöltése (Jogkorok beállítása)
 INSERT INTO [dbo].[Jogkorok] VALUES ('1','Admin')
-INSERT INTO [dbo].[Jogkorok] VALUES ('2','Felhasznalo')
-INSERT INTO [dbo].[Jogkorok] VALUES ('3','Felhasznalo')
-INSERT INTO [dbo].[Jogkorok] VALUES ('4','Admin')
-INSERT INTO [dbo].[Jogkorok] VALUES ('5','Felhasznalo')
+INSERT INTO [dbo].[Jogkorok] VALUES ('2','Beosztott')
+INSERT INTO [dbo].[Jogkorok] VALUES ('3','Beosztott')
+INSERT INTO [dbo].[Jogkorok] VALUES ('4','Vezeto')
+INSERT INTO [dbo].[Jogkorok] VALUES ('5','Beosztott')
 
 --Ünnepnapok tábla feltöltése
 INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 01. 01','0')
