@@ -47,14 +47,6 @@ Public Class wtForm
             Case "Vezeto"
                 getFszhLtb()
                 setDefaultWorkingHours(user.email)
-                lblUnnep.Visible = True
-                lblUnnep.Enabled = True
-                btnUnnep.Visible = True
-                btnUnnep.Enabled = True
-                lblJogkor.Visible = True
-                lblJogkor.Enabled = True
-                btnJogkor.Visible = True
-                btnJogkor.Enabled = True
             Case "Beosztott"
                 ltbFelhasznalok.Enabled = False
                 btnFelhasznalok.Enabled = False
