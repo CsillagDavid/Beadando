@@ -203,9 +203,8 @@ Public Class WtForm
 
         ClearDataGridView(DgvTabla)
         Dim evhonap = GetYearAndMonth()
-        Dim szabLista = szabMan.GetByEmailAndDate(User.email, evhonap.Item(itemEv), evhonap.Item(itemHonap))
         mkiLista.Clear()
-        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkidoMan.getMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         DgvTabla.Columns.Add("Datum", "Dátum")
         DgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
@@ -231,20 +230,6 @@ Public Class WtForm
             DgvTabla.Item("Kezdo_ido", index).Value = mkiLista(index).Kezdo_ido
             DgvTabla.Item("Befejezo_ido", index).Value = mkiLista(index).Befejezo_ido
             DgvTabla.Item("FelhasznaloID", index).Value = mkiLista(index).FelhasznaloID
-            'If szabLista.Count > 0 Then
-            '    Dim szabIndex = szabLista.FindIndex(Function(szab)
-            '                                            Return szab.Datum.Equals(mkiLista(index).Datum)
-            '                                        End Function)
-            '    If szabIndex > -1 Then
-            '        DgvTabla.Item("Tavollet", index) = InitComboBox(1)
-            '    Else
-            '        DgvTabla.Item("Tavollet", index) = InitComboBox()
-            '    End If
-            '    GetWorkTimeofDay(DgvTabla, index)
-            'Else
-            '    DgvTabla.Item("Tavollet", index) = InitComboBox()
-            '    GetWorkTimeofDay(DgvTabla, index)
-            'End If
             DgvTabla.Item("Tavollet", index) = InitComboBox()
             GetWorkTimeofDay(DgvTabla, index)
         Next
@@ -277,7 +262,7 @@ Public Class WtForm
         Dim evhonap = GetYearAndMonth()
 
         mkiLista.Clear()
-        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkidoMan.getMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         For Each felhasznalo In fhszLista
             If felhasznalo.Email = email Then
@@ -436,18 +421,18 @@ Public Class WtForm
             Case "Admin"
                 For index = 0 To fhszLista.Count - 1
                     Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
             Case "Vezeto"
                 For index = 0 To fhszLista.Count - 1
                     Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
             Case "Beosztott"
                 Dim ujmunkaido As New List(Of Munkaidok)
-                mkidoMan.GetMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
+                mkidoMan.getMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
                 felhaszMunkaido.Add(ujmunkaido)
         End Select
 
@@ -577,7 +562,7 @@ Public Class WtForm
         ClearDataGridView(DgvTabla)
 
         Dim jogkorok As New List(Of Jogkorok)
-        jgkkMan.GetJogkorok(jogkorok)
+        jgkkMan.getJogkorok(jogkorok)
 
         DgvTabla.Columns.Add("Nev", "Név")
         DgvTabla.Columns.Add("Jogkor", "Jogkör")
