@@ -13,7 +13,7 @@ Public Class Login
     Dim authentication As New AuthenticationManagement
 
     Private Sub OK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK.Click
-        Dim user = authentication.Authenticate(UsernameTextBox.Text, PasswordTextBox.Text)
+        Dim user = authentication.authenticate(UsernameTextBox.Text, PasswordTextBox.Text)
         If (user.UserName.Length > 0) Then
             WtForm.User = user
             Me.Close()

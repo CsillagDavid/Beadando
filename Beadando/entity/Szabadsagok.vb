@@ -1,7 +1,7 @@
 ﻿Public Class Szabadsagok
 
     Private valueId As Integer
-    Public Property Id() As Integer
+    Public Property id() As Integer
         Get
             Return valueId
         End Get
@@ -41,7 +41,7 @@
     End Property
 
     Public Sub New(id As Integer, datum As Date, tipus As Integer, felhasznaloId As Integer)
-        Me.Id = id
+        Me.id = id
         Me.Datum = datum
         Me.Tipus = tipus
         Me.FelhasznaloID = felhasznaloId

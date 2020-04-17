@@ -36,7 +36,7 @@ Public Class JogkorokManagement
         sqlConnection.SqlClose()
     End Sub
 
-    Public Sub GetJogkorok(list As List(Of Jogkorok))
+    Public Sub getJogkorok(list As List(Of Jogkorok))
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter

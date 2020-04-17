@@ -41,7 +41,7 @@ Public Class MunkaidokManagement
         sqlConnection.SqlClose()
     End Sub
 
-    Public Sub GetMunkaidok(list As List(Of Munkaidok), Email As String, KezdoDatum As String, BefejezoDatum As String)
+    Public Sub getMunkaidok(list As List(Of Munkaidok), Email As String, KezdoDatum As String, BefejezoDatum As String)
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
