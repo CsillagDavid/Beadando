@@ -130,7 +130,7 @@ Public Class WtForm
     End Sub
 
     'Szabadságok beállításához szükséges combobox cella beállításai
-    Private Function InitComboBox()
+    Private Function InitComboBox() As DataGridViewCell
         Dim tavolletBox As New DataGridViewComboBoxCell
         tavolletBox.Items.Add("Szabadság")
         tavolletBox.Items.Add("Betegség")
@@ -218,7 +218,7 @@ Public Class WtForm
         DgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         DgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
         DgvTabla.Columns("Napi_ido").ValueType = GetType(Decimal)
-        DgvTabla.Columns("Tavollet").ValueType = GetType(DataGridViewComboBoxColumn)
+        'DgvTabla.Columns("Tavollet").ValueType = GetType(DataGridViewComboBoxColumn)
 
         TxtMunkaidoOsszes.Text = 0
 
@@ -440,7 +440,6 @@ Public Class WtForm
         DgvUj.Columns.Add("Kezdo_ido", "Kezdés")
         DgvUj.Columns.Add("Befejezo_ido", "Befejezés")
         DgvUj.Columns.Add("Napi_ido", "Napi munkaidő")
-        DgvUj.Columns.Add("Tavollet", "Távollét")
 
         Dim rowindex = 0
         For Each szemelyes In felhaszMunkaido
@@ -457,7 +456,6 @@ Public Class WtForm
                 DgvUj.Item("Datum", rowindex).Value = szemelyes(Index).Datum
                 DgvUj.Item("Kezdo_ido", rowindex).Value = szemelyes(Index).Kezdo_ido
                 DgvUj.Item("Befejezo_ido", rowindex).Value = szemelyes(Index).Befejezo_ido
-                DgvUj.Item("Tavollet", rowindex) = InitComboBox()
                 GetWorkTimeofDay(DgvUj, rowindex)
                 rowindex += 1
             Next
