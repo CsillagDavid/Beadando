@@ -211,18 +211,14 @@ Public Class WtForm
         DgvTabla.Columns.Add("Datum", "Dátum")
         DgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
         DgvTabla.Columns.Add("Befejezo_ido", "Befejezés")
-        DgvTabla.Columns.Add("FelhasznaloID", "Felhasználó ID")
         DgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
         DgvTabla.Columns.Add("Tavollet", "Távollét")
 
         DgvTabla.Columns("Datum").ValueType = GetType(Date)
         DgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         DgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
-        DgvTabla.Columns("FelhasznaloID").ValueType = GetType(Integer)
         DgvTabla.Columns("Napi_ido").ValueType = GetType(Decimal)
-        DgvTabla.Columns("Tavollet").ValueType = GetType(DataGridViewComboBoxCell)
-
-        DgvTabla.Columns("FelhasznaloID").Visible = False
+        DgvTabla.Columns("Tavollet").ValueType = GetType(DataGridViewComboBoxColumn)
 
         TxtMunkaidoOsszes.Text = 0
 
@@ -231,7 +227,6 @@ Public Class WtForm
             DgvTabla.Item("Datum", index).Value = mkiLista(index).Datum
             DgvTabla.Item("Kezdo_ido", index).Value = mkiLista(index).Kezdo_ido
             DgvTabla.Item("Befejezo_ido", index).Value = mkiLista(index).Befejezo_ido
-            DgvTabla.Item("FelhasznaloID", index).Value = mkiLista(index).FelhasznaloID
             DgvTabla.Item("Tavollet", index) = InitComboBox()
             GetWorkTimeofDay(DgvTabla, index)
         Next
