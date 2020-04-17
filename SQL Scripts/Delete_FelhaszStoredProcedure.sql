@@ -11,29 +11,29 @@ IF EXISTS (
 GO
 
 CREATE PROCEDURE [dbo].[DeleteFelhasznalok]
-	@id int,
-	@Nev nvarchar (255),
-	@Email nvarchar (255)
+	@id INT,
+	@Nev NVARCHAR(255),
+	@Email NVARCHAR(255)
 AS
-	begin tran
-		if exists (select * from [dbo].[Felhasznalok] 
-			where Email = @Email and id = @id)
-		begin
-		if exists (select * from [dbo].[Jogkorok]
-			Where FelhasznaloID = @id)
-			begin
-				delete from [dbo].[Jogkorok]
-				where FelhasznaloID = @id
-			end
-			if exists (select * from [dbo].[Munkaidok]
-			Where FelhasznaloID = @id)
-			begin
-				delete from [dbo].[Munkaidok]
-				where FelhasznaloID = @id
-			end
-			delete from [dbo].[Felhasznalok]
-				where Email = @Email AND Nev = @Nev AND id = @id
-		end	
-	commit tran
+	BEGIN TRAN
+		IF EXISTS (SELECT * FROM [dbo].[Felhasznalok] 
+			WHERE Email = @Email and id = @id)
+		BEGIN
+		IF EXISTS (SELECT * FROM [dbo].[Jogkorok]
+			WHERE FelhasznaloID = @id)
+			BEGIN
+				DELETE FROM [dbo].[Jogkorok]
+				WHERE FelhasznaloID = @id
+			END
+			IF EXISTS (SELECT * FROM [dbo].[Munkaidok]
+			WHERE FelhasznaloID = @id)
+			BEGIN
+				DELETE FROM [dbo].[Munkaidok]
+				WHERE FelhasznaloID = @id
+			END
+			DELETE FROM [dbo].[Felhasznalok]
+				WHERE Email = @Email AND Nev = @Nev AND id = @id
+		END	
+	COMMIT TRAN
 RETURN 0
 GO

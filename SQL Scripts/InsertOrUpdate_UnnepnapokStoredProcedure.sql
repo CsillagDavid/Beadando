@@ -11,24 +11,24 @@ IF EXISTS (
 GO
 
 CREATE PROCEDURE [dbo].[InsertOrUpdateUnnepnapok]
-	@Datum date, 
-	@Tipus int
+	@Datum DATE, 
+	@Tipus INT
 AS
-	begin tran
-		if exists (select * from [dbo].[Unnepnapok] 
-			where Datum = @Datum)
-		begin
-		   update [dbo].[Unnepnapok] 
-		   set 
+	BEGIN TRAN
+		IF EXISTS (SELECT * FROM [dbo].[Unnepnapok] 
+			WHERE Datum = @Datum)
+		BEGIN
+		   UPDATE [dbo].[Unnepnapok] 
+		   SET 
 				Datum = @Datum, 
 				Tipus = @Tipus
-		   where Datum = @Datum
-		end
-		else
-		begin
-		   insert into [dbo].[Unnepnapok] (Datum, Tipus) 
-		   values (@Datum, @Tipus)
-		end
-	commit tran
+		   WHERE Datum = @Datum
+		END
+		ELSE
+		BEGIN
+		   INSERT INTO [dbo].[Unnepnapok] (Datum, Tipus) 
+		   VALUES (@Datum, @Tipus)
+		END
+	COMMIT TRAN
 RETURN 0
 GO

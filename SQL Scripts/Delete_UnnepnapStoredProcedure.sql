@@ -11,15 +11,15 @@ IF EXISTS (
 GO
 
 CREATE PROCEDURE [dbo].[DeleteUnnepnapok]
-	@Datum date
+	@Datum DATE
 AS
-	begin tran
-		if exists (select * from [dbo].[Unnepnapok] 
-			where Datum = @Datum)
-		begin
-			delete from [dbo].[Unnepnapok]
-			where Datum = @Datum
-		end	
-	commit tran
+	BEGIN TRAN
+		IF EXISTS (SELECT * FROM [dbo].[Unnepnapok] 
+			WHERE Datum = @Datum)
+		BEGIN
+			DELETE FROM [dbo].[Unnepnapok]
+			WHERE Datum = @Datum
+		END
+	COMMIT TRAN
 RETURN 0
 GO

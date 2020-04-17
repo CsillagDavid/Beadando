@@ -11,27 +11,27 @@ IF EXISTS (
 GO
 
 CREATE PROCEDURE [dbo].[InsertOrUpdateMunkaidok]
-	@Datum date, 
-	@Kezdo_Ido decimal (18,0), 
-	@Befejezo_Ido decimal (18,0), 
-	@FelhasznaloID int
+	@Datum DATE, 
+	@Kezdo_Ido DECIMAL(18,0), 
+	@Befejezo_Ido DECIMAL(18,0), 
+	@FelhasznaloID INT
 AS
-	begin tran
-		if exists (select * from [dbo].[Munkaidok] 
-			where Datum = @Datum AND FelhasznaloID = @FelhasznaloID)
-		begin
-		   update [dbo].[Munkaidok] 
-		   set 
+	BEGIN TRAN
+		IF EXISTS (SELECT * FROM [dbo].[Munkaidok] 
+			WHERE Datum = @Datum AND FelhasznaloID = @FelhasznaloID)
+		BEGIN
+		   UPDATE [dbo].[Munkaidok] 
+		   SET 
 				Datum = @Datum, 
 				Kezdo_ido = @Kezdo_Ido, 
 				Befejezo_ido = @Befejezo_Ido
-		   where Datum = @Datum AND FelhasznaloID = @FelhasznaloID
-		end
-		else
-		begin
-		   insert into [dbo].[Munkaidok] (Datum, Kezdo_ido, Befejezo_ido, FelhasznaloID) 
-		   values (@Datum, @Kezdo_Ido, @Befejezo_Ido, @FelhasznaloID)
-		end
-	commit tran
+		   WHERE Datum = @Datum AND FelhasznaloID = @FelhasznaloID
+		END
+		ELSE
+		BEGIN
+		   INSERT INTO [dbo].[Munkaidok] (Datum, Kezdo_ido, Befejezo_ido, FelhasznaloID) 
+		   VALUES (@Datum, @Kezdo_Ido, @Befejezo_Ido, @FelhasznaloID)
+		END
+	COMMIT TRAN
 RETURN 0
 GO

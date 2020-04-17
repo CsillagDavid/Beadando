@@ -1,16 +1,37 @@
 USE master
 GO
 
---Adatbázis létrehozása, ha már létezik törlése
+--Adatbázis és a hozzá kapcsolódó felhasználó létrehozása, ha már léteznek törlésük
 IF  EXISTS (
 	SELECT name 
 		FROM sys.databases 
-		WHERE name = N'Nyilvantartas'
+		WHERE name = N'Nyilvantartas'		
 )
-DROP DATABASE Nyilvantartas
+BEGIN
+	ALTER DATABASE Nyilvantartas 
+	SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+	DROP DATABASE Nyilvantartas
+END
+GO
+
+DROP USER IF EXISTS [nyilvantartasdb]
 GO
 
 CREATE DATABASE Nyilvantartas
+GO
+
+IF NOT EXISTS
+    (SELECT name
+     FROM sys.database_principals
+     WHERE name = 'nyilvantartasdb')
+BEGIN
+    CREATE LOGIN [nyilvantartasdb] 
+	WITH PASSWORD=N'Nyilvan1234', 
+	DEFAULT_DATABASE=[Nyilvantartas], 
+	DEFAULT_LANGUAGE=[us_english], 
+	CHECK_EXPIRATION=ON, 
+	CHECK_POLICY=ON 
+END
 GO
 
 USE Nyilvantartas
@@ -35,6 +56,14 @@ GO
 
 IF OBJECT_ID('[dbo].[Unnepnapok]', 'U') IS NOT NULL
   DROP TABLE [dbo].[Unnepnapok]
+GO
+
+CREATE USER [nyilvantartasdb] 
+	FOR LOGIN [nyilvantartasdb]
+GO
+
+ALTER ROLE [db_owner] 
+	ADD MEMBER [nyilvantartasdb]
 GO
 
 --Felhasználók tábla létrehozása

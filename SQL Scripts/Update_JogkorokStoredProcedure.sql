@@ -11,18 +11,18 @@ IF EXISTS (
 GO
 
 CREATE PROCEDURE [dbo].[UpdateJogkorok]
-	@FelhasznaloID int,
-	@Jogkor nvarchar(255)
+	@FelhasznaloID INT,
+	@Jogkor NVARCHAR(255)
 AS
-	begin tran
-		if exists (select * from [dbo].[Jogkorok] 
-			where FelhasznaloID = @FelhasznaloID)
-		begin
-		   update [dbo].[Jogkorok] 
-		   set 
+	BEGIN TRAN
+		IF EXISTS (SELECT * FROM [dbo].[Jogkorok] 
+			WHERE FelhasznaloID = @FelhasznaloID)
+		BEGIN
+		   UPDATE [dbo].[Jogkorok] 
+		   SET 
 				Jogkor = @Jogkor
-		   where FelhasznaloID = @FelhasznaloID
-		end
-	commit tran
+		   WHERE FelhasznaloID = @FelhasznaloID
+		END
+	COMMIT TRAN
 RETURN 0
 GO
