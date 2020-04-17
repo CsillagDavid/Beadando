@@ -158,7 +158,7 @@ Public Class WtForm
     Private Function GetDifferenceWorkingHours(munkanap As Integer, napiIdo As Integer, munkaIdo As Integer, aktDate As DateTime)
         Dim lista As New Dictionary(Of String, Integer)
         Dim evhonap = GetYearAndMonth()
-        munkaIdo = munkaIdo * munkanap
+        munkaIdo *= munkanap
         If aktDate.Year = evhonap.Item(itemEv) Then
             If aktDate.Month = evhonap.Item(itemHonap) Then
                 lista.Add(itemMunkaIdo, munkaIdo)
