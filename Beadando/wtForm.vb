@@ -65,6 +65,8 @@ Public Class WtForm
             Case "Vezeto"
                 GetFszhLtb()
                 SetDefaultWorkingHours(User.email)
+                GetUserWorkingHours(User.email)
+                userEmail = User.email
             Case "Beosztott"
                 LtbFelhasznalok.Enabled = False
                 BtnFelhasznalok.Enabled = False
