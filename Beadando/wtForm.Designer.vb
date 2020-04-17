@@ -193,7 +193,7 @@ Partial Class WtForm
         '
         'TstButton
         '
-        Me.TstButton.Location = New System.Drawing.Point(197, 554)
+        Me.TstButton.Location = New System.Drawing.Point(43, 133)
         Me.TstButton.Name = "TstButton"
         Me.TstButton.Size = New System.Drawing.Size(75, 23)
         Me.TstButton.TabIndex = 19
@@ -228,9 +228,9 @@ Partial Class WtForm
         Me.LblJogkor.Enabled = False
         Me.LblJogkor.Location = New System.Drawing.Point(9, 444)
         Me.LblJogkor.Name = "LblJogkor"
-        Me.LblJogkor.Size = New System.Drawing.Size(54, 13)
+        Me.LblJogkor.Size = New System.Drawing.Size(118, 13)
         Me.LblJogkor.TabIndex = 22
-        Me.LblJogkor.Text = "Jogkörök:"
+        Me.LblJogkor.Text = "Jogkörök szerkesztése:"
         Me.LblJogkor.Visible = False
         '
         'BtnJogkor
