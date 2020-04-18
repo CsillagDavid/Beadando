@@ -129,16 +129,6 @@ Public Class WtForm
         End Try
     End Sub
 
-    'Szabadságok beállításához szükséges combobox cella beállításai
-    Private Function InitComboBox() As DataGridViewCell
-        Dim tavolletBox As New DataGridViewComboBoxCell
-        tavolletBox.Items.Add("Szabadság")
-        tavolletBox.Items.Add("Betegség")
-        tavolletBox.Items.Add("Fizetetlen szabadság")
-        'tavolletBox.Value = tavolletBox.Items.Item(1)
-        Return tavolletBox
-    End Function
-
     'A generált táblázatok ellenőrzése, ezáltal értékadása a mentés és törlés funkciókhoz
     Private Function CheckTable(tabla As DataGridView)
         Dim ret As Integer
@@ -212,13 +202,11 @@ Public Class WtForm
         DgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
         DgvTabla.Columns.Add("Befejezo_ido", "Befejezés")
         DgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
-        DgvTabla.Columns.Add("Tavollet", "Távollét")
 
         DgvTabla.Columns("Datum").ValueType = GetType(Date)
         DgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         DgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
         DgvTabla.Columns("Napi_ido").ValueType = GetType(Decimal)
-        'DgvTabla.Columns("Tavollet").ValueType = GetType(DataGridViewComboBoxColumn)
 
         TxtMunkaidoOsszes.Text = 0
 
@@ -227,7 +215,6 @@ Public Class WtForm
             DgvTabla.Item("Datum", index).Value = mkiLista(index).Datum
             DgvTabla.Item("Kezdo_ido", index).Value = mkiLista(index).Kezdo_ido
             DgvTabla.Item("Befejezo_ido", index).Value = mkiLista(index).Befejezo_ido
-            DgvTabla.Item("Tavollet", index) = InitComboBox()
             GetWorkTimeofDay(DgvTabla, index)
         Next
 
