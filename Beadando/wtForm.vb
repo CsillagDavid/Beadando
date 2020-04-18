@@ -1,4 +1,5 @@
-﻿Imports System.Data.SqlClient
+﻿Imports System.ComponentModel
+Imports System.Data.SqlClient
 
 Public Class WtForm
 
@@ -6,13 +7,13 @@ Public Class WtForm
 
     'Adatbázis Management osztályok betöltése
     Dim authMan As New AuthenticationManagement
-    Dim mkidoMan As New MunkaidokManagement
+    Dim mkiMan As New MunkaidokManagement
     Dim fhszMan As New FelhasznalokManagement
     Dim unnepMan As New UnnepnapokManagement
     Dim jgkkMan As New JogkorokManagement
+    Dim szabMan As New SzabadsagokManagement
 
     'SQL kapcsolathoz szükséges változók
-    Dim szabMan As New SzabadsagokManagement
     Dim con As New SqlConnection
     Dim cmd As New SqlCommand
     Dim sqlConnection As SqlConn
@@ -23,10 +24,10 @@ Public Class WtForm
     Dim userEmail As String
 
     'Statikus változók
-    ReadOnly itemEv = "ev"
-    ReadOnly itemHonap = "honap"
-    ReadOnly itemMunkaIdo = "munkaido"
-    ReadOnly itemNapiIdo = "napiido"
+    ReadOnly itemEv = "Ev"
+    ReadOnly itemHonap = "Honap"
+    ReadOnly itemMunkaIdo = "Munkaido"
+    ReadOnly itemNapiIdo = "Napiido"
 
     'Adatbázis objectjeit tartalmazó listák
     Dim fhszLista As New List(Of Felhasznalok)
@@ -112,17 +113,17 @@ Public Class WtForm
     Private Sub GetWorkTimeofDay(tabla As DataGridView, index As Integer)
         Try
             Dim kezdo, befejezo, mkoSum As Decimal
-            tabla.Columns("napi_ido").ReadOnly = False
-            befejezo = IsDecimal(tabla.Item("befejezo_ido", index).Value)
-            kezdo = IsDecimal(tabla.Item("kezdo_ido", index).Value)
+            tabla.Columns("Napi_ido").ReadOnly = False
+            befejezo = IsDecimal(tabla.Item("Befejezo_ido", index).Value)
+            kezdo = IsDecimal(tabla.Item("Kezdo_ido", index).Value)
             mkoSum = IsDecimal(TxtMunkaidoOsszes.Text)
-            tabla.Item("napi_ido", index).Value = befejezo - kezdo
+            tabla.Item("Napi_ido", index).Value = befejezo - kezdo
             mkoSum += (befejezo - kezdo)
             TxtMunkaidoOsszes.Visible = True
             LblMunkaidoOsszes.Visible = True
             TxtMunkaidoOsszes.Text = mkoSum
             LblOra.Visible = True
-            tabla.Columns("napi_ido").ReadOnly = True
+            tabla.Columns("Napi_ido").ReadOnly = True
         Catch ex As Exception
             Console.WriteLine("A munkaidő kiszámításában hiba lépett fel!")
         End Try
@@ -225,7 +226,7 @@ Public Class WtForm
         ClearDataGridView(DgvTabla)
         Dim evhonap = GetYearAndMonth()
         mkiLista.Clear()
-        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkiMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         DgvTabla.Columns.Add("Datum", "Dátum")
         DgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
@@ -255,6 +256,8 @@ Public Class WtForm
         DgvTabla.Columns("FelhasznaloID").ReadOnly = True
         DgvTabla.Columns("FelhasznaloID").Visible = False
 
+        DgvTabla.Sort(DgvTabla.Columns("Datum"), ListSortDirection.Ascending)
+
         BtnMentes.Enabled = True
         BtnTorles.Enabled = False
 
@@ -278,7 +281,7 @@ Public Class WtForm
         Dim szabadsagdatum As New List(Of Date)
 
         mkiLista.Clear()
-        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkiMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
         szabLista.Clear()
         szabMan.GetSzabadsagok(szabLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
@@ -364,7 +367,7 @@ Public Class WtForm
             End If
         Next
 
-        mkidoMan.InsertOrUpdate(DgvTabla)
+        mkiMan.InsertOrUpdate(DgvTabla)
         ClearDataGridView(DgvTabla)
 
     End Sub
@@ -399,14 +402,16 @@ Public Class WtForm
         DgvTabla.Columns("id").ReadOnly = True
 
         If User.role = "Admin" Then
-            DgvTabla.Columns("jelszo").Visible = True
-            DgvTabla.Columns("jelszo").ReadOnly = False
+            DgvTabla.Columns("Jelszo").Visible = True
+            DgvTabla.Columns("Jelszo").ReadOnly = False
         Else
             DgvTabla.Columns("Jelszo").Visible = False
             DgvTabla.Columns("Jelszo").ReadOnly = True
         End If
 
+        DgvTabla.Sort(DgvTabla.Columns("Nev"), ListSortDirection.Ascending)
         DgvTabla.AllowUserToAddRows = True
+
         BtnMentes.Enabled = True
         BtnTorles.Enabled = True
         TxtMunkaidoOsszes.Visible = False
@@ -443,12 +448,12 @@ Public Class WtForm
 
         If User.Role = "Beosztott" Then
             Dim ujmunkaido As New List(Of Munkaidok)
-            mkidoMan.GetMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
+            mkiMan.GetMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
             felhaszMunkaido.Add(ujmunkaido)
         Else
             For index = 0 To fhszLista.Count - 1
                 Dim ujmunkaido As New List(Of Munkaidok)
-                mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                mkiMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                 felhaszMunkaido.Add(ujmunkaido)
             Next
         End If
@@ -494,6 +499,7 @@ Public Class WtForm
 
     'Új ünnepnapok vagy mostaniak törlésére szolgáló függvény Admin jogként
     Private Sub SetHoliday()
+
         ClearDataGridView(DgvTabla)
 
         DgvTabla.Columns.Add("Datum", "Dátum")
@@ -565,6 +571,8 @@ Public Class WtForm
             End If
         Next
 
+        DgvTabla.Sort(DgvTabla.Columns("Nev"), ListSortDirection.Ascending)
+
         DgvTabla.AllowUserToAddRows = False
         DgvTabla.ReadOnly = True
 
@@ -574,6 +582,7 @@ Public Class WtForm
     Private Sub GetUserHoliday(email As String)
 
         ClearDataGridView(DgvTabla)
+
         Dim evhonap = GetYearAndMonth()
 
         szabLista.Clear()
@@ -596,6 +605,7 @@ Public Class WtForm
 
         DgvTabla.Columns("FelhasznaloID").ReadOnly = True
         DgvTabla.Columns("FelhasznaloID").Visible = False
+        DgvTabla.Sort(DgvTabla.Columns("Datum"), ListSortDirection.Ascending)
 
         BtnMentes.Enabled = True
         BtnTorles.Enabled = True
@@ -680,7 +690,7 @@ Public Class WtForm
             GetFszhLtb()
             NewFhszsetJogkor()
         ElseIf CheckTable(DgvTabla) = 0 Then
-            editedRows.ForEach(Sub(i) mkidoMan.InsertOrUpdate(DgvTabla.Rows.Item(i).Cells))
+            editedRows.ForEach(Sub(i) mkiMan.InsertOrUpdate(DgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
         ElseIf CheckTable(DgvTabla) = 2 Then
             editedRows.ForEach(Sub(i) unnepMan.InsertOrUpdate(DgvTabla.Rows.Item(i).Cells))
@@ -784,7 +794,9 @@ Public Class WtForm
     'Cellamódosítás kezdésének érzékelése
     Private Sub DgvTabla_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvTabla.CellBeginEdit
         Try
-            DgvTabla.Rows.Item(e.RowIndex).Tag = DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
+            If DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value <> Nothing Then
+                DgvTabla.Rows.Item(e.RowIndex).Tag = DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value
+            End If
         Catch ex As Exception
 
         End Try
@@ -793,18 +805,20 @@ Public Class WtForm
     'Cellamódosítás befejézésnek érzékelése
     Private Sub DgvTabla_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvTabla.CellEndEdit
         Try
-            If Not DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(DgvTabla.Rows.Item(e.RowIndex).Tag) Then
-                If Not editedRows.Contains(e.RowIndex) Then
-                    editedRows.Add(e.RowIndex)
-                End If
-                If CheckTable(DgvTabla) = 0 Then
-                    Dim rowCount = DgvTabla.Rows.Count
-                    TxtMunkaidoOsszes.Text = 0
-                    For index = 0 To rowCount - 2
-                        GetWorkTimeofDay(DgvTabla, index)
-                    Next
-                ElseIf CheckTable(DgvTabla) = 4 Then
-                    SaveSzabadsag()
+            If DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value <> Nothing Then
+                If Not DgvTabla.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex).Value.Equals(DgvTabla.Rows.Item(e.RowIndex).Tag) Then
+                    If Not editedRows.Contains(e.RowIndex) Then
+                        editedRows.Add(e.RowIndex)
+                    End If
+                    If CheckTable(DgvTabla) = 0 Then
+                        Dim rowCount = DgvTabla.Rows.Count
+                        TxtMunkaidoOsszes.Text = 0
+                        For index = 0 To rowCount - 2
+                            GetWorkTimeofDay(DgvTabla, index)
+                        Next
+                    ElseIf CheckTable(DgvTabla) = 4 Then
+                        SaveSzabadsag()
+                    End If
                 End If
             End If
             DgvTabla.Rows.Item(e.RowIndex).Tag = ""
@@ -857,8 +871,6 @@ Public Class WtForm
             e.ThrowException = False
         End If
     End Sub
-
-
 
 #End Region
 
