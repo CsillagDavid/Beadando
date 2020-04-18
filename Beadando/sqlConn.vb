@@ -1,6 +1,7 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Configuration
 Public Class SqlConn
+
     Public con As New SqlConnection
     Public cmd As New SqlCommand
 
@@ -9,6 +10,7 @@ Public Class SqlConn
         'sqlConnect()
     End Sub
 
+    'Kapcsolat lezárása
     Protected Overrides Sub Finalize()
         If con.State = ConnectionState.Open Then
             Try
@@ -18,6 +20,7 @@ Public Class SqlConn
         End If
     End Sub
 
+    'SQL kapcsolat megnyitása
     Public Sub SqlConnect()
         SqlClose()
         Try
@@ -28,6 +31,7 @@ Public Class SqlConn
         End Try
     End Sub
 
+    'SQL kapcsolat bezárása
     Public Sub SqlClose()
         If con.State = ConnectionState.Open Then
             Try
@@ -37,6 +41,7 @@ Public Class SqlConn
         End If
     End Sub
 
+    'A ConnectionString betöltése az App.config fájlból
     Private Sub ReadConnectionString()
         Try
             con.ConnectionString = ConfigurationManager.ConnectionStrings("sqlConnection").ConnectionString

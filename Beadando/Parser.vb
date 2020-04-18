@@ -1,5 +1,6 @@
 ﻿Public Module Parser
 
+    'Ellenőrzi az objectként kapott értéket, hogy az dátum-e, majd visszaadja az eredményt.
     Public Function IsDate(parameter As Object)
         Dim result As Date
         If Date.TryParse(parameter, result) Then
@@ -9,6 +10,9 @@
         End If
     End Function
 
+
+
+    'Ellenőrzi, hogy egész számot adtunk-e meg, majd visszaadja az eredményt
     Public Function IsInteger(parameter As Object)
         Dim result As Integer
         If Integer.TryParse(parameter, result) Then
@@ -18,6 +22,7 @@
         End If
     End Function
 
+    'Ellenőrzi, hogy decimális számot adtunk-e meg, majd visszaadja az eredményt
     Public Function IsDecimal(parameter As Object)
         Dim result As Decimal
         If Decimal.TryParse(parameter, result) Then
@@ -27,6 +32,7 @@
         End If
     End Function
 
+    'Ellenőrzi, hogy a kapott dátum ünnepnapnak vagy hétvégének számít-e
     Public Function IsHolidayOrWeekend(datum As Date, holidays As List(Of Unnepnapok))
         If datum.DayOfWeek = DayOfWeek.Sunday Then
             Return False
@@ -46,4 +52,5 @@
         Next
         Return True
     End Function
+
 End Module

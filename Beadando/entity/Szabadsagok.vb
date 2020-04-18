@@ -1,21 +1,13 @@
 ﻿Public Class Szabadsagok
 
-    Private valueId As Integer
-    Public Property id() As Integer
-        Get
-            Return valueId
-        End Get
-        Set(ByVal value As Integer)
-            valueId = value
-        End Set
-    End Property
+    'Szabadságok osztály, a szabadság elemeinek fogadására
 
-    Private valueDatum As String
-    Public Property Datum() As String
+    Private valueDatum As Date
+    Public Property Datum() As Date
         Get
             Return valueDatum
         End Get
-        Set(ByVal value As String)
+        Private Set(ByVal value As Date)
             valueDatum = value
         End Set
     End Property
@@ -25,7 +17,7 @@
         Get
             Return valueTipus
         End Get
-        Set(ByVal value As Integer)
+        Private Set(ByVal value As Integer)
             valueTipus = value
         End Set
     End Property
@@ -35,13 +27,12 @@
         Get
             Return valueFelhasznaloID
         End Get
-        Set(ByVal value As Integer)
+        Private Set(ByVal value As Integer)
             valueFelhasznaloID = value
         End Set
     End Property
 
-    Public Sub New(id As Integer, datum As Date, tipus As Integer, felhasznaloId As Integer)
-        Me.id = id
+    Public Sub New(datum As Date, tipus As Integer, felhasznaloId As Integer)
         Me.Datum = datum
         Me.Tipus = tipus
         Me.FelhasznaloID = felhasznaloId

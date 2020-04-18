@@ -1,11 +1,13 @@
 ﻿Public Class Felhasznalok
 
+    'Felhasználók osztály, a felhasználók tábla elemeinek a fogadására
+
     Private valueId As Integer
     Public Property Id() As Integer
         Get
             Return valueId
         End Get
-        Set(ByVal value As Integer)
+        Private Set(ByVal value As Integer)
             valueId = value
         End Set
     End Property
@@ -15,7 +17,7 @@
         Get
             Return valueNev
         End Get
-        Set(ByVal value As String)
+        Private Set(ByVal value As String)
             valueNev = value
         End Set
     End Property
@@ -25,7 +27,7 @@
         Get
             Return valueJelszo
         End Get
-        Set(ByVal value As String)
+        Private Set(ByVal value As String)
             valueJelszo = value
         End Set
     End Property
@@ -35,7 +37,7 @@
         Get
             Return valueEmail
         End Get
-        Set(ByVal value As String)
+        Private Set(ByVal value As String)
             valueEmail = value
         End Set
     End Property
@@ -45,7 +47,7 @@
         Get
             Return valueMunkaido
         End Get
-        Set(ByVal value As Integer)
+        Private Set(ByVal value As Integer)
             valueMunkaido = value
         End Set
     End Property

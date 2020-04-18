@@ -1,6 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class AuthenticationManagement
+
     Private sqlConnection As SqlConn
     Private con As New SqlConnection
     Private cmd As New SqlCommand
@@ -11,12 +12,16 @@ Public Class AuthenticationManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    Public Function authenticate(UserName As String, Password As String) As User
+    'A bejelentkezésnél az email és a jelszó ellenőrzése és a bejelentkezés engedélyezése
+    Public Function Authenticate(UserName As String, Password As String) As User
         Dim user = New User()
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
-        cmd.CommandText = "SELECT f.Nev, f.Email, j.Jogkor FROM Felhasznalok f INNER JOIN Jogkorok j ON j.FelhasznaloID = f.id WHERE (f.Email = '" & UserName & "' AND f.Jelszo = '" + Password & "')"
+        cmd.CommandText = "SELECT F.Nev, F.Email, J.Jogkor FROM Felhasznalok F 
+                            INNER JOIN Jogkorok J 
+                            ON J.FelhasznaloID = F.id 
+                            WHERE (F.Email = '" & UserName & "' AND F.Jelszo = '" + Password & "')"
         Dim reader As SqlDataReader
         reader = cmd.ExecuteReader()
         If reader.Read() Then
@@ -30,4 +35,5 @@ Public Class AuthenticationManagement
         sqlConnection.SqlClose()
         Return user
     End Function
+
 End Class

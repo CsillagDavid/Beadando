@@ -38,11 +38,12 @@ Partial Class WtForm
         Me.LvlHonap = New System.Windows.Forms.Label()
         Me.DgvUj = New System.Windows.Forms.DataGridView()
         Me.LblOra = New System.Windows.Forms.Label()
-        Me.TstButton = New System.Windows.Forms.Button()
+        Me.BtnGeneralas = New System.Windows.Forms.Button()
         Me.BtnUnnep = New System.Windows.Forms.Button()
         Me.LblUnnep = New System.Windows.Forms.Label()
         Me.LblJogkor = New System.Windows.Forms.Label()
         Me.BtnJogkor = New System.Windows.Forms.Button()
+        Me.LblGeneralas = New System.Windows.Forms.Label()
         CType(Me.DgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -191,19 +192,21 @@ Partial Class WtForm
         Me.LblOra.TabIndex = 18
         Me.LblOra.Text = "óra"
         '
-        'TstButton
+        'BtnGeneralas
         '
-        Me.TstButton.Location = New System.Drawing.Point(43, 133)
-        Me.TstButton.Name = "TstButton"
-        Me.TstButton.Size = New System.Drawing.Size(75, 23)
-        Me.TstButton.TabIndex = 19
-        Me.TstButton.Text = "teszt"
-        Me.TstButton.UseVisualStyleBackColor = True
+        Me.BtnGeneralas.Enabled = False
+        Me.BtnGeneralas.Location = New System.Drawing.Point(9, 483)
+        Me.BtnGeneralas.Name = "BtnGeneralas"
+        Me.BtnGeneralas.Size = New System.Drawing.Size(75, 23)
+        Me.BtnGeneralas.TabIndex = 19
+        Me.BtnGeneralas.Text = "Generálás"
+        Me.BtnGeneralas.UseVisualStyleBackColor = True
+        Me.BtnGeneralas.Visible = False
         '
         'BtnUnnep
         '
         Me.BtnUnnep.Enabled = False
-        Me.BtnUnnep.Location = New System.Drawing.Point(9, 414)
+        Me.BtnUnnep.Location = New System.Drawing.Point(9, 399)
         Me.BtnUnnep.Name = "BtnUnnep"
         Me.BtnUnnep.Size = New System.Drawing.Size(75, 23)
         Me.BtnUnnep.TabIndex = 20
@@ -215,7 +218,7 @@ Partial Class WtForm
         '
         Me.LblUnnep.AutoSize = True
         Me.LblUnnep.Enabled = False
-        Me.LblUnnep.Location = New System.Drawing.Point(6, 398)
+        Me.LblUnnep.Location = New System.Drawing.Point(6, 383)
         Me.LblUnnep.Name = "LblUnnep"
         Me.LblUnnep.Size = New System.Drawing.Size(136, 13)
         Me.LblUnnep.TabIndex = 21
@@ -226,7 +229,7 @@ Partial Class WtForm
         '
         Me.LblJogkor.AutoSize = True
         Me.LblJogkor.Enabled = False
-        Me.LblJogkor.Location = New System.Drawing.Point(9, 444)
+        Me.LblJogkor.Location = New System.Drawing.Point(6, 425)
         Me.LblJogkor.Name = "LblJogkor"
         Me.LblJogkor.Size = New System.Drawing.Size(118, 13)
         Me.LblJogkor.TabIndex = 22
@@ -236,7 +239,7 @@ Partial Class WtForm
         'BtnJogkor
         '
         Me.BtnJogkor.Enabled = False
-        Me.BtnJogkor.Location = New System.Drawing.Point(9, 460)
+        Me.BtnJogkor.Location = New System.Drawing.Point(9, 441)
         Me.BtnJogkor.Name = "BtnJogkor"
         Me.BtnJogkor.Size = New System.Drawing.Size(75, 23)
         Me.BtnJogkor.TabIndex = 23
@@ -244,17 +247,29 @@ Partial Class WtForm
         Me.BtnJogkor.UseVisualStyleBackColor = True
         Me.BtnJogkor.Visible = False
         '
+        'LblGeneralas
+        '
+        Me.LblGeneralas.AutoSize = True
+        Me.LblGeneralas.Enabled = False
+        Me.LblGeneralas.Location = New System.Drawing.Point(6, 467)
+        Me.LblGeneralas.Name = "LblGeneralas"
+        Me.LblGeneralas.Size = New System.Drawing.Size(131, 13)
+        Me.LblGeneralas.TabIndex = 24
+        Me.LblGeneralas.Text = "Alapértelmezett munkaidő:"
+        Me.LblGeneralas.Visible = False
+        '
         'WtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(959, 578)
+        Me.Controls.Add(Me.LblGeneralas)
         Me.Controls.Add(Me.BtnJogkor)
         Me.Controls.Add(Me.LblJogkor)
         Me.Controls.Add(Me.LblUnnep)
         Me.Controls.Add(Me.BtnUnnep)
-        Me.Controls.Add(Me.TstButton)
+        Me.Controls.Add(Me.BtnGeneralas)
         Me.Controls.Add(Me.LblOra)
         Me.Controls.Add(Me.DgvTabla)
         Me.Controls.Add(Me.LvlHonap)
@@ -296,9 +311,10 @@ Partial Class WtForm
     Friend WithEvents LvlHonap As Label
     Friend WithEvents DgvUj As DataGridView
     Friend WithEvents LblOra As Label
-    Friend WithEvents TstButton As Button
+    Friend WithEvents BtnGeneralas As Button
     Friend WithEvents BtnUnnep As Button
     Friend WithEvents LblUnnep As Label
     Friend WithEvents LblJogkor As Label
     Friend WithEvents BtnJogkor As Button
+    Friend WithEvents LblGeneralas As Label
 End Class

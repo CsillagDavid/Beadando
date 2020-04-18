@@ -1,6 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class FelhasznalokManagement
+
     Private sqlConnection As SqlConn
     Private con As New SqlConnection
     Private cmd As New SqlCommand
@@ -11,6 +12,7 @@ Public Class FelhasznalokManagement
         cmd = sqlConnection.cmd
     End Sub
 
+    'Felhasználó adatainak frissítése vagy új felhasználó beszúrása az adatbázisban
     Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
@@ -28,6 +30,7 @@ Public Class FelhasznalokManagement
         sqlConnection.SqlClose()
     End Sub
 
+    'Felhasználó törlése az adatbázisból paraméterek alapján
     Public Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
@@ -39,7 +42,9 @@ Public Class FelhasznalokManagement
         cmd.ExecuteNonQuery()
         sqlConnection.SqlClose()
     End Sub
-    Public Sub GetFelhasznalok(list As List(Of Felhasznalok))
+
+    'Felhasználók lekérése az adatbázisból, tárolása
+    Public Sub GetFelhasznalok(lista As List(Of Felhasznalok))
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
@@ -57,7 +62,7 @@ Public Class FelhasznalokManagement
                 sdr.Item("Jelszo"),
                 sdr.Item("Email"),
                 sdr.Item("Munkaido"))
-            list.Add(felhasznalo)
+            lista.Add(felhasznalo)
         End While
         sqlConnection.SqlClose()
     End Sub

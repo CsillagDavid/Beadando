@@ -1,11 +1,13 @@
 ﻿Public Class Unnepnapok
 
-    Private valueDatum As String
-    Public Property Datum() As String
+    'Ünnepnapok osztály, az ünnepnapok tábla értékeinek fogadására
+
+    Private valueDatum As Date
+    Public Property Datum() As Date
         Get
             Return valueDatum
         End Get
-        Set(ByVal value As String)
+        Private Set(ByVal value As Date)
             valueDatum = value
         End Set
     End Property
@@ -15,7 +17,7 @@
         Get
             Return valueTipus
         End Get
-        Set(ByVal value As Integer)
+        Private Set(ByVal value As Integer)
             valueTipus = value
         End Set
     End Property

@@ -1,6 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class MunkaidokManagement
+
     Private sqlConnection As SqlConn
     Private con As New SqlConnection
     Private cmd As New SqlCommand
@@ -11,6 +12,7 @@ Public Class MunkaidokManagement
         cmd = sqlConnection.cmd
     End Sub
 
+    'Munkaidők frissítése vagy új felvétele tábla megadásával
     Public Sub InsertOrUpdate(tabla As DataGridView)
         Dim rowCount = tabla.Rows.Count
         cmd = con.CreateCommand()
@@ -28,6 +30,7 @@ Public Class MunkaidokManagement
         sqlConnection.SqlClose()
     End Sub
 
+    'Munkaidők frissítése vagy új felvétele cella megadásával
     Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
@@ -41,7 +44,8 @@ Public Class MunkaidokManagement
         sqlConnection.SqlClose()
     End Sub
 
-    Public Sub getMunkaidok(list As List(Of Munkaidok), Email As String, KezdoDatum As String, BefejezoDatum As String)
+    'A munkaidők lekérése az adatbázisból és ezekből lista generálása
+    Public Sub GetMunkaidok(lista As List(Of Munkaidok), Email As String, KezdoDatum As String, BefejezoDatum As String)
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
@@ -62,7 +66,7 @@ Public Class MunkaidokManagement
                 sdr.Item("Befejezo_ido"),
                 sdr.Item("FelhasznaloID")
                 )
-            list.Add(munkaido)
+            lista.Add(munkaido)
         End While
         sqlConnection.SqlClose()
     End Sub

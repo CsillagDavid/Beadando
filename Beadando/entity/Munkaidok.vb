@@ -1,11 +1,13 @@
 ﻿Public Class Munkaidok
 
-    Private valueDatum As String
-    Public Property Datum() As String
+    'Munkaidők osztály, a munkaidők tábla elemeinek a fogadására
+
+    Private valueDatum As Date
+    Public Property Datum() As Date
         Get
             Return valueDatum
         End Get
-        Set(ByVal value As String)
+        Private Set(ByVal value As Date)
             valueDatum = value
         End Set
     End Property
@@ -15,7 +17,7 @@
         Get
             Return valueKezdo_ido
         End Get
-        Set(ByVal value As Decimal)
+        Private Set(ByVal value As Decimal)
             valueKezdo_ido = value
         End Set
     End Property
@@ -25,7 +27,7 @@
         Get
             Return valueBefejezo_ido
         End Get
-        Set(ByVal value As Decimal)
+        Private Set(ByVal value As Decimal)
             valueBefejezo_ido = value
         End Set
     End Property
@@ -35,7 +37,7 @@
         Get
             Return valueFelhasznaloID
         End Get
-        Set(ByVal value As Integer)
+        Private Set(ByVal value As Integer)
             valueFelhasznaloID = value
         End Set
     End Property

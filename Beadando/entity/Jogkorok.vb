@@ -1,11 +1,13 @@
 ﻿Public Class Jogkorok
 
+    'Jogkörök osztály, a jogkörök tábla elemeinek a fogadására
+
     Private valueFelhasznaloID As Integer
     Public Property FelhasznaloID() As Integer
         Get
             Return valueFelhasznaloID
         End Get
-        Set(ByVal value As Integer)
+        Private Set(ByVal value As Integer)
             valueFelhasznaloID = value
         End Set
     End Property
@@ -15,7 +17,7 @@
         Get
             Return valueJogkor
         End Get
-        Set(ByVal value As String)
+        Private Set(ByVal value As String)
             valueJogkor = value
         End Set
     End Property

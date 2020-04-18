@@ -11,6 +11,7 @@ Public Class JogkorokManagement
         cmd = sqlConnection.cmd
     End Sub
 
+    'Jogkörök frissítése az adatbázisban
     Public Sub UpdateJogkorok(Cells As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
@@ -22,6 +23,7 @@ Public Class JogkorokManagement
         sqlConnection.SqlClose()
     End Sub
 
+    'Új felhasználónak az alapértelmezett Beosztott jogkör beszúrása
     Public Sub InsertJogkorok(tabla As DataGridView)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
@@ -36,7 +38,8 @@ Public Class JogkorokManagement
         sqlConnection.SqlClose()
     End Sub
 
-    Public Sub getJogkorok(list As List(Of Jogkorok))
+    'A jogkörök lekérdezése az adatbázisból és ezek listában tárolása
+    Public Sub GetJogkorok(lista As List(Of Jogkorok))
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
@@ -51,7 +54,7 @@ Public Class JogkorokManagement
                 sdr.Item("FelhasznaloID"),
                 sdr.Item("Jogkor")
                 )
-            list.Add(jogkor)
+            lista.Add(jogkor)
         End While
         sqlConnection.SqlClose()
     End Sub
