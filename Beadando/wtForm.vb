@@ -811,9 +811,14 @@ Public Class WtForm
                         editedRows.Add(e.RowIndex)
                     End If
                     If CheckTable(DgvTabla) = 0 Then
-                        Dim rowCount = DgvTabla.Rows.Count
+                        Dim rowCount As New Integer
+                        If User.Role = "Beosztott" Then
+                            rowCount = DgvTabla.Rows.Count - 1
+                        Else
+                            rowCount = DgvTabla.Rows.Count - 2
+                        End If
                         TxtMunkaidoOsszes.Text = 0
-                        For index = 0 To rowCount - 2
+                        For index = 0 To rowCount
                             GetWorkTimeofDay(DgvTabla, index)
                         Next
                     ElseIf CheckTable(DgvTabla) = 4 Then
