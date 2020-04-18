@@ -600,6 +600,7 @@ Public Class WtForm
         TxtMunkaidoOsszes.Visible = False
         LblOra.Visible = False
         LblMunkaidoOsszes.Visible = False
+        DgvTabla.AllowUserToAddRows = True
 
     End Sub
 
