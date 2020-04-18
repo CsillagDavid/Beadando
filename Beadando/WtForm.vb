@@ -51,7 +51,7 @@ Public Class WtForm
 
     'A bejelentkezett felhasználó jogkörének a lekérdezése, és a program ezáltali indítása
     Private Sub CheckAuthentication()
-        Select Case User.role
+        Select Case User.Role
             Case "Admin"
                 GetFszhLtb()
                 LblUnnep.Visible = True
@@ -62,17 +62,21 @@ Public Class WtForm
                 LblJogkor.Enabled = True
                 BtnJogkor.Visible = True
                 BtnJogkor.Enabled = True
+                LblGeneralas.Visible = True
+                LblGeneralas.Enabled = True
+                BtnGeneralas.Visible = True
+                BtnGeneralas.Enabled = True
             Case "Vezeto"
                 GetFszhLtb()
-                SetDefaultWorkingHours(User.email)
-                GetUserWorkingHours(User.email)
-                userEmail = User.email
+                SetDefaultWorkingHours(User.Email)
+                GetUserWorkingHours(User.Email)
+                userEmail = User.Email
             Case "Beosztott"
                 LtbFelhasznalok.Enabled = False
                 BtnFelhasznalok.Enabled = False
-                SetDefaultWorkingHours(User.email)
-                GetUserWorkingHours(User.email)
-                userEmail = User.email
+                SetDefaultWorkingHours(User.Email)
+                GetUserWorkingHours(User.Email)
+                userEmail = User.Email
         End Select
     End Sub
 
@@ -111,13 +115,7 @@ Public Class WtForm
             befejezo = IsDecimal(tabla.Item("befejezo_ido", index).Value)
             kezdo = IsDecimal(tabla.Item("kezdo_ido", index).Value)
             mkoSum = IsDecimal(TxtMunkaidoOsszes.Text)
-            If tabla.Item("tavollet", index).Value = "Szabadság" Then
-                tabla.Item("napi_ido", index).Value = 0
-                tabla.Item("befejezo_ido", index).Value = 0
-                tabla.Item("kezdo_ido", index).Value = 0
-            Else
-                tabla.Item("napi_ido", index).Value = befejezo - kezdo
-            End If
+            tabla.Item("napi_ido", index).Value = befejezo - kezdo
             mkoSum += (befejezo - kezdo)
             TxtMunkaidoOsszes.Visible = True
             LblMunkaidoOsszes.Visible = True
@@ -224,14 +222,11 @@ Public Class WtForm
         BtnMentes.Enabled = True
         BtnTorles.Enabled = False
 
-        Select Case User.role
-            Case "Admin"
-                DgvTabla.AllowUserToAddRows = True
-            Case "Vezeto"
-                DgvTabla.AllowUserToAddRows = True
-            Case "Beosztott"
-                DgvTabla.AllowUserToAddRows = False
-        End Select
+        If User.Role = "Beosztott" Then
+            DgvTabla.AllowUserToAddRows = False
+        Else
+            DgvTabla.AllowUserToAddRows = True
+        End If
 
     End Sub
 
@@ -401,24 +396,17 @@ Public Class WtForm
         Dim evhonap = GetYearAndMonth()
         Dim felhaszMunkaido As New List(Of List(Of Munkaidok))
 
-        Select Case User.role
-            Case "Admin"
-                For index = 0 To fhszLista.Count - 1
-                    Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
-                    felhaszMunkaido.Add(ujmunkaido)
-                Next
-            Case "Vezeto"
-                For index = 0 To fhszLista.Count - 1
-                    Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
-                    felhaszMunkaido.Add(ujmunkaido)
-                Next
-            Case "Beosztott"
+        If User.Role = "Beosztott" Then
+            Dim ujmunkaido As New List(Of Munkaidok)
+            mkidoMan.GetMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
+            felhaszMunkaido.Add(ujmunkaido)
+        Else
+            For index = 0 To fhszLista.Count - 1
                 Dim ujmunkaido As New List(Of Munkaidok)
-                mkidoMan.GetMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
+                mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                 felhaszMunkaido.Add(ujmunkaido)
-        End Select
+            Next
+        End If
 
         DgvUj.Columns.Add("Nev", "Név")
         DgvUj.Columns.Add("Email", "E-mail")
@@ -629,14 +617,11 @@ Public Class WtForm
 
     'Felhasználó munkaidejének lekérdezése
     Private Sub BtnMunkaidoleker_Click(sender As Object, e As EventArgs) Handles BtnMunkaidoleker.Click
-        Select Case User.role
-            Case "Admin"
-                GetUserWorkingHours(LtbFelhasznalok.SelectedValue)
-            Case "Vezeto"
-                GetUserWorkingHours(LtbFelhasznalok.SelectedValue)
-            Case "Beosztott"
-                GetUserWorkingHours(userEmail)
-        End Select
+        If User.Role = "Beosztott" Then
+            GetUserWorkingHours(userEmail)
+        Else
+            GetUserWorkingHours(LtbFelhasznalok.SelectedValue)
+        End If
     End Sub
 
     'Munkaidő összesítés gomb
@@ -645,15 +630,8 @@ Public Class WtForm
     End Sub
 
     'Teszt gomb, később törlésre kerül
-    Private Sub TstButton_Click(sender As Object, e As EventArgs) Handles TstButton.Click
-        Select Case User.role
-            Case "Admin"
-                SetDefaultWorkingHours(LtbFelhasznalok.SelectedValue)
-            Case "Vezeto"
-                SetDefaultWorkingHours(LtbFelhasznalok.SelectedValue)
-            Case "Beosztott"
-                SetDefaultWorkingHours(userEmail)
-        End Select
+    Private Sub BtnGeneralas_Click(sender As Object, e As EventArgs) Handles BtnGeneralas.Click
+        SetDefaultWorkingHours(LtbFelhasznalok.SelectedValue)
     End Sub
 
     'Törlés gomb működtetése
