@@ -267,9 +267,12 @@ Public Class WtForm
         Dim row As String()
         Dim dateResult As DateTime
         Dim evhonap = GetYearAndMonth()
+        Dim szabadsagdatum As New List(Of Date)
 
         mkiLista.Clear()
         mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        szabLista.Clear()
+        szabMan.GetSzabadsagok(szabLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         For Each felhasznalo In fhszLista
             If felhasznalo.Email = email Then
@@ -277,6 +280,10 @@ Public Class WtForm
                 felhaszid = IsInteger(felhasznalo.Id)
                 Exit For
             End If
+        Next
+
+        For Each item In szabLista
+            szabadsagdatum.Add(item.Datum)
         Next
 
         ClearDataGridView(DgvTabla)
@@ -309,40 +316,42 @@ Public Class WtForm
             End If
             datum = ev & ". " & honapStr & ". " & napStr
             If Date.TryParse(datum, dateResult) Then
-                Dim ismunkanap = IsHolidayOrWeekend(datum, unnepLista)
+                Dim ismunkanap = IsHolidayOrWeekend(dateResult, unnepLista)
                 If ismunkanap Then
-                    kido = 8
-                    bido = kido + munkaido
-                    If mkiLista.Count > 1 Then
-                        If Not mkiLista(datumindex).Datum = dateResult Then
-                            row = {
-                                    dateResult,
-                                    kido,
-                                    bido,
-                                    felhaszid
-                                 }
+                    If Not szabadsagdatum.Contains(dateResult) Then
+                        kido = 8
+                        bido = kido + munkaido
+                        If mkiLista.Count > 1 Then
+                            If Not mkiLista(datumindex).Datum = dateResult Then
+                                row = {
+                                        dateResult,
+                                        kido,
+                                        bido,
+                                        felhaszid
+                                     }
+                            Else
+                                dateResult = mkiLista(datumindex).Datum
+                                kido = mkiLista(datumindex).Kezdo_ido
+                                bido = mkiLista(datumindex).Befejezo_ido
+                                felhaszid = mkiLista(datumindex).FelhasznaloID
+                                row = {
+                                        dateResult,
+                                        kido,
+                                        bido,
+                                        felhaszid
+                                    }
+                                datumindex += 1
+                            End If
                         Else
-                            dateResult = mkiLista(datumindex).Datum
-                            kido = mkiLista(datumindex).Kezdo_ido
-                            bido = mkiLista(datumindex).Befejezo_ido
-                            felhaszid = mkiLista(datumindex).FelhasznaloID
                             row = {
                                     dateResult,
                                     kido,
                                     bido,
                                     felhaszid
                                 }
-                            datumindex += 1
                         End If
-                    Else
-                        row = {
-                                dateResult,
-                                kido,
-                                bido,
-                                felhaszid
-                            }
+                        DgvTabla.Rows.Add(row)
                     End If
-                    DgvTabla.Rows.Add(row)
                 End If
             End If
         Next

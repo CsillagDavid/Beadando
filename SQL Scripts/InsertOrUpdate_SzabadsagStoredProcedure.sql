@@ -27,6 +27,10 @@ AS
 		END
 		ELSE
 		BEGIN
+			DELETE FROM [dbo].[Munkaidok]
+			WHERE Datum = @Datum AND FelhasznaloID = @FelhasznaloID
+		END
+		BEGIN
 		   INSERT INTO [dbo].[Szabadsagok] (Datum, Tavollet, FelhasznaloID) 
 		   VALUES (@Datum, @Tavollet, @FelhasznaloID)
 		END
