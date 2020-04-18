@@ -20,7 +20,7 @@ Public Class WtForm
 
     'Egyéb változók
     Public Property User = New User()
-    Dim editedRows As List(Of Integer) = New List(Of Integer)
+    Dim editedRows As New List(Of Integer)
     Dim userEmail As String
 
     'Statikus változók
