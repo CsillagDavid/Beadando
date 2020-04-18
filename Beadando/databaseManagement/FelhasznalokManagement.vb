@@ -31,7 +31,7 @@ Public Class FelhasznalokManagement
     End Sub
 
     'Felhasználó törlése az adatbázisból paraméterek alapján
-    Public Sub DeleteFelhasznalok(nev As String, email As String, id As Integer)
+    Public Sub Delete(nev As String, email As String, id As Integer)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure

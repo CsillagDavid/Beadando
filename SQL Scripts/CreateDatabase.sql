@@ -106,7 +106,7 @@ GO
 CREATE TABLE [dbo].[Szabadsagok](
     [id]            INT          IDENTITY (1, 1) NOT NULL,
     [Datum]         DATE         NOT NULL,
-	[Tipus]			INT			NOT NULL,
+	[Tavollet]		NVARCHAR(255)			NOT NULL,
     [FelhasznaloID] INT          NOT NULL,
     PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [fk_szabadsagok_felhasznalok] FOREIGN KEY ([FelhasznaloID]) REFERENCES [dbo].[Felhasznalok] ([id])

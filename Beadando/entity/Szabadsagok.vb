@@ -12,13 +12,13 @@
         End Set
     End Property
 
-    Private valueTipus As Integer
-    Public Property Tipus() As Integer
+    Private valueTavollet As String
+    Public Property Tavollet() As String
         Get
-            Return valueTipus
+            Return valueTavollet
         End Get
-        Private Set(ByVal value As Integer)
-            valueTipus = value
+        Private Set(ByVal value As String)
+            valueTavollet = value
         End Set
     End Property
 
@@ -32,9 +32,9 @@
         End Set
     End Property
 
-    Public Sub New(datum As Date, tipus As Integer, felhasznaloId As Integer)
+    Public Sub New(datum As Date, tavollet As String, felhasznaloId As Integer)
         Me.Datum = datum
-        Me.Tipus = tipus
+        Me.Tavollet = tavollet
         Me.FelhasznaloID = felhasznaloId
     End Sub
 

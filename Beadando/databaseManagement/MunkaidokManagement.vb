@@ -21,10 +21,10 @@ Public Class MunkaidokManagement
         sqlConnection.SqlConnect()
         For index = 0 To rowCount - 2
             cmd.Parameters.Clear()
-            cmd.Parameters.AddWithValue("@Datum", IsDate(tabla.Item("datum", index).Value))
-            cmd.Parameters.AddWithValue("@Kezdo_ido", IsDecimal(tabla.Item("kezdo_ido", index).Value))
-            cmd.Parameters.AddWithValue("@Befejezo_ido", IsDecimal(tabla.Item("befejezo_ido", index).Value))
-            cmd.Parameters.AddWithValue("@FelhasznaloID", IsInteger(tabla.Item("felhasznaloid", index).Value))
+            cmd.Parameters.AddWithValue("@Datum", IsDate(tabla.Item("Datum", index).Value))
+            cmd.Parameters.AddWithValue("@Kezdo_ido", IsDecimal(tabla.Item("Kezdo_ido", index).Value))
+            cmd.Parameters.AddWithValue("@Befejezo_ido", IsDecimal(tabla.Item("Befejezo_ido", index).Value))
+            cmd.Parameters.AddWithValue("@FelhasznaloID", IsInteger(tabla.Item("FelhasznaloID", index).Value))
             cmd.ExecuteNonQuery()
         Next
         sqlConnection.SqlClose()
@@ -40,6 +40,18 @@ Public Class MunkaidokManagement
         cmd.Parameters.AddWithValue("@Kezdo_ido", IsDecimal(Cells.Item("Kezdo_ido").Value))
         cmd.Parameters.AddWithValue("@Befejezo_ido", IsDecimal(Cells.Item("Befejezo_ido").Value))
         cmd.Parameters.AddWithValue("@FelhasznaloID", IsInteger(Cells.Item("FelhasznaloID").Value))
+        cmd.ExecuteNonQuery()
+        sqlConnection.SqlClose()
+    End Sub
+
+    'Munkaidő törlése az adatbázisból
+    Public Sub Delete(datum As Date, felhasznaloid As Integer)
+        sqlConnection.SqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "DeleteMunkaidok"
+        cmd.Parameters.AddWithValue("@Datum", datum)
+        cmd.Parameters.AddWithValue("@FelhasznaloID", felhasznaloid)
         cmd.ExecuteNonQuery()
         sqlConnection.SqlClose()
     End Sub

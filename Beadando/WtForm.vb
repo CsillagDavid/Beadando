@@ -32,6 +32,7 @@ Public Class WtForm
     Dim fhszLista As New List(Of Felhasznalok)
     Dim mkiLista As New List(Of Munkaidok)
     Dim unnepLista As New List(Of Unnepnapok)
+    Dim szabLista As New List(Of Szabadsagok)
 
 #End Region
 
@@ -138,6 +139,8 @@ Public Class WtForm
             ret = 2
         ElseIf tabla.Columns(0).Name = "Nev" And tabla.Columns(1).Name = "Jogkor" Then
             ret = 3
+        ElseIf tabla.Columns(0).Name = "Datum" And tabla.Columns(1).Name = "Tavollet" Then
+            ret = 4
         Else
             ret = -1
         End If
@@ -184,6 +187,26 @@ Public Class WtForm
         table.Rows.Clear()
     End Sub
 
+    'Felhasználó ID beszúrása az új sorokba
+    Public Sub SaveSzabadsag()
+        Dim email As String
+        If User.Role = "Beosztott" Then
+            email = userEmail
+        Else
+            email = LtbFelhasznalok.SelectedValue
+        End If
+        Dim felhaszid As Integer
+        For Each item In fhszLista
+            If item.Email = email Then
+                felhaszid = item.Id
+                Exit For
+            End If
+        Next
+        For index = 0 To DgvTabla.Rows.Count - 2
+            DgvTabla.Item("FelhasznaloID", index).Value = felhaszid
+        Next
+    End Sub
+
 #End Region
 
 #Region "Funkciót ellátó függvények"
@@ -200,11 +223,13 @@ Public Class WtForm
         DgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
         DgvTabla.Columns.Add("Befejezo_ido", "Befejezés")
         DgvTabla.Columns.Add("Napi_ido", "Napi munkaidő")
+        DgvTabla.Columns.Add("FelhasznaloID", "Felhasználó ID")
 
         DgvTabla.Columns("Datum").ValueType = GetType(Date)
         DgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
         DgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
         DgvTabla.Columns("Napi_ido").ValueType = GetType(Decimal)
+        DgvTabla.Columns("FelhasznaloID").ValueType = GetType(Integer)
 
         TxtMunkaidoOsszes.Text = 0
 
@@ -213,11 +238,14 @@ Public Class WtForm
             DgvTabla.Item("Datum", index).Value = mkiLista(index).Datum
             DgvTabla.Item("Kezdo_ido", index).Value = mkiLista(index).Kezdo_ido
             DgvTabla.Item("Befejezo_ido", index).Value = mkiLista(index).Befejezo_ido
+            DgvTabla.Item("FelhasznaloID", index).Value = mkiLista(index).FelhasznaloID
             GetWorkTimeofDay(DgvTabla, index)
         Next
 
         DgvTabla.Columns("Datum").ReadOnly = True
         DgvTabla.Columns("Napi_ido").ReadOnly = True
+        DgvTabla.Columns("FelhasznaloID").ReadOnly = True
+        DgvTabla.Columns("FelhasznaloID").Visible = False
 
         BtnMentes.Enabled = True
         BtnTorles.Enabled = False
@@ -526,6 +554,41 @@ Public Class WtForm
 
     End Sub
 
+    'Szabadságok bekérése az adatbázisból, táblázat készítése
+    Private Sub GetUserHoliday(email As String)
+
+        ClearDataGridView(DgvTabla)
+        Dim evhonap = GetYearAndMonth()
+
+        szabLista.Clear()
+        szabMan.GetSzabadsagok(szabLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+
+        DgvTabla.Columns.Add("Datum", "Dátum")
+        DgvTabla.Columns.Add("Tavollet", "Távollét")
+        DgvTabla.Columns.Add("FelhasznaloID", "Felhasználó ID")
+
+        DgvTabla.Columns("Datum").ValueType = GetType(Date)
+        DgvTabla.Columns("Tavollet").ValueType = GetType(String)
+        DgvTabla.Columns("FelhasznaloID").ValueType = GetType(Integer)
+
+        For index = 0 To szabLista.Count - 1
+            DgvTabla.Rows.Add()
+            DgvTabla.Item("Datum", index).Value = szabLista(index).Datum
+            DgvTabla.Item("Tavollet", index).Value = szabLista(index).Tavollet
+            DgvTabla.Item("FelhasznaloID", index).Value = szabLista(index).FelhasznaloID
+        Next
+
+        DgvTabla.Columns("FelhasznaloID").ReadOnly = True
+        DgvTabla.Columns("FelhasznaloID").Visible = False
+
+        BtnMentes.Enabled = True
+        BtnTorles.Enabled = True
+        TxtMunkaidoOsszes.Visible = False
+        LblOra.Visible = False
+        LblMunkaidoOsszes.Visible = False
+
+    End Sub
+
     'Jogkorok bekérése módosításhoz, Admin jogként
     Private Sub GetJogkorok()
 
@@ -612,6 +675,9 @@ Public Class WtForm
             editedRows.ForEach(Sub(i) jgkkMan.UpdateJogkorok(DgvTabla.Rows.Item(i).Cells))
             editedRows.Clear()
             GetJogkorok()
+        ElseIf CheckTable(DgvTabla) = 4 Then
+            editedRows.ForEach(Sub(i) szabMan.InsertOrUpdate(DgvTabla.Rows.Item(i).Cells))
+            editedRows.Clear()
         End If
     End Sub
 
@@ -644,7 +710,7 @@ Public Class WtForm
                 id = DgvTabla.SelectedRows(0).Cells("id").Value
                 nev = DgvTabla.SelectedRows(0).Cells("nev").Value
                 DgvTabla.Rows.Remove(DgvTabla.SelectedRows(0))
-                fhszMan.DeleteFelhasznalok(nev, email, id)
+                fhszMan.Delete(nev, email, id)
                 fhszLista.Clear()
                 fhszMan.GetFelhasznalok(fhszLista)
                 GetFszhLtb()
@@ -663,6 +729,16 @@ Public Class WtForm
             Else
                 MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
             End If
+        ElseIf CheckTable(DgvTabla) = 4 Then
+            If DgvTabla.SelectedRows.Count > 0 Then
+                Dim datum = DgvTabla.SelectedRows(0).Cells("Datum").Value
+                Dim felhasznaloid = DgvTabla.SelectedRows(0).Cells("FelhasznaloID").Value
+                DgvTabla.Rows.Remove(DgvTabla.SelectedRows(0))
+                szabMan.Delete(datum, felhasznaloid)
+            Else
+                MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
+            End If
+
         End If
     End Sub
 
@@ -676,6 +752,14 @@ Public Class WtForm
         GetJogkorok()
     End Sub
 
+    'Szabadságok lekérdezése és szerkesztése
+    Private Sub BtnSzabadsagleker_Click(sender As Object, e As EventArgs) Handles BtnSzabadsagleker.Click
+        If User.Role = "Beosztott" Then
+            GetUserHoliday(userEmail)
+        Else
+            GetUserHoliday(LtbFelhasznalok.SelectedValue)
+        End If
+    End Sub
 #End Region
 
 #Region "DataGridView automatikus függvényei"
@@ -702,6 +786,8 @@ Public Class WtForm
                     For index = 0 To rowCount - 2
                         GetWorkTimeofDay(DgvTabla, index)
                     Next
+                ElseIf CheckTable(DgvTabla) = 4 Then
+                    SaveSzabadsag()
                 End If
             End If
             DgvTabla.Rows.Item(e.RowIndex).Tag = ""
@@ -754,6 +840,8 @@ Public Class WtForm
             e.ThrowException = False
         End If
     End Sub
+
+
 
 #End Region
 

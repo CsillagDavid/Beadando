@@ -44,6 +44,7 @@ Partial Class WtForm
         Me.LblJogkor = New System.Windows.Forms.Label()
         Me.BtnJogkor = New System.Windows.Forms.Button()
         Me.LblGeneralas = New System.Windows.Forms.Label()
+        Me.BtnSzabadsagleker = New System.Windows.Forms.Button()
         CType(Me.DgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -258,12 +259,22 @@ Partial Class WtForm
         Me.LblGeneralas.Text = "Alapértelmezett munkaidő:"
         Me.LblGeneralas.Visible = False
         '
+        'BtnSzabadsagleker
+        '
+        Me.BtnSzabadsagleker.Location = New System.Drawing.Point(9, 134)
+        Me.BtnSzabadsagleker.Name = "BtnSzabadsagleker"
+        Me.BtnSzabadsagleker.Size = New System.Drawing.Size(153, 22)
+        Me.BtnSzabadsagleker.TabIndex = 25
+        Me.BtnSzabadsagleker.Text = "Szabadságok lekérdezése"
+        Me.BtnSzabadsagleker.UseVisualStyleBackColor = True
+        '
         'WtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(959, 578)
+        Me.Controls.Add(Me.BtnSzabadsagleker)
         Me.Controls.Add(Me.LblGeneralas)
         Me.Controls.Add(Me.BtnJogkor)
         Me.Controls.Add(Me.LblJogkor)
@@ -317,4 +328,5 @@ Partial Class WtForm
     Friend WithEvents LblJogkor As Label
     Friend WithEvents BtnJogkor As Button
     Friend WithEvents LblGeneralas As Label
+    Friend WithEvents BtnSzabadsagleker As Button
 End Class
