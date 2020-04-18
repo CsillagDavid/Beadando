@@ -12,27 +12,6 @@ Public Class UnnepnapokManagement
         cmd = sqlConnection.cmd
     End Sub
 
-    'Az ünnepnapok elemeinek lekérdezése az adatbázisból, majd ezeket egy ünnepnapok típusú listában tárolása
-    Public Sub GetUnnepnapok(lista As List(Of Unnepnapok))
-        sqlConnection.SqlConnect()
-        Dim sdr As SqlDataReader
-        Dim sda As New SqlDataAdapter
-        cmd.CommandType = CommandType.Text
-        Dim sqlquery As String = "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
-        cmd.CommandText = sqlquery
-        cmd.Connection = con
-        sda.SelectCommand = cmd
-        sdr = cmd.ExecuteReader()
-        While sdr.Read
-            Dim unnepnap = New Unnepnapok(
-                sdr.Item("Datum"),
-                sdr.Item("Tipus")
-                )
-            lista.Add(unnepnap)
-        End While
-        sqlConnection.SqlClose()
-    End Sub
-
     'Új ünnepnap felvétele az adatbázisba, vagy egy meglévő módosítása
     Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
@@ -53,6 +32,27 @@ Public Class UnnepnapokManagement
         cmd.CommandText = "DeleteUnnepnapok"
         cmd.Parameters.AddWithValue("@Datum", datum)
         cmd.ExecuteNonQuery()
+        sqlConnection.SqlClose()
+    End Sub
+
+    'Az ünnepnapok elemeinek lekérdezése az adatbázisból, majd ezeket egy ünnepnapok típusú listában tárolása
+    Public Sub GetUnnepnapok(lista As List(Of Unnepnapok))
+        sqlConnection.SqlConnect()
+        Dim sdr As SqlDataReader
+        Dim sda As New SqlDataAdapter
+        cmd.CommandType = CommandType.Text
+        Dim sqlquery As String = "SELECT U.Datum, U.Tipus FROM Unnepnapok U"
+        cmd.CommandText = sqlquery
+        cmd.Connection = con
+        sda.SelectCommand = cmd
+        sdr = cmd.ExecuteReader()
+        While sdr.Read
+            Dim unnepnap = New Unnepnapok(
+                sdr.Item("Datum"),
+                sdr.Item("Tipus")
+                )
+            lista.Add(unnepnap)
+        End While
         sqlConnection.SqlClose()
     End Sub
 

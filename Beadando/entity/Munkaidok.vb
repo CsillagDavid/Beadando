@@ -42,7 +42,7 @@
         End Set
     End Property
 
-    Public Sub New(datum As String, kezdo_ido As Decimal, befejezo_ido As Decimal, felhasznaloID As Integer)
+    Public Sub New(datum As Date, kezdo_ido As Decimal, befejezo_ido As Decimal, felhasznaloID As Integer)
         Me.Datum = datum
         Me.Kezdo_ido = kezdo_ido
         Me.Befejezo_ido = befejezo_ido

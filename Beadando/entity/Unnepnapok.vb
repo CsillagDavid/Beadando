@@ -22,7 +22,7 @@
         End Set
     End Property
 
-    Public Sub New(datum As String, tipus As Integer)
+    Public Sub New(datum As Date, tipus As Integer)
         Me.Datum = datum
         Me.Tipus = tipus
     End Sub

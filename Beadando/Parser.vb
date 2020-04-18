@@ -10,8 +10,6 @@
         End If
     End Function
 
-
-
     'Ellenőrzi, hogy egész számot adtunk-e meg, majd visszaadja az eredményt
     Public Function IsInteger(parameter As Object)
         Dim result As Integer
