@@ -38,7 +38,7 @@ Public Class SzabadsagokManagement
     End Sub
 
     'A szabadságok lekérése az adatbázisból és ebből lista készítése
-    Public Sub GetSzabadsagok(lista As List(Of Szabadsagok), Email As String, KezdoDatum As String, BefejezoDatum As String)
+    Public Sub GetSzabadsagok(lista As List(Of Szabadsagok), email As String, ev As String, honap As String)
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
         sqlConnection.SqlConnect()
@@ -47,8 +47,8 @@ Public Class SzabadsagokManagement
         Dim sqlquery As String = "SELECT Sz.Datum, Sz.Tavollet, Sz.FelhasznaloID FROM Szabadsagok Sz                   
                                 INNER JOIN Felhasznalok F
                                 ON Sz.FelhasznaloID = F.id
-                                WHERE F.Email = '" & Email & "' AND Sz.Datum >= '" & KezdoDatum & ". " & BefejezoDatum & ". 01' 
-                                AND Sz.Datum < '" & KezdoDatum & ". " & (BefejezoDatum + 1) & ". 01'"
+                                WHERE F.Email = '" & email & "' AND Sz.Datum >= '" & ev & ". " & honap & ". 01' 
+                                AND Sz.Datum < '" & ev & ". " & (honap + 1) & ". 01'"
         cmd.CommandText = sqlquery
         sda.SelectCommand = cmd
         sdr = cmd.ExecuteReader()
