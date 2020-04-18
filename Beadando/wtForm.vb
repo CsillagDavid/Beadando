@@ -206,7 +206,7 @@ Public Class WtForm
         ClearDataGridView(DgvTabla)
         Dim evhonap = GetYearAndMonth()
         mkiLista.Clear()
-        mkidoMan.getMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         DgvTabla.Columns.Add("Datum", "Dátum")
         DgvTabla.Columns.Add("Kezdo_ido", "Kezdés")
@@ -259,7 +259,7 @@ Public Class WtForm
         Dim evhonap = GetYearAndMonth()
 
         mkiLista.Clear()
-        mkidoMan.getMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        mkidoMan.GetMunkaidok(mkiLista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
 
         For Each felhasznalo In fhszLista
             If felhasznalo.Email = email Then
@@ -418,18 +418,18 @@ Public Class WtForm
             Case "Admin"
                 For index = 0 To fhszLista.Count - 1
                     Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
             Case "Vezeto"
                 For index = 0 To fhszLista.Count - 1
                     Dim ujmunkaido As New List(Of Munkaidok)
-                    mkidoMan.getMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
+                    mkidoMan.GetMunkaidok(ujmunkaido, fhszLista(index).Email, evhonap.item(itemEv), evhonap.item(itemHonap))
                     felhaszMunkaido.Add(ujmunkaido)
                 Next
             Case "Beosztott"
                 Dim ujmunkaido As New List(Of Munkaidok)
-                mkidoMan.getMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
+                mkidoMan.GetMunkaidok(ujmunkaido, userEmail, evhonap.item(itemEv), evhonap.item(itemHonap))
                 felhaszMunkaido.Add(ujmunkaido)
         End Select
 
@@ -557,7 +557,7 @@ Public Class WtForm
         ClearDataGridView(DgvTabla)
 
         Dim jogkorok As New List(Of Jogkorok)
-        jgkkMan.getJogkorok(jogkorok)
+        jgkkMan.GetJogkorok(jogkorok)
 
         DgvTabla.Columns.Add("Nev", "Név")
         DgvTabla.Columns.Add("Jogkor", "Jogkör")
