@@ -207,6 +207,14 @@ Public Class WtForm
         Next
     End Sub
 
+    'Szabadságok számának megállapítása
+    Public Function GetSzabadsagCount(email As String)
+        Dim lista As New List(Of Szabadsagok)
+        Dim evhonap = GetYearAndMonth()
+        szabMan.GetSzabadsagok(lista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+        Return lista.Count
+    End Function
+
 #End Region
 
 #Region "Funkciót ellátó függvények"
@@ -530,15 +538,9 @@ Public Class WtForm
         rowCount = tabla.Rows.Count
 
         For index = 0 To rowCount - 1
-
-            Dim lista As New List(Of Szabadsagok)
-            Dim evhonap = GetYearAndMonth()
-
             Dim nev = tabla.Item("Nev", index).Value
             Dim email = tabla.Item("email", index).Value
-            szabMan.GetSzabadsagok(lista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
-            Dim munkanap = GetWeekdaysNumber() - lista.Count
-
+            Dim munkanap = GetWeekdaysNumber() - GetSzabadsagCount(email)
             Dim diffworkhours = GetDifferenceWorkingHours(munkanap, IsInteger(tabla.Item("napi_ido", index).Value), IsInteger(tabla.Item("munkaido", index).Value), IsDate(tabla.Item("datum", index).Value))
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
