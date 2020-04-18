@@ -513,7 +513,6 @@ Public Class WtForm
         Dim row As String()
         Dim nevLista As New List(Of String)
         Dim rowCount As Integer
-        Dim munkanap = GetWeekdaysNumber()
         Dim tabla = GetSummaryTable()
 
         DgvTabla.Columns.Add("Nev", "Név")
@@ -532,8 +531,14 @@ Public Class WtForm
 
         For index = 0 To rowCount - 1
 
+            Dim lista As New List(Of Szabadsagok)
+            Dim evhonap = GetYearAndMonth()
+
             Dim nev = tabla.Item("Nev", index).Value
             Dim email = tabla.Item("email", index).Value
+            szabMan.GetSzabadsagok(lista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
+            Dim munkanap = GetWeekdaysNumber() - lista.Count
+
             Dim diffworkhours = GetDifferenceWorkingHours(munkanap, IsInteger(tabla.Item("napi_ido", index).Value), IsInteger(tabla.Item("munkaido", index).Value), IsDate(tabla.Item("datum", index).Value))
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
