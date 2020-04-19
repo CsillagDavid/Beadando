@@ -265,6 +265,7 @@ Public Class WtForm
             DgvTabla.AllowUserToAddRows = False
         Else
             DgvTabla.AllowUserToAddRows = True
+            DgvTabla.Item("Datum", DgvTabla.Rows.Count - 1).ReadOnly = False
         End If
 
     End Sub
