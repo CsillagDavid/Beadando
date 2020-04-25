@@ -22,8 +22,8 @@ Public Class MunkaidokManagement
         For index = 0 To rowCount - 2
             cmd.Parameters.Clear()
             cmd.Parameters.AddWithValue("@Datum", IsDate(tabla.Item("Datum", index).Value))
-            cmd.Parameters.AddWithValue("@Kezdo_ido", IsDecimal(tabla.Item("Kezdo_ido", index).Value))
-            cmd.Parameters.AddWithValue("@Befejezo_ido", IsDecimal(tabla.Item("Befejezo_ido", index).Value))
+            cmd.Parameters.AddWithValue("@Kezdo_ido", IsDate(tabla.Item("Kezdo_ido", index).Value))
+            cmd.Parameters.AddWithValue("@Befejezo_ido", IsDate(tabla.Item("Befejezo_ido", index).Value))
             cmd.Parameters.AddWithValue("@FelhasznaloID", IsInteger(tabla.Item("FelhasznaloID", index).Value))
             cmd.ExecuteNonQuery()
         Next
@@ -37,8 +37,8 @@ Public Class MunkaidokManagement
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateMunkaidok"
         cmd.Parameters.AddWithValue("@Datum", IsDate(Cells.Item("Datum").Value))
-        cmd.Parameters.AddWithValue("@Kezdo_ido", IsDecimal(Cells.Item("Kezdo_ido").Value))
-        cmd.Parameters.AddWithValue("@Befejezo_ido", IsDecimal(Cells.Item("Befejezo_ido").Value))
+        cmd.Parameters.AddWithValue("@Kezdo_ido", IsDate(Cells.Item("Kezdo_ido").Value))
+        cmd.Parameters.AddWithValue("@Befejezo_ido", IsDate(Cells.Item("Befejezo_ido").Value))
         cmd.Parameters.AddWithValue("@FelhasznaloID", IsInteger(Cells.Item("FelhasznaloID").Value))
         cmd.ExecuteNonQuery()
         sqlConnection.SqlClose()

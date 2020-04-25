@@ -12,22 +12,22 @@
         End Set
     End Property
 
-    Private valueKezdo_ido As Decimal
-    Public Property Kezdo_ido() As Decimal
+    Private valueKezdo_ido As DateTime
+    Public Property Kezdo_ido() As DateTime
         Get
             Return valueKezdo_ido
         End Get
-        Private Set(ByVal value As Decimal)
+        Private Set(ByVal value As DateTime)
             valueKezdo_ido = value
         End Set
     End Property
 
-    Private valueBefejezo_ido As Decimal
-    Public Property Befejezo_ido() As Decimal
+    Private valueBefejezo_ido As DateTime
+    Public Property Befejezo_ido() As DateTime
         Get
             Return valueBefejezo_ido
         End Get
-        Private Set(ByVal value As Decimal)
+        Private Set(ByVal value As DateTime)
             valueBefejezo_ido = value
         End Set
     End Property
@@ -42,7 +42,7 @@
         End Set
     End Property
 
-    Public Sub New(datum As Date, kezdo_ido As Decimal, befejezo_ido As Decimal, felhasznaloID As Integer)
+    Public Sub New(datum As Date, kezdo_ido As DateTime, befejezo_ido As DateTime, felhasznaloID As Integer)
         Me.Datum = datum
         Me.Kezdo_ido = kezdo_ido
         Me.Befejezo_ido = befejezo_ido
