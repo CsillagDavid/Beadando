@@ -875,28 +875,32 @@ Public Class WtForm
 
     'Error függvény, még nincs kifejtve!
     Private Sub DgvTabla_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvTabla.DataError
-        MessageBox.Show("Error:  " & e.Context.ToString())
-        If (e.Context = DataGridViewDataErrorContexts.Commit) Then
-            MessageBox.Show("Commit error")
-        End If
-        If (e.Context = DataGridViewDataErrorContexts.CurrentCellChange) Then
-            MessageBox.Show("Cell change")
-        End If
-        If (e.Context = DataGridViewDataErrorContexts.Parsing) Then
-            MessageBox.Show("parsing error")
-        End If
-        If (e.Context = DataGridViewDataErrorContexts.LeaveControl) Then
-            MessageBox.Show("leave control error")
-        End If
-
-        If (TypeOf (e.Exception) Is ConstraintException) Then
-            Dim view As DataGridView = CType(sender, DataGridView)
-            view.Rows(e.RowIndex).ErrorText = "an error"
-            view.Rows(e.RowIndex).Cells(e.ColumnIndex) _
-                .ErrorText = "an error"
-            MsgBox("error")
-            e.ThrowException = False
-        End If
+        Select Case e.Context
+            Case DataGridViewDataErrorContexts.Commit
+                MessageBox.Show("Commit error")
+            Case DataGridViewDataErrorContexts.CurrentCellChange
+                MessageBox.Show("Cell change")
+            Case DataGridViewDataErrorContexts.Parsing
+                MessageBox.Show("Parsing error")
+            Case DataGridViewDataErrorContexts.LeaveControl
+                MessageBox.Show("Leave control error")
+            Case DataGridViewDataErrorContexts.Formatting
+                MessageBox.Show("Format error")
+            Case DataGridViewDataErrorContexts.Display
+                MessageBox.Show("Display error")
+            Case 4864
+                MessageBox.Show("Hibás cella formátum!")
+            Case Else
+                MessageBox.Show("Error:  " & e.Context.ToString())
+        End Select
+        'If (TypeOf (e.Exception) Is ConstraintException) Then
+        '    Dim view As DataGridView = CType(sender, DataGridView)
+        '    view.Rows(e.RowIndex).ErrorText = "an error"
+        '    view.Rows(e.RowIndex).Cells(e.ColumnIndex) _
+        '        .ErrorText = "an error"
+        '    MsgBox("error")
+        '    e.ThrowException = False
+        'End If
     End Sub
 
 #End Region
