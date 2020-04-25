@@ -112,13 +112,22 @@ Public Class WtForm
     'A naponként ledolgozott órák kiszámolása a táblázatba, valamint a textbox mezőbe az adott havi összesítés megjelenítése
     Private Sub GetWorkTimeofDay(tabla As DataGridView, index As Integer)
         Try
-            Dim kezdo, befejezo, mkoSum As Decimal
+            Dim kezdo, befejezo As DateTime
+            Dim mkoSum As Decimal
+            Dim asa = kezdo.GetDateTimeFormats()
+            Dim ora, perc As Integer
             tabla.Columns("Napi_ido").ReadOnly = False
-            befejezo = IsDecimal(tabla.Item("Befejezo_ido", index).Value)
-            kezdo = IsDecimal(tabla.Item("Kezdo_ido", index).Value)
-            mkoSum = IsDecimal(TxtMunkaidoOsszes.Text)
-            tabla.Item("Napi_ido", index).Value = befejezo - kezdo
-            mkoSum += (befejezo - kezdo)
+            befejezo = tabla.Item("Befejezo_ido", index).Value
+            kezdo = tabla.Item("Kezdo_ido", index).Value
+            mkoSum = TxtMunkaidoOsszes.Text
+            ora = befejezo.Hour - kezdo.Hour
+            perc = befejezo.Minute - kezdo.Minute
+            If perc < 0 Then
+                ora -= 1
+                perc *= (-1)
+            End If
+            tabla.Item("Napi_ido", index).Value = IsDate(ora & ":" & perc)
+            mkoSum += ora + IsDecimal(0 & "," & perc)
             TxtMunkaidoOsszes.Visible = True
             LblMunkaidoOsszes.Visible = True
             TxtMunkaidoOsszes.Text = mkoSum
@@ -149,14 +158,22 @@ Public Class WtForm
     End Function
 
     'Egy felhasználó összes előírt órájának kiszámítása
-    Private Function GetDifferenceWorkingHours(munkanap As Integer, napiIdo As Integer, munkaIdo As Integer, aktDate As DateTime)
-        Dim lista As New Dictionary(Of String, Integer)
+    Private Function GetDifferenceWorkingHours(munkanap As Integer, napiIdo As DateTime, munkaIdo As Integer, aktDate As DateTime)
+        Dim lista As New Dictionary(Of String, Decimal)
+        Dim ora, perc As Integer
+        ora = napiIdo.Hour
+        perc = napiIdo.Minute
+        If perc < 0 Then
+            ora -= 1
+            perc *= (-1)
+        End If
+        Dim aktIdo = IsDecimal(ora & "," & perc)
         Dim evhonap = GetYearAndMonth()
         munkaIdo *= munkanap
         If aktDate.Year = evhonap.Item(itemEv) Then
             If aktDate.Month = evhonap.Item(itemHonap) Then
                 lista.Add(itemMunkaIdo, munkaIdo)
-                lista.Add(itemNapiIdo, napiIdo)
+                lista.Add(itemNapiIdo, aktIdo)
             End If
         End If
         Return lista
@@ -235,9 +252,12 @@ Public Class WtForm
         DgvTabla.Columns.Add("FelhasznaloID", "Felhasználó ID")
 
         DgvTabla.Columns("Datum").ValueType = GetType(Date)
-        DgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
-        DgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
-        DgvTabla.Columns("Napi_ido").ValueType = GetType(Decimal)
+        DgvTabla.Columns("Kezdo_ido").ValueType = GetType(DateTime)
+        DgvTabla.Columns("Kezdo_ido").DefaultCellStyle.Format = "HH:mm"
+        DgvTabla.Columns("Befejezo_ido").ValueType = GetType(DateTime)
+        DgvTabla.Columns("Befejezo_ido").DefaultCellStyle.Format = "HH:mm"
+        DgvTabla.Columns("Napi_ido").ValueType = GetType(DateTime)
+        DgvTabla.Columns("Napi_ido").DefaultCellStyle.Format = "HH:mm"
         DgvTabla.Columns("FelhasznaloID").ValueType = GetType(Integer)
 
         TxtMunkaidoOsszes.Text = 0
@@ -275,7 +295,7 @@ Public Class WtForm
 
         Dim datum, napStr, honapStr As String
         Dim napok, munkaido, felhaszid, ev, honap As Integer
-        Dim kido, bido As Decimal
+        Dim kido, bido As DateTime
         Dim row As String()
         Dim dateResult As DateTime
         Dim evhonap = GetYearAndMonth()
@@ -306,8 +326,8 @@ Public Class WtForm
         DgvTabla.Columns.Add("FelhasznaloID", "Felhasználó ID")
 
         DgvTabla.Columns("Datum").ValueType = GetType(Date)
-        DgvTabla.Columns("Kezdo_ido").ValueType = GetType(Decimal)
-        DgvTabla.Columns("Befejezo_ido").ValueType = GetType(Decimal)
+        DgvTabla.Columns("Kezdo_ido").ValueType = GetType(DateTime)
+        DgvTabla.Columns("Befejezo_ido").ValueType = GetType(DateTime)
         DgvTabla.Columns("FelhasznaloID").ValueType = GetType(Integer)
 
         ev = evhonap.Item(itemEv).ToString()
@@ -331,14 +351,15 @@ Public Class WtForm
                 Dim ismunkanap = IsHolidayOrWeekend(dateResult, unnepLista)
                 If ismunkanap Then
                     If Not szabadsagdatum.Contains(dateResult) Then
-                        kido = 8
-                        bido = kido + munkaido
+                        kido = dateResult.AddHours(8.0)
+                        bido = dateResult.AddHours(kido.Hour() + munkaido)
                         If mkiLista.Count > 1 Then
+                            'bido.Hour & ":" & kido.Minute,
                             If Not mkiLista(datumindex).Datum = dateResult Then
                                 row = {
                                         dateResult,
-                                        kido,
-                                        bido,
+                                        kido.ToString("MM/dd/yyyy HH:mm:ss tt"),
+                                        bido.ToString("MM/dd/yyyy HH:mm:ss tt"),
                                         felhaszid
                                      }
                             Else
@@ -357,8 +378,8 @@ Public Class WtForm
                         Else
                             row = {
                                     dateResult,
-                                    kido,
-                                    bido,
+                                    kido.ToString("MM/dd/yyyy HH:mm:ss tt"),
+                                    bido.ToString("MM/dd/yyyy HH:mm:ss tt"),
                                     felhaszid
                                 }
                         End If
@@ -548,7 +569,7 @@ Public Class WtForm
             Dim nev = tabla.Item("Nev", index).Value
             Dim email = tabla.Item("email", index).Value
             Dim munkanap = GetWeekdaysNumber() - GetSzabadsagCount(email)
-            Dim diffworkhours = GetDifferenceWorkingHours(munkanap, IsInteger(tabla.Item("napi_ido", index).Value), IsInteger(tabla.Item("munkaido", index).Value), IsDate(tabla.Item("datum", index).Value))
+            Dim diffworkhours = GetDifferenceWorkingHours(munkanap, tabla.Item("napi_ido", index).Value, IsInteger(tabla.Item("munkaido", index).Value), IsDate(tabla.Item("datum", index).Value))
             Dim napiIdo = diffworkhours.Item(itemNapiIdo)
             Dim munkaIdo = diffworkhours.Item(itemMunkaIdo)
             Dim nevIndex = nevLista.IndexOf(nev)
