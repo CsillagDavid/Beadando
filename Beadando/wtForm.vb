@@ -838,7 +838,14 @@ Public Class WtForm
 
     'Kijelentkezés gomb
     Private Sub BtnKijelentkez_Click(sender As Object, e As EventArgs) Handles BtnKijelentkez.Click
-        Login.ShowDialog()
+        Me.User = New User
+        fhszLista = New List(Of Felhasznalok)
+        mkiLista = New List(Of Munkaidok)
+        unnepLista = New List(Of Unnepnapok)
+        szabLista = New List(Of Szabadsagok)
+        Me.Visible = False
+        Me.WtForm_Load(sender, e)
+        Me.Visible = True
     End Sub
 
 #End Region
