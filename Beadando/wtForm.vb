@@ -839,7 +839,6 @@ Public Class WtForm
     'Kijelentkezés gomb
     Private Sub BtnKijelentkez_Click(sender As Object, e As EventArgs) Handles BtnKijelentkez.Click
         Login.ShowDialog()
-        Me.Close()
     End Sub
 
 #End Region
