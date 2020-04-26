@@ -56,6 +56,8 @@ Public Class WtForm
         Select Case User.Role
             Case "Admin"
                 GetFszhLtb()
+                LtbFelhasznalok.Enabled = True
+                BtnFelhasznalok.Enabled = True
                 LblUnnep.Visible = True
                 LblUnnep.Enabled = True
                 BtnUnnep.Visible = True
@@ -73,12 +75,38 @@ Public Class WtForm
                 SetDefaultWorkingHours(User.Email)
                 GetUserWorkingHours(User.Email)
                 userEmail = User.Email
+                LtbFelhasznalok.Enabled = True
+                BtnFelhasznalok.Enabled = True
+                LblUnnep.Visible = False
+                LblUnnep.Enabled = False
+                BtnUnnep.Visible = False
+                BtnUnnep.Enabled = False
+                LblJogkor.Visible = False
+                LblJogkor.Enabled = False
+                BtnJogkor.Visible = False
+                BtnJogkor.Enabled = False
+                LblGeneralas.Visible = False
+                LblGeneralas.Enabled = False
+                BtnGeneralas.Visible = False
+                BtnGeneralas.Enabled = False
             Case "Beosztott"
-                LtbFelhasznalok.Enabled = False
-                BtnFelhasznalok.Enabled = False
                 SetDefaultWorkingHours(User.Email)
                 GetUserWorkingHours(User.Email)
                 userEmail = User.Email
+                LtbFelhasznalok.Enabled = False
+                BtnFelhasznalok.Enabled = False
+                LblUnnep.Visible = False
+                LblUnnep.Enabled = False
+                BtnUnnep.Visible = False
+                BtnUnnep.Enabled = False
+                LblJogkor.Visible = False
+                LblJogkor.Enabled = False
+                BtnJogkor.Visible = False
+                BtnJogkor.Enabled = False
+                LblGeneralas.Visible = False
+                LblGeneralas.Enabled = False
+                BtnGeneralas.Visible = False
+                BtnGeneralas.Enabled = False
         End Select
     End Sub
 
@@ -305,12 +333,13 @@ Public Class WtForm
         DgvTabla.Sort(DgvTabla.Columns("Datum"), ListSortDirection.Ascending)
 
         BtnMentes.Enabled = True
-        BtnTorles.Enabled = False
 
         If User.Role = "Beosztott" Then
             DgvTabla.AllowUserToAddRows = False
+            BtnTorles.Enabled = False
         Else
             DgvTabla.AllowUserToAddRows = True
+            BtnTorles.Enabled = True
             DgvTabla.Item("Datum", DgvTabla.Rows.Count - 1).ReadOnly = False
         End If
 
@@ -813,7 +842,15 @@ Public Class WtForm
             Else
                 MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
             End If
-
+        ElseIf CheckTable(DgvTabla) = 0 Then
+            If DgvTabla.SelectedRows.Count > 0 Then
+                Dim datum = DgvTabla.SelectedRows(0).Cells("Datum").Value
+                Dim felhasznaloid = DgvTabla.SelectedRows(0).Cells("FelhasznaloID").Value
+                DgvTabla.Rows.Remove(DgvTabla.SelectedRows(0))
+                mkiMan.Delete(datum, felhasznaloid)
+            Else
+                MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
+            End If
         End If
     End Sub
 
