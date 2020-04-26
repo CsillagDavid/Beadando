@@ -11,6 +11,8 @@ Public Class Login
             WtForm.User = user
             Me.Close()
         End If
+        TxtFelhasznalonev.Text = ""
+        TxtJelszo.Text = ""
     End Sub
 
     'A kilépés gomb mûködtetése
