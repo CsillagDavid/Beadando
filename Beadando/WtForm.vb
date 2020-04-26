@@ -101,6 +101,25 @@ Public Class WtForm
         CmbHonap.SelectedIndex = (mh - 1)
     End Sub
 
+    'Az új, felvitt dátum ellenőrzése, hogy szerepel-e már az adatbázisban
+    Private Sub CheckDate(tabla As DataGridView)
+        Try
+            Dim ujDatum = tabla.Item("Datum", tabla.Rows.Count - 2).Value
+            For index = 0 To tabla.Rows.Count - 3
+                If ujDatum = tabla.Item("Datum", index).Value Then
+                    MsgBox("Ez a dátum már szerepel a rendszerben, válasszon másikat vagy módosítsa a már meglévő dátum jelenlétét!")
+                    tabla.Rows.RemoveAt(tabla.Rows.Count - 2)
+                    Exit For
+                Else
+                    tabla.Item("FelhasznaloID", tabla.Rows.Count - 2).Value = tabla.Item("FelhasznaloID", tabla.Rows.Count - 3).Value
+                End If
+            Next
+        Catch ex As Exception
+            Console.WriteLine("Checkdate hiba")
+        End Try
+
+    End Sub
+
     'A kiválasztott év és hónap lekérése a comboboxokból
     Private Function GetYearAndMonth()
         Dim lista As New Dictionary(Of String, Integer)
@@ -125,6 +144,7 @@ Public Class WtForm
             If perc < 0 Then
                 ora -= 1
                 perc *= (-1)
+                perc = (60 - perc)
             End If
             tabla.Item("Napi_ido", index).Value = IsDate(ora & ":" & perc)
             mkoSum += ora + IsDecimal(0 & "," & perc)
@@ -230,7 +250,13 @@ Public Class WtForm
         Dim lista As New List(Of Szabadsagok)
         Dim evhonap = GetYearAndMonth()
         szabMan.GetSzabadsagok(lista, email, evhonap.item(itemEv), evhonap.item(itemHonap))
-        Return lista.Count
+        Dim count = lista.Count
+        For Each item In lista
+            If Not IsHolidayOrWeekend(item.Datum, unnepLista) Then
+                count -= 1
+            End If
+        Next
+        Return count
     End Function
 
 #End Region
@@ -563,9 +589,9 @@ Public Class WtForm
         DgvTabla.Columns("Teljesora").ValueType = GetType(Decimal)
         DgvTabla.Columns("Kulonbseg").ValueType = GetType(Decimal)
 
-        rowCount = tabla.Rows.Count
+        rowCount = tabla.Rows.Count - 1
 
-        For index = 0 To rowCount - 1
+        For index = 0 To rowCount
             Dim nev = tabla.Item("Nev", index).Value
             Dim email = tabla.Item("email", index).Value
             Dim munkanap = GetWeekdaysNumber() - GetSzabadsagCount(email)
@@ -809,6 +835,13 @@ Public Class WtForm
             GetUserHoliday(LtbFelhasznalok.SelectedValue)
         End If
     End Sub
+
+    'Kijelentkezés gomb
+    Private Sub BtnKijelentkez_Click(sender As Object, e As EventArgs) Handles BtnKijelentkez.Click
+        Login.ShowDialog()
+        Me.Close()
+    End Sub
+
 #End Region
 
 #Region "DataGridView automatikus függvényei"
@@ -837,6 +870,7 @@ Public Class WtForm
                         If User.Role = "Beosztott" Then
                             rowCount = DgvTabla.Rows.Count - 1
                         Else
+                            CheckDate(DgvTabla)
                             rowCount = DgvTabla.Rows.Count - 2
                         End If
                         TxtMunkaidoOsszes.Text = 0
