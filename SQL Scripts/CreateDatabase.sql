@@ -82,8 +82,8 @@ GO
 CREATE TABLE [dbo].[Munkaidok] (
     [id]            INT          IDENTITY (1, 1) NOT NULL,
     [Datum]         DATE         NOT NULL,
-    [Kezdo_ido]     DECIMAL (18) NOT NULL,
-    [Befejezo_ido]  DECIMAL (18) NOT NULL,
+    [Kezdo_ido]     DATETIME	 NOT NULL,
+    [Befejezo_ido]  DATETIME	 NOT NULL,
     [FelhasznaloID] INT          NOT NULL,
     PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [fk_munkaidok_felhasznalok] FOREIGN KEY ([FelhasznaloID]) REFERENCES [dbo].[Felhasznalok] ([id])

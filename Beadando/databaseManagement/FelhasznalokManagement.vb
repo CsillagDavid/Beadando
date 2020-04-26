@@ -67,4 +67,35 @@ Public Class FelhasznalokManagement
         sqlConnection.SqlClose()
     End Sub
 
+    'Jelszócseréhez szükséges adatok betöltése az adatbázisból
+    Public Sub GetJelszo(email As String, jelszo As String)
+        sqlConnection.SqlConnect()
+        Dim sdr As SqlDataReader
+        Dim sda As New SqlDataAdapter
+        cmd.CommandType = CommandType.Text
+        Dim sqlquery As String = "SELECT F.Jelszo, F.Email FROM Felhasznalok F
+                                     WHERE F.Email = '" & email & "' AND F.Jelszo = '" & jelszo & "'"
+        cmd.CommandText = sqlquery
+        cmd.Connection = con
+        sda.SelectCommand = cmd
+        sdr = cmd.ExecuteReader()
+        While sdr.Read
+            email = sdr.Item("Email")
+            jelszo = sdr.Item("Jelszo")
+        End While
+        sqlConnection.SqlClose()
+    End Sub
+
+    'Új jelszó beszúrása
+    Public Sub UpdateJelszo(email As String, jelszo As String)
+        sqlConnection.SqlConnect()
+        cmd = con.CreateCommand()
+        cmd.CommandType = CommandType.StoredProcedure
+        cmd.CommandText = "UpdateJelszo"
+        cmd.Parameters.AddWithValue("@Email", email)
+        cmd.Parameters.AddWithValue("@Jelszo", jelszo)
+        cmd.ExecuteNonQuery()
+        sqlConnection.SqlClose()
+    End Sub
+
 End Class

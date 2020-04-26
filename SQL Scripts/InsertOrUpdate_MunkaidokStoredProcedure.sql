@@ -12,8 +12,8 @@ GO
 
 CREATE PROCEDURE [dbo].[InsertOrUpdateMunkaidok]
 	@Datum DATE, 
-	@Kezdo_Ido DECIMAL(18,0), 
-	@Befejezo_Ido DECIMAL(18,0), 
+	@Kezdo_Ido DATETIME, 
+	@Befejezo_Ido DATETIME, 
 	@FelhasznaloID INT
 AS
 	BEGIN TRAN

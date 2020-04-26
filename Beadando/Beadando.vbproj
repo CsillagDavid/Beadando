@@ -89,10 +89,16 @@
     <Compile Include="entity\Munkaidok.vb" />
     <Compile Include="entity\Szabadsagok.vb" />
     <Compile Include="entity\Unnepnapok.vb" />
-    <Compile Include="LoginForm.Designer.vb">
-      <DependentUpon>LoginForm.vb</DependentUpon>
+    <Compile Include="JelszoForm.Designer.vb">
+      <DependentUpon>JelszoForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="LoginForm.vb">
+    <Compile Include="JelszoForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BejelentkezesForm.Designer.vb">
+      <DependentUpon>BejelentkezesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="BejelentkezesForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Parser.vb" />
@@ -122,8 +128,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.vb</DependentUpon>
+    <EmbeddedResource Include="JelszoForm.resx">
+      <DependentUpon>JelszoForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BejelentkezesForm.resx">
+      <DependentUpon>BejelentkezesForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WtForm.resx">
       <DependentUpon>WtForm.vb</DependentUpon>

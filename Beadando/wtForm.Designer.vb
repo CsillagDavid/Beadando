@@ -45,6 +45,7 @@ Partial Class WtForm
         Me.BtnJogkor = New System.Windows.Forms.Button()
         Me.LblGeneralas = New System.Windows.Forms.Label()
         Me.BtnSzabadsagleker = New System.Windows.Forms.Button()
+        Me.BtnKijelentkez = New System.Windows.Forms.Button()
         CType(Me.DgvTabla, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvUj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -125,16 +126,16 @@ Partial Class WtForm
         '
         'TxtMunkaidoOsszes
         '
-        Me.TxtMunkaidoOsszes.Location = New System.Drawing.Point(887, 551)
+        Me.TxtMunkaidoOsszes.Location = New System.Drawing.Point(866, 551)
         Me.TxtMunkaidoOsszes.Name = "TxtMunkaidoOsszes"
         Me.TxtMunkaidoOsszes.ReadOnly = True
-        Me.TxtMunkaidoOsszes.Size = New System.Drawing.Size(36, 20)
+        Me.TxtMunkaidoOsszes.Size = New System.Drawing.Size(57, 20)
         Me.TxtMunkaidoOsszes.TabIndex = 10
         '
         'LblMunkaidoOsszes
         '
         Me.LblMunkaidoOsszes.AutoSize = True
-        Me.LblMunkaidoOsszes.Location = New System.Drawing.Point(788, 556)
+        Me.LblMunkaidoOsszes.Location = New System.Drawing.Point(767, 556)
         Me.LblMunkaidoOsszes.Name = "LblMunkaidoOsszes"
         Me.LblMunkaidoOsszes.Size = New System.Drawing.Size(93, 13)
         Me.LblMunkaidoOsszes.TabIndex = 11
@@ -178,7 +179,7 @@ Partial Class WtForm
         '
         Me.DgvUj.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvUj.Enabled = False
-        Me.DgvUj.Location = New System.Drawing.Point(9, 561)
+        Me.DgvUj.Location = New System.Drawing.Point(171, 561)
         Me.DgvUj.Name = "DgvUj"
         Me.DgvUj.Size = New System.Drawing.Size(10, 10)
         Me.DgvUj.TabIndex = 17
@@ -268,12 +269,22 @@ Partial Class WtForm
         Me.BtnSzabadsagleker.Text = "Szabadságok lekérdezése"
         Me.BtnSzabadsagleker.UseVisualStyleBackColor = True
         '
+        'BtnKijelentkez
+        '
+        Me.BtnKijelentkez.Location = New System.Drawing.Point(9, 551)
+        Me.BtnKijelentkez.Name = "BtnKijelentkez"
+        Me.BtnKijelentkez.Size = New System.Drawing.Size(156, 20)
+        Me.BtnKijelentkez.TabIndex = 26
+        Me.BtnKijelentkez.Text = "Kijelentkezés"
+        Me.BtnKijelentkez.UseVisualStyleBackColor = True
+        '
         'WtForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(959, 578)
+        Me.Controls.Add(Me.BtnKijelentkez)
         Me.Controls.Add(Me.BtnSzabadsagleker)
         Me.Controls.Add(Me.LblGeneralas)
         Me.Controls.Add(Me.BtnJogkor)
@@ -329,4 +340,5 @@ Partial Class WtForm
     Friend WithEvents BtnJogkor As Button
     Friend WithEvents LblGeneralas As Label
     Friend WithEvents BtnSzabadsagleker As Button
+    Friend WithEvents BtnKijelentkez As Button
 End Class
