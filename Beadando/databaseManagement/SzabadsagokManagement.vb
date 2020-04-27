@@ -13,14 +13,14 @@ Public Class SzabadsagokManagement
     End Sub
 
     'Szabadság frissítése vagy új felvétele cella megadásával
-    Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
+    Public Sub InsertOrUpdate(cella As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateSzabadsagok"
-        cmd.Parameters.AddWithValue("@Datum", IsDate(Cells.Item("Datum").Value))
-        cmd.Parameters.AddWithValue("@Tavollet", Cells.Item("Tavollet").Value)
-        cmd.Parameters.AddWithValue("@FelhasznaloID", IsInteger(Cells.Item("FelhasznaloID").Value))
+        cmd.Parameters.AddWithValue("@Datum", IsDate(cella.Item("Datum").Value))
+        cmd.Parameters.AddWithValue("@Tavollet", cella.Item("Tavollet").Value)
+        cmd.Parameters.AddWithValue("@FelhasznaloID", IsInteger(cella.Item("FelhasznaloID").Value))
         cmd.ExecuteNonQuery()
         sqlConnection.SqlClose()
     End Sub
@@ -38,7 +38,7 @@ Public Class SzabadsagokManagement
     End Sub
 
     'A szabadságok lekérése az adatbázisból és ebből lista készítése
-    Public Sub GetSzabadsagok(lista As List(Of Szabadsagok), email As String, ev As String, honap As String)
+    Public Sub GetSzabadsagok(szabadsagoklista As List(Of Szabadsagok), email As String, ev As String, honap As String)
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
         sqlConnection.SqlConnect()
@@ -57,7 +57,7 @@ Public Class SzabadsagokManagement
                 sdr.Item("Datum"),
                 sdr.Item("Tavollet"),
                 sdr.Item("FelhasznaloID"))
-            lista.Add(szabadsag)
+            szabadsagoklista.Add(szabadsag)
         End While
         sqlConnection.SqlClose()
     End Sub

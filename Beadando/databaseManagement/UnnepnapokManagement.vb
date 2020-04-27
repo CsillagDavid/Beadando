@@ -13,19 +13,19 @@ Public Class UnnepnapokManagement
     End Sub
 
     'Új ünnepnap felvétele az adatbázisba, vagy egy meglévő módosítása
-    Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
+    Public Sub InsertOrUpdate(cella As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateUnnepnapok"
-        cmd.Parameters.AddWithValue("@Datum", IsDate(Cells.Item("Datum").Value))
-        cmd.Parameters.AddWithValue("@Tipus", IsInteger(Cells.Item("Tipus").Value))
+        cmd.Parameters.AddWithValue("@Datum", IsDate(cella.Item("Datum").Value))
+        cmd.Parameters.AddWithValue("@Tipus", IsInteger(cella.Item("Tipus").Value))
         cmd.ExecuteNonQuery()
         sqlConnection.SqlClose()
     End Sub
 
     'Ünnepnapok törlésére szolgáló függvény
-    Public Sub DeleteUnnepnap(datum As DateTime)
+    Public Sub DeleteUnnepnap(datum As String)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
@@ -36,7 +36,7 @@ Public Class UnnepnapokManagement
     End Sub
 
     'Az ünnepnapok elemeinek lekérdezése az adatbázisból, majd ezeket egy ünnepnapok típusú listában tárolása
-    Public Sub GetUnnepnapok(lista As List(Of Unnepnapok))
+    Public Sub GetUnnepnapok(unnepnapoklista As List(Of Unnepnapok))
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
@@ -51,7 +51,7 @@ Public Class UnnepnapokManagement
                 sdr.Item("Datum"),
                 sdr.Item("Tipus")
                 )
-            lista.Add(unnepnap)
+            unnepnapoklista.Add(unnepnap)
         End While
         sqlConnection.SqlClose()
     End Sub

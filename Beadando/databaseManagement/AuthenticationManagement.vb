@@ -13,7 +13,7 @@ Public Class AuthenticationManagement
     End Sub
 
     'A bejelentkezésnél az email és a jelszó ellenőrzése és a bejelentkezés engedélyezése
-    Public Function Authenticate(UserName As String, Password As String) As User
+    Public Function Authenticate(felhasznalonev As String, jelszo As String) As User
         Dim user = New User()
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
@@ -21,7 +21,7 @@ Public Class AuthenticationManagement
         cmd.CommandText = "SELECT F.Nev, F.Email, J.Jogkor FROM Felhasznalok F 
                             INNER JOIN Jogkorok J 
                             ON J.FelhasznaloID = F.id 
-                            WHERE (F.Email = '" & UserName & "' AND F.Jelszo = '" + Password & "')"
+                            WHERE (F.Email = '" & felhasznalonev & "' AND F.Jelszo = '" + jelszo & "')"
         Dim reader As SqlDataReader
         reader = cmd.ExecuteReader()
         If reader.Read() Then

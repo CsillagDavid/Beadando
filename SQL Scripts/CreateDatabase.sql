@@ -128,8 +128,7 @@ GO
 INSERT INTO [dbo].[Felhasznalok] VALUES ('Rendszergazda','admin1234','admin@nyilvantartas.com','0')
 INSERT INTO [dbo].[Felhasznalok] VALUES ('Jung Tamás','Asd123','jungtamas@nyilvantartas.com','7')
 INSERT INTO [dbo].[Felhasznalok] VALUES ('Csillag Dávid','Asd456','csillagdavid@nyilvantartas.com','6')
-INSERT INTO [dbo].[Felhasznalok] VALUES ('Munkahelyi Vezetõ','1','a','8')
-INSERT INTO [dbo].[Felhasznalok] VALUES ('User Teszt','1','u','5')
+INSERT INTO [dbo].[Felhasznalok] VALUES ('Munkahelyi Vezetõ','Pw1','vezeto@nyilvantartas.com','8')
 
 --Jogkörök tábla feltöltése (Jogkorok beállítása)
 INSERT INTO [dbo].[Jogkorok] VALUES ('1','Admin')

@@ -4,6 +4,7 @@ Public Class SqlConn
 
     Public con As New SqlConnection
     Public cmd As New SqlCommand
+    ReadOnly connectionString = "Data Source=tcp:5.187.197.206,1433;Initial Catalog=Nyilvantartas;Persist Security Info=True;User ID=nyilvantartasdb;Password=Nyilvan1234"
 
     Public Sub New()
         ReadConnectionString()
@@ -44,7 +45,7 @@ Public Class SqlConn
     'A ConnectionString betöltése az App.config fájlból
     Private Sub ReadConnectionString()
         Try
-            con.ConnectionString = ConfigurationManager.ConnectionStrings("sqlConnection").ConnectionString
+            con.ConnectionString = connectionString
         Catch ex As Exception
             MsgBox("Az sql elérési út nem található!")
             Application.Exit()

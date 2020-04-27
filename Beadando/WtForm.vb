@@ -822,9 +822,8 @@ Public Class WtForm
                 MessageBox.Show("Jelölj ki egy sort, mielőtt törölni szeretnéd.")
             End If
         ElseIf CheckTable(DgvTabla) = 2 Then
-            Dim datum As DateTime
             If DgvTabla.SelectedRows.Count > 0 Then
-                datum = DgvTabla.SelectedRows(0).Cells("Datum").Value
+                Dim datum = DgvTabla.SelectedRows(0).Cells("Datum").Value
                 DgvTabla.Rows.Remove(DgvTabla.SelectedRows(0))
                 unnepMan.DeleteUnnepnap(datum)
                 unnepLista.Clear()

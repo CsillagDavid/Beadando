@@ -12,26 +12,26 @@ Public Class JogkorokManagement
     End Sub
 
     'Jogkörök frissítése az adatbázisban
-    Public Sub UpdateJogkorok(Cells As DataGridViewCellCollection)
+    Public Sub UpdateJogkorok(cella As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "UpdateJogkorok"
-        cmd.Parameters.AddWithValue("@FelhasznaloID", Cells.Item("FelhasznaloID").Value)
-        cmd.Parameters.AddWithValue("@Jogkor", Cells.Item("Jogkor").Value)
+        cmd.Parameters.AddWithValue("@FelhasznaloID", cella.Item("FelhasznaloID").Value)
+        cmd.Parameters.AddWithValue("@Jogkor", cella.Item("Jogkor").Value)
         cmd.ExecuteNonQuery()
         sqlConnection.SqlClose()
     End Sub
 
     'Új felhasználónak az alapértelmezett Beosztott jogkör beszúrása
-    Public Sub InsertJogkorok(tabla As DataGridView)
+    Public Sub InsertJogkorok(tablazat As DataGridView)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertJogkorok"
-        For index = 0 To tabla.Rows.Count - 2
+        For index = 0 To tablazat.Rows.Count - 2
             cmd.Parameters.Clear()
-            cmd.Parameters.AddWithValue("@FelhasznaloID", tabla.Item("id", index).Value)
+            cmd.Parameters.AddWithValue("@FelhasznaloID", tablazat.Item("id", index).Value)
             cmd.Parameters.AddWithValue("@Jogkor", "Beosztott")
             cmd.ExecuteNonQuery()
         Next
@@ -39,7 +39,7 @@ Public Class JogkorokManagement
     End Sub
 
     'A jogkörök lekérdezése az adatbázisból és ezek listában tárolása
-    Public Sub GetJogkorok(lista As List(Of Jogkorok))
+    Public Sub GetJogkorok(jogkoroklista As List(Of Jogkorok))
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
@@ -54,7 +54,7 @@ Public Class JogkorokManagement
                 sdr.Item("FelhasznaloID"),
                 sdr.Item("Jogkor")
                 )
-            lista.Add(jogkor)
+            jogkoroklista.Add(jogkor)
         End While
         sqlConnection.SqlClose()
     End Sub

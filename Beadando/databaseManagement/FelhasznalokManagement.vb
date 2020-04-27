@@ -13,19 +13,19 @@ Public Class FelhasznalokManagement
     End Sub
 
     'Felhasználó adatainak frissítése vagy új felhasználó beszúrása az adatbázisban
-    Public Sub InsertOrUpdate(Cells As DataGridViewCellCollection)
+    Public Sub InsertOrUpdate(cella As DataGridViewCellCollection)
         sqlConnection.SqlConnect()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.StoredProcedure
         cmd.CommandText = "InsertOrUpdateFelhasznalok"
-        cmd.Parameters.AddWithValue("@Nev", Cells.Item("Nev").Value.ToString())
-        If Cells.Item("Jelszo").Value = Nothing Then
+        cmd.Parameters.AddWithValue("@Nev", cella.Item("Nev").Value.ToString())
+        If cella.Item("Jelszo").Value = Nothing Then
             cmd.Parameters.AddWithValue("@Jelszo", "Password1")
         Else
-            cmd.Parameters.AddWithValue("@Jelszo", Cells.Item("Jelszo").Value.ToString())
+            cmd.Parameters.AddWithValue("@Jelszo", cella.Item("Jelszo").Value.ToString())
         End If
-        cmd.Parameters.AddWithValue("@Email", Cells.Item("Email").Value)
-        cmd.Parameters.AddWithValue("@Munkaido", IsInteger(Cells.Item("Munkaido").Value.ToString()))
+        cmd.Parameters.AddWithValue("@Email", cella.Item("Email").Value)
+        cmd.Parameters.AddWithValue("@Munkaido", IsInteger(cella.Item("Munkaido").Value.ToString()))
         cmd.ExecuteNonQuery()
         sqlConnection.SqlClose()
     End Sub
@@ -44,7 +44,7 @@ Public Class FelhasznalokManagement
     End Sub
 
     'Felhasználók lekérése az adatbázisból, tárolása
-    Public Sub GetFelhasznalok(lista As List(Of Felhasznalok))
+    Public Sub GetFelhasznalok(felhasznaloklista As List(Of Felhasznalok))
         sqlConnection.SqlConnect()
         Dim sdr As SqlDataReader
         Dim sda As New SqlDataAdapter
@@ -62,7 +62,7 @@ Public Class FelhasznalokManagement
                 sdr.Item("Jelszo"),
                 sdr.Item("Email"),
                 sdr.Item("Munkaido"))
-            lista.Add(felhasznalo)
+            felhasznaloklista.Add(felhasznalo)
         End While
         sqlConnection.SqlClose()
     End Sub
