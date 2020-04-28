@@ -135,7 +135,6 @@ INSERT INTO [dbo].[Jogkorok] VALUES ('1','Admin')
 INSERT INTO [dbo].[Jogkorok] VALUES ('2','Beosztott')
 INSERT INTO [dbo].[Jogkorok] VALUES ('3','Beosztott')
 INSERT INTO [dbo].[Jogkorok] VALUES ('4','Vezeto')
-INSERT INTO [dbo].[Jogkorok] VALUES ('5','Beosztott')
 
 --Ünnepnapok tábla feltöltése
 INSERT INTO [dbo].[Unnepnapok] VALUES ('2020. 01. 01','0')

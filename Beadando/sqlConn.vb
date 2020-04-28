@@ -4,7 +4,8 @@ Public Class SqlConn
 
     Public con As New SqlConnection
     Public cmd As New SqlCommand
-    ReadOnly connectionString = "Data Source=tcp:5.187.197.206,1433;Initial Catalog=Nyilvantartas;Persist Security Info=True;User ID=nyilvantartasdb;Password=Nyilvan1234"
+    'ReadOnly connectionString = "Data Source=tcp:5.187.197.206,1433;Initial Catalog=Nyilvantartas;Persist Security Info=True;User ID=nyilvantartasdb;Password=Nyilvan1234"
+    ReadOnly connectionString = "Data Source=gamer-pc\sqlhome;Initial Catalog=Nyilvantartas;Persist Security Info=True;User ID=nyilvantartasdb;Password=Nyilvan1234"
 
     Public Sub New()
         ReadConnectionString()
