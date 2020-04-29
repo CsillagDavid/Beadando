@@ -24,6 +24,7 @@ AS
 		   SET 
 				Nev = @Nev, 
 				Email = @Email, 
+				Jelszo = @Jelszo,
 				Munkaido = @Munkaido
 		   WHERE Nev = @Nev OR Email = @Email
 		END
